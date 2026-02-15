@@ -1,0 +1,125 @@
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f7f9fc;
+}
+
+main,
+#app-section,
+#auth-section {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* ============================= */
+/* Layout Improvements */
+/* ============================= */
+
+.container {
+  max-width: 1100px;
+  margin: 40px auto;        /* center horizontally */
+  padding: 20px;
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+/* Equal width columns */
+.col {
+  flex: 1;                  /* equal width */
+  display: grid;
+  grid-template-columns: 160px 1fr;  /* label column + input column */
+  gap: 12px 16px;
+  align-items: center;
+}
+
+/* Make labels not stack */
+.col label {
+  display: contents; 
+}
+
+/* Make inputs/selects stretch nicely */
+.col input,
+.col select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Make sliders span full width */
+.col input[type="range"] {
+  grid-column: 1 / -1;
+}
+
+/* Responsive breakpoint */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+}
+
+
+
+
+/* Percent + slider row spans full width */
+.percent-row {
+  grid-column: 1 / -1;        /* span both grid columns */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Bootstrap-style input group */
+.input-group {
+  display: flex;
+  align-items: stretch;
+  min-width: 120px;
+  max-width: 160px;
+}
+
+.input-group input {
+  border: 1px solid #ccc;
+  border-right: none;
+  padding: 8px;
+  width: 100%;
+  border-radius: 4px 0 0 4px;
+}
+
+.input-addon {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 0 4px 4px 0;
+  font-size: 14px;
+}
+
+/* Make slider grow */
+.percent-row input[type="range"] {
+  flex: 1;
+}
+
+
+
+/* Compact time row (4 columns) */
+.time-row {
+  grid-column: 1 / -1; /* span full width of the col grid */
+  display: grid;
+  grid-template-columns: auto 140px auto 140px;
+  gap: 12px 16px;
+  align-items: center;
+}
+
+/* Prevent these inputs from stretching */
+.time-row input {
+  width: 140px;
+}
+
+/* Make labels inline instead of block */
+.time-row label {
+  margin: 0;
+}
+

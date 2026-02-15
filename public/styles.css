@@ -1,0 +1,508 @@
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f7f9fc;
+  margin-right: 24%;
+  margin-left: 24%;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+main,
+#app-section,
+#auth-section,
+hr,
+h2 {
+  max-width: 900px;      /* narrower content */
+  margin-left: 0px;
+  margin-right: auto;
+}
+
+main {
+  margin-top: 40px;
+}
+
+#configHeading {
+  text-align: center;
+}
+
+#applyStart {
+    grid-column-start: 1;
+    grid-row-start: 2;
+}
+
+#applyMax {
+    grid-row: span 2 / span 2;
+    grid-column-start: 2;
+    grid-row-start: 1;
+}
+
+/* ============================= */
+/* Layout Improvements */
+/* ============================= */
+
+.container {
+  margin: 40px auto;        /* center horizontally */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+/* Equal width columns */
+.col {
+  flex: 1 1 400px;                  /* equal width */
+  min-width: 200px;
+  min-width: 200px;
+  display: grid;
+	  grid-template-columns: 90px 1fr;  /* label column + input column */
+  gap: 12px 16px;
+  align-items: center;
+}
+
+/* Make labels not stack */
+.col label {
+  display: contents; 
+}
+
+/* Make inputs/selects stretch nicely */
+.col input,
+.col select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Make sliders span full width */
+.col input[type="range"] {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 600px) {
+  .percent-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+.percent-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 3fr;  /* 1 column + 3 columns */
+  gap: 8px;
+  align-items: center;
+}
+
+/* Percentage input column */
+.input-group {
+  display: flex;
+  align-items: stretch;
+  max-width: 100px;
+}
+
+.input-group input {
+  border: 1px solid #ccc;
+  border-right: none;
+  padding: 8px;
+  width: 100%;
+  border-radius: 4px 0 0 4px;
+}
+
+.input-addon {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 0 4px 4px 0;
+  font-size: 14px;
+}
+
+/* Slider starts in column 2 and spans to the end */
+.percent-row input[type="range"] {
+  grid-column: 2 / -1;
+  width: 100%;
+}
+
+
+
+/* Compact time row (4 columns) */
+.time-row {
+  grid-column: 1 / -1; /* span full width of the col grid */
+  display: grid;
+  /* grid-template-columns: auto 140px auto 140px; */
+  grid-template-columns: 1fr 1fr 1fr 1fr ;
+  gap: 12px 16px;
+  align-items: center;
+}
+
+/* Prevent these inputs from stretching */
+.time-row input {
+  /* width: 140px; */
+}
+
+/* Make labels inline instead of block */
+.time-row label {
+  margin: 0;
+}
+
+
+.preview-section {
+  max-width: 900px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.preview-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+#previewFrame {
+  width: 100%;
+  /* max-width: 800px; */
+  height: 400px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+
+
+
+/* 
+ *
+ * Search bar
+ *
+ */
+
+
+/* ============================= */
+/* Search Autocomplete Dropdown */
+/* ============================= */
+
+.search-wrapper {
+  position: relative;
+  max-width: 400px;   /* controls width */
+}
+
+#search {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Dropdown container */
+#results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;              /* same as search input */
+  background: white;
+  border: 1px solid #dcdcdc;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+/* Hide if empty */
+#results:empty {
+  display: none;
+}
+
+/* Individual result items */
+.game {
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+
+/* Hover state */
+.game:hover {
+  background: #f3f6fa;
+}
+
+/* Keyboard focus state */
+.game:focus {
+  outline: none;
+  background: #e8f0fe;
+}
+
+/* Active click feedback */
+.game:active {
+  transform: scale(0.98);
+}
+
+/* Optional: subtle divider */
+.game + .game {
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Smooth appearance */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* ============================= */
+/* Selected Game Card */
+/* ============================= */
+
+/* Steam Library Search Styles */
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+input {
+  padding: 8px;
+  width: 300px;
+  font-size: 16px;
+}
+
+select {
+  padding: 8px;
+  width: 318px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+input[type="color"] {
+  padding: 4px;
+  /* width: 318px; */
+  height: 40px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.game {
+  margin: 0;
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+  outline: none;
+}
+
+.game:last-child {
+  border-bottom: none;
+}
+
+.game:hover {
+  background-color: #f5f5f5;
+}
+
+.game:focus {
+  background-color: #e3f2fd;
+  border-left: 3px solid #2196F3;
+  padding-left: 7px;
+}
+
+img {
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+#selected-game {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #e8f4f8;
+  border-radius: 4px;
+  border-left: 4px solid #2196F3;
+  font-size: 14px;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+}
+
+#selected-game:empty {
+  display: none;
+}
+
+.selected-game-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.apply-section {
+  margin-top: 5px;
+}
+
+.apply-label {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.clear-selection {
+  font-size: 24px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  margin-right: 10px;
+  line-height: 1;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+.clear-selection:hover {
+  color: #d32f2f;
+}
+
+.apply-time-btn {
+  padding: 6px 12px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.apply-time-btn:hover {
+  background-color: #1976D2;
+}
+
+.apply-time-btn:active {
+  background-color: #0D47A1;
+}
+
+.apply-max-btn {
+  padding: 6px 12px;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.apply-max-btn:last-child {
+  margin-bottom: 0;
+}
+
+/* Main Story - Blue */
+.apply-max-btn-main {
+  background-color: #2196F3;
+}
+
+.apply-max-btn-main:hover {
+  background-color: #1976D2;
+}
+
+.apply-max-btn-main:active {
+  background-color: #0D47A1;
+}
+
+/* Main + Extras - Purple */
+.apply-max-btn-plus {
+  background-color: #9C27B0;
+}
+
+.apply-max-btn-plus:hover {
+  background-color: #7B1FA2;
+}
+
+.apply-max-btn-plus:active {
+  background-color: #4A148C;
+}
+
+/* Completionist - Green */
+.apply-max-btn-complete {
+  background-color: #4CAF50;
+}
+
+.apply-max-btn-complete:hover {
+  background-color: #45a049;
+}
+
+.apply-max-btn-complete:active {
+  background-color: #388E3C;
+}
+
+/*
+.max-time-buttons {
+  display: flex;
+  flex-direction: column;
+}
+*/
+
+.max-time-loading,
+.max-time-error {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+}
+
+.steam-icon {
+  width: 16px;
+  height: 16px;
+  fill: white;
+}
+
+#results {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
+#results:empty {
+  border: none;
+}
+
+/* Progress Bar Configuration Styles */
+
+
+#startInputLabel {
+  display: none;
+}
+
+#maxInputLabel {
+  display: none;
+}
+
+#previewFrame {
+  width: 100%;
+  height: 400px;
+  border: 1px solid #ccc;
+}
