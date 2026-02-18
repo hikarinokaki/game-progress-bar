@@ -2,47 +2,47 @@
    STEAM LIBRARY SEARCH
 ====================== */
 
-const authSection = document.getElementById('auth-section');
-const appSection = document.getElementById('app-section');
-const welcome = document.getElementById('welcome');
-const searchInput = document.getElementById('search');
-const resultsDiv = document.getElementById('results');
-const selectedGameDiv = document.getElementById('selected-game');
+const authSection = document.getElementById("auth-section");
+const appSection = document.getElementById("app-section");
+const welcome = document.getElementById("welcome");
+const searchInput = document.getElementById("search");
+const resultsDiv = document.getElementById("results");
+const selectedGameDiv = document.getElementById("selected-game");
 
 async function checkAuth() {
-  const res = await fetch('api/me');
+  const res = await fetch("api/me");
   const data = await res.json();
 
   if (data.authenticated) {
-    authSection.style.display = 'none';
-    appSection.style.display = 'block';
+    authSection.style.display = "none";
+    appSection.style.display = "block";
     welcome.innerText = `Welcome, ${data.name}`;
   } else {
-    authSection.style.display = 'block';
-    appSection.style.display = 'none';
+    authSection.style.display = "block";
+    appSection.style.display = "none";
   }
 }
 
 let timeout = null;
 
-searchInput.addEventListener('input', () => {
+searchInput.addEventListener("input", () => {
   clearTimeout(timeout);
-  
+
   // Clear selected game display when user starts typing
-  selectedGameDiv.innerHTML = '';
+  selectedGameDiv.innerHTML = "";
 
   timeout = setTimeout(async () => {
     const query = searchInput.value.trim();
 
     if (!query) {
-      resultsDiv.innerHTML = '';
+      resultsDiv.innerHTML = "";
       return;
     }
 
     const res = await fetch(`api/search?q=${encodeURIComponent(query)}`);
     const games = await res.json();
 
-    resultsDiv.innerHTML = '';
+    resultsDiv.innerHTML = "";
 
     if (!games.length) {
       resultsDiv.innerHTML = "<p>No matches found.</p>";
@@ -50,8 +50,8 @@ searchInput.addEventListener('input', () => {
     }
 
     games.forEach((game, index) => {
-      const div = document.createElement('div');
-      div.className = 'game';
+      const div = document.createElement("div");
+      div.className = "game";
       div.tabIndex = 0; // Make focusable
 
       const hours = Math.round(game.playtime / 60);
@@ -64,13 +64,13 @@ searchInput.addEventListener('input', () => {
       // Function to select this game
       const selectGame = () => {
         const playtimeInSeconds = game.playtime * 60; // Convert minutes to seconds
-        
+
         // Autocomplete search input with game name
         searchInput.value = game.name;
-        
+
         // Clear search results
-        resultsDiv.innerHTML = '';
-        
+        resultsDiv.innerHTML = "";
+
         // Display selected game info with playtime
         selectedGameDiv.innerHTML = `
           <div class="selected-game-content">
@@ -94,56 +94,60 @@ searchInput.addEventListener('input', () => {
             </div>
           </div>
         `;
-        
+
         // Add click handler for clear button
-        selectedGameDiv.querySelector('.clear-selection').addEventListener('click', () => {
-          selectedGameDiv.innerHTML = '';
-          searchInput.value = '';
-          searchInput.focus();
-        });
-        
+        selectedGameDiv
+          .querySelector(".clear-selection")
+          .addEventListener("click", () => {
+            selectedGameDiv.innerHTML = "";
+            searchInput.value = "";
+            searchInput.focus();
+          });
+
         // Add click handler for apply start time button
-        selectedGameDiv.querySelector('.apply-time-btn').addEventListener('click', () => {
-          setStart(playtimeInSeconds);
-        });
-        
+        selectedGameDiv
+          .querySelector(".apply-time-btn")
+          .addEventListener("click", () => {
+            setStart(playtimeInSeconds);
+          });
+
         // Fetch and display max time buttons
         fetchMaxTime(game.appid, game.name);
-        
+
         // Return focus to search input
         searchInput.focus();
       };
 
       // Click handler
-      div.addEventListener('click', selectGame);
+      div.addEventListener("click", selectGame);
 
       // Keyboard navigation
-      div.addEventListener('keydown', (e) => {
-        const gameElements = Array.from(resultsDiv.querySelectorAll('.game'));
+      div.addEventListener("keydown", (e) => {
+        const gameElements = Array.from(resultsDiv.querySelectorAll(".game"));
         const currentIndex = gameElements.indexOf(div);
 
-        if (e.key === 'Enter') {
+        if (e.key === "Enter") {
           e.preventDefault();
           selectGame();
-        } else if (e.key === 'ArrowDown') {
+        } else if (e.key === "ArrowDown") {
           e.preventDefault();
           if (currentIndex < gameElements.length - 1) {
             gameElements[currentIndex + 1].focus();
           }
-        } else if (e.key === 'ArrowUp') {
+        } else if (e.key === "ArrowUp") {
           e.preventDefault();
           if (currentIndex > 0) {
             gameElements[currentIndex - 1].focus();
           } else {
             searchInput.focus();
           }
-        } else if (e.key === 'Tab' && !e.shiftKey) {
+        } else if (e.key === "Tab" && !e.shiftKey) {
           // Tab - move to next game or let it continue naturally if last
           if (currentIndex < gameElements.length - 1) {
             e.preventDefault();
             gameElements[currentIndex + 1].focus();
           }
-        } else if (e.key === 'Tab' && e.shiftKey) {
+        } else if (e.key === "Tab" && e.shiftKey) {
           // Shift+Tab - move to previous game or back to search input
           e.preventDefault();
           if (currentIndex > 0) {
@@ -156,14 +160,13 @@ searchInput.addEventListener('input', () => {
 
       resultsDiv.appendChild(div);
     });
-
   }, 300);
 });
 
 // Allow ArrowDown from search input to enter results
-searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowDown') {
-    const firstGame = resultsDiv.querySelector('.game');
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowDown") {
+    const firstGame = resultsDiv.querySelector(".game");
     if (firstGame) {
       e.preventDefault();
       firstGame.focus();
@@ -175,35 +178,35 @@ checkAuth();
 
 // Fetch max time from server and create buttons
 async function fetchMaxTime(appid, gameName) {
-  const maxTimeContainer = selectedGameDiv.querySelector('.max-time-buttons');
-  
+  const maxTimeContainer = selectedGameDiv.querySelector(".max-time-buttons");
+
   if (!maxTimeContainer) return;
-  
+
   try {
     const res = await fetch(`api/max-time?appid=${appid}`);
     const data = await res.json();
-    
+
     // Clear loading message
-    maxTimeContainer.innerHTML = '';
-    
+    maxTimeContainer.innerHTML = "";
+
     // Define the completion types with their labels and styling
     const completionTypes = [
-      { key: 'comp_main', label: 'Main Story', color: 'main' },
-      { key: 'comp_plus', label: 'Main + Extras', color: 'plus' },
-      { key: 'comp_100', label: 'Completionist', color: 'complete' }
+      { key: "comp_main", label: "Main Story", color: "main" },
+      { key: "comp_plus", label: "Main + Extras", color: "plus" },
+      { key: "comp_100", label: "Completionist", color: "complete" },
     ];
-    
+
     let hasAnyData = false;
-    
+
     // Create a button for each available completion type
-    completionTypes.forEach(type => {
+    completionTypes.forEach((type) => {
       const timeInSeconds = data[type.key];
-      
+
       if (timeInSeconds && timeInSeconds > 0) {
         hasAnyData = true;
         const hours = Math.round(timeInSeconds / 3600);
-        
-        const button = document.createElement('button');
+
+        const button = document.createElement("button");
         button.className = `apply-max-btn apply-max-btn-${type.color}`;
         button.innerHTML = `
           <svg class="steam-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -211,29 +214,29 @@ async function fetchMaxTime(appid, gameName) {
           </svg>
           ${type.label}: ${hours} hrs
         `;
-        
+
         // Add click handler
-        button.addEventListener('click', () => {
+        button.addEventListener("click", () => {
           setMax(timeInSeconds);
           // Update title with game name + completion type
           setTitle(`${gameName} - ${type.label}`);
         });
-        
+
         maxTimeContainer.appendChild(button);
       }
     });
-    
+
     // Show message if no data available
     if (!hasAnyData) {
-      maxTimeContainer.innerHTML = '<div class="max-time-error">No completion time data available</div>';
+      maxTimeContainer.innerHTML =
+        '<div class="max-time-error">No completion time data available</div>';
     }
-    
   } catch (err) {
-    console.error('Failed to fetch max time:', err);
-    maxTimeContainer.innerHTML = '<div class="max-time-error">Failed to load completion times</div>';
+    console.error("Failed to fetch max time:", err);
+    maxTimeContainer.innerHTML =
+      '<div class="max-time-error">Failed to load completion times</div>';
   }
 }
-
 
 /* ======================
    PROGRESS BAR CONFIGURATION
@@ -243,10 +246,10 @@ async function fetchMaxTime(appid, gameName) {
 const state = {
   start: 0,
   max: 3600,
-  title: '',
-  style: 'progress',
-  displayFormat: 'percentage',
-  accentColor: '#4CAF50'
+  title: "",
+  style: "progress",
+  displayFormat: "percentage",
+  accentColor: "#4CAF50",
 };
 
 /* HELPERS */
@@ -284,7 +287,9 @@ function parseTimeToSeconds(input) {
     totalMinutes += parseFloat(hourMatch[1]) * 60;
   }
 
-  const minuteMatch = input.match(/(\d+(\.\d+)?)\s*(m|min|mins|minute|minutes)/);
+  const minuteMatch = input.match(
+    /(\d+(\.\d+)?)\s*(m|min|mins|minute|minutes)/,
+  );
   if (minuteMatch) {
     totalMinutes += parseFloat(minuteMatch[1]);
   }
@@ -292,8 +297,7 @@ function parseTimeToSeconds(input) {
   const implicitMatch = input.match(/(\d+(\.\d+)?)\s*h\s*(\d+(\.\d+)?)/);
   if (implicitMatch) {
     totalMinutes =
-      parseFloat(implicitMatch[1]) * 60 +
-      parseFloat(implicitMatch[3]);
+      parseFloat(implicitMatch[1]) * 60 + parseFloat(implicitMatch[3]);
   }
 
   if (totalMinutes === 0) {
@@ -375,7 +379,7 @@ function render() {
   startSlider.min = 0;
   startSlider.max = state.max;
   startSlider.value = state.start;
-  
+
   titleInput.value = state.title;
   styleSelect.value = state.style;
   displayFormatSelect.value = state.displayFormat;
@@ -385,55 +389,58 @@ function render() {
 /* EVENTS */
 
 // Title
-titleInput.addEventListener("input", e => setTitle(e.target.value));
+titleInput.addEventListener("input", (e) => setTitle(e.target.value));
 
 // Style
-styleSelect.addEventListener("change", e => setStyle(e.target.value));
+styleSelect.addEventListener("change", (e) => setStyle(e.target.value));
 
 // Display Format
-displayFormatSelect.addEventListener("change", e => setDisplayFormat(e.target.value));
+displayFormatSelect.addEventListener("change", (e) =>
+  setDisplayFormat(e.target.value),
+);
 
 // Accent Color
-accentColorInput.addEventListener("input", e => setAccentColor(e.target.value));
+accentColorInput.addEventListener("input", (e) =>
+  setAccentColor(e.target.value),
+);
 
 // Numeric
-startInput.addEventListener("input", e => setStart(e.target.value));
-maxInput.addEventListener("input", e => setMax(e.target.value));
-percentInput.addEventListener("input", e => setPercent(e.target.value));
+startInput.addEventListener("input", (e) => setStart(e.target.value));
+maxInput.addEventListener("input", (e) => setMax(e.target.value));
+percentInput.addEventListener("input", (e) => setPercent(e.target.value));
 
 // Time text
-startTimeInput.addEventListener("change", e => {
+startTimeInput.addEventListener("change", (e) => {
   const seconds = parseTimeToSeconds(e.target.value);
   if (seconds !== null) setStart(seconds);
 });
 
-maxTimeInput.addEventListener("change", e => {
+maxTimeInput.addEventListener("change", (e) => {
   const seconds = parseTimeToSeconds(e.target.value);
   if (seconds !== null) setMax(seconds);
 });
 
 // Slider
-startSlider.addEventListener("input", e => setStart(e.target.value));
+startSlider.addEventListener("input", (e) => setStart(e.target.value));
 
 // Scroll support
 function addScroll(el, callback) {
-  el.addEventListener("wheel", e => {
+  el.addEventListener("wheel", (e) => {
     e.preventDefault();
     const delta = e.deltaY < 0 ? 1 : -1;
     callback(delta);
   });
 }
 
-addScroll(percentInput, d => setPercent(calculatePercent() + d));
+addScroll(percentInput, (d) => setPercent(calculatePercent() + d));
 
 // Scroll on startSlider - increment by 1% of max value
-addScroll(startSlider, d => {
+addScroll(startSlider, (d) => {
   const increment = Math.max(1, Math.round(state.max * 0.01)); // 1% of max, minimum 1
-  setStart(state.start + (d * increment));
+  setStart(state.start + d * increment);
 });
 
 render();
-
 
 /* PREVIEW + COPY */
 const previewBtn = document.getElementById("previewBtn");
@@ -448,7 +455,7 @@ function buildPreviewURL() {
     title: state.title,
     style: state.style,
     displayFormat: state.displayFormat,
-    accentColor: state.accentColor
+    accentColor: state.accentColor,
   });
   return `bar.html?${params.toString()}`;
 }

@@ -1,4 +1,3 @@
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -18,7 +17,7 @@ main,
 #auth-section,
 hr,
 h2 {
-  max-width: 900px;      /* narrower content */
+  max-width: 900px; /* narrower content */
   margin-left: 0px;
   margin-right: auto;
 }
@@ -32,14 +31,14 @@ main {
 }
 
 #applyStart {
-    grid-column-start: 1;
-    grid-row-start: 2;
+  grid-column-start: 1;
+  grid-row-start: 2;
 }
 
 #applyMax {
-    grid-row: span 2 / span 2;
-    grid-column-start: 2;
-    grid-row-start: 1;
+  grid-row: span 2 / span 2;
+  grid-column-start: 2;
+  grid-row-start: 1;
 }
 
 /* ============================= */
@@ -47,7 +46,7 @@ main {
 /* ============================= */
 
 .container {
-  margin: 40px auto;        /* center horizontally */
+  margin: 40px auto; /* center horizontally */
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
@@ -56,18 +55,18 @@ main {
 
 /* Equal width columns */
 .col {
-  flex: 1 1 400px;                  /* equal width */
+  flex: 1 1 400px; /* equal width */
   min-width: 200px;
   min-width: 200px;
   display: grid;
-	  grid-template-columns: 90px 1fr;  /* label column + input column */
+  grid-template-columns: 90px 1fr; /* label column + input column */
   gap: 12px 16px;
   align-items: center;
 }
 
 /* Make labels not stack */
 .col label {
-  display: contents; 
+  display: contents;
 }
 
 /* Make inputs/selects stretch nicely */
@@ -88,13 +87,10 @@ main {
   }
 }
 
-
-
-
 .percent-row {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 1fr 3fr;  /* 1 column + 3 columns */
+  grid-template-columns: 1fr 3fr; /* 1 column + 3 columns */
   gap: 8px;
   align-items: center;
 }
@@ -130,14 +126,12 @@ main {
   width: 100%;
 }
 
-
-
 /* Compact time row (4 columns) */
 .time-row {
   grid-column: 1 / -1; /* span full width of the col grid */
   display: grid;
   /* grid-template-columns: auto 140px auto 140px; */
-  grid-template-columns: 1fr 1fr 1fr 1fr ;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 12px 16px;
   align-items: center;
 }
@@ -151,7 +145,6 @@ main {
 .time-row label {
   margin: 0;
 }
-
 
 .preview-section {
   max-width: 900px;
@@ -174,15 +167,11 @@ main {
   border-radius: 6px;
 }
 
-
-
-
 /* 
  *
  * Search bar
  *
  */
-
 
 /* ============================= */
 /* Search Autocomplete Dropdown */
@@ -190,7 +179,7 @@ main {
 
 .search-wrapper {
   position: relative;
-  max-width: 400px;   /* controls width */
+  max-width: 400px; /* controls width */
 }
 
 #search {
@@ -203,12 +192,12 @@ main {
   position: absolute;
   top: 100%;
   left: 0;
-  width: 100%;              /* same as search input */
+  width: 100%; /* same as search input */
   background: white;
   border: 1px solid #dcdcdc;
   border-top: none;
   border-radius: 0 0 8px 8px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   max-height: 300px;
   overflow-y: auto;
   z-index: 1000;
@@ -227,7 +216,9 @@ main {
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: background 0.15s ease, transform 0.05s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.05s ease;
 }
 
 /* Hover state */
@@ -262,8 +253,6 @@ main {
     transform: translateY(0);
   }
 }
-
-
 
 /* ============================= */
 /* Selected Game Card */
@@ -321,7 +310,7 @@ button {
 
 .game:focus {
   background-color: #e3f2fd;
-  border-left: 3px solid #2196F3;
+  border-left: 3px solid #2196f3;
   padding-left: 7px;
 }
 
@@ -335,7 +324,7 @@ img {
   padding: 10px;
   background-color: #e8f4f8;
   border-radius: 4px;
-  border-left: 4px solid #2196F3;
+  border-left: 4px solid #2196f3;
   font-size: 14px;
 
   display: grid;
@@ -381,7 +370,7 @@ img {
 
 .apply-time-btn {
   padding: 6px 12px;
-  background-color: #2196F3;
+  background-color: #2196f3;
   color: white;
   border: none;
   border-radius: 3px;
@@ -394,11 +383,11 @@ img {
 }
 
 .apply-time-btn:hover {
-  background-color: #1976D2;
+  background-color: #1976d2;
 }
 
 .apply-time-btn:active {
-  background-color: #0D47A1;
+  background-color: #0d47a1;
 }
 
 .apply-max-btn {
@@ -421,33 +410,33 @@ img {
 
 /* Main Story - Blue */
 .apply-max-btn-main {
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
 
 .apply-max-btn-main:hover {
-  background-color: #1976D2;
+  background-color: #1976d2;
 }
 
 .apply-max-btn-main:active {
-  background-color: #0D47A1;
+  background-color: #0d47a1;
 }
 
 /* Main + Extras - Purple */
 .apply-max-btn-plus {
-  background-color: #9C27B0;
+  background-color: #9c27b0;
 }
 
 .apply-max-btn-plus:hover {
-  background-color: #7B1FA2;
+  background-color: #7b1fa2;
 }
 
 .apply-max-btn-plus:active {
-  background-color: #4A148C;
+  background-color: #4a148c;
 }
 
 /* Completionist - Green */
 .apply-max-btn-complete {
-  background-color: #4CAF50;
+  background-color: #4caf50;
 }
 
 .apply-max-btn-complete:hover {
@@ -455,7 +444,7 @@ img {
 }
 
 .apply-max-btn-complete:active {
-  background-color: #388E3C;
+  background-color: #388e3c;
 }
 
 /*
@@ -491,7 +480,6 @@ img {
 }
 
 /* Progress Bar Configuration Styles */
-
 
 #startInputLabel {
   display: none;

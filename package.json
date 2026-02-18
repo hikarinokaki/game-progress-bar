@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --ignore-path .gitignore \"**/*.+(ts|tsx|js|jsx|json|css|md|mdx|html)\"",
+    "format": "npm run prettier -- --write",
+    "check-format": "npm run prettier -- --list-different"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +21,11 @@
     "passport": "^0.7.0",
     "passport-steam": "^1.0.18",
     "puppeteer": "^24.37.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.0",
+    "globals": "^17.3.0",
+    "prettier": "^3.8.1"
   }
 }
