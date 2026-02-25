@@ -1,7 +1,7 @@
 // src/public/js/api.js
 
 export async function checkAuth() {
-  const res = await fetch("api/me");
+  const res = await fetch("auth/me");
   return res.json();
 }
 
