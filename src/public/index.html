@@ -17,24 +17,22 @@
           alt="Sign in through Steam"
         />
       </a>
-        </div >
-        <header class="main-header">
-          <div class="header-content">
-            <div id="app-section" style="display: none">
-              <h2 id="welcome"></h2>
-              <button onclick="window.location = 'logout'">Logout</button>
-              <br /><br />
-              <div class="search-wrapper">
-                <input type="text" id="search" placeholder="Search your games..." />
-                <div id="results"></div>
+            </div >
+            <header>
+              <div id="app-section" style="display: none">
+                <h2 id="welcome"></h2>
+                <button onclick="window.location = 'logout'">Logout</button>
+                <br /><br />
+                <div class="search-wrapper">
+                  <input type="text" id="search" placeholder="Search your games..." />
+                  <div id="results"></div>
+                </div>
               </div>
-            </div>
+        
+              <div id="selected-game"></div>
+            </header>
+            <hr />
             <h2 id="configHeading">Progress Bar Configuration</h2>
-            <div id="selected-game"></div>
-          </div>
-        </header>
-        <hr />
-
     <main class="container">
       <div class="col">
         <label id="startInputLabel" style="display: none">

@@ -11,29 +11,6 @@ header {
   flex-wrap: wrap;
 }
 
-/* Styling for the new header structure */
-.main-header .header-content {
-  display: flex;
-  align-items: center; /* Vertically center items */
-  justify-content: space-between; /* Push items to ends, allow center to take space */
-  width: 100%; /* Ensure it takes full width of its parent */
-  max-width: 56rem; /* Match existing content width */
-  margin: 0 auto; /* Center the header content itself */
-  padding: 1rem 0; /* Add some vertical padding */
-}
-
-.main-header #configHeading {
-  flex-grow: 1; /* Allow the heading to take available space */
-  text-align: center; /* Center the text */
-  margin: 0; /* Remove default margins that might interfere with centering */
-}
-
-.main-header #app-section,
-.main-header #selected-game {
-  /* Ensure these don't grow and maintain their size */
-  flex-shrink: 0;
-}
-
 
 main,
 #app-section,
@@ -355,7 +332,7 @@ img {
 }
 
 #selected-game:empty {
-  display: none;
+  visibility: hidden;
 }
 
 .selected-game-content {
