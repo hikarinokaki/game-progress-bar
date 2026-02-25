@@ -28,15 +28,3 @@ jobs:
         run: |
           docker push ghcr.io/${{ github.repository }}:latest
           docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
-
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            docker pull ghcr.io/${{ github.repository }}:latest
-            docker compose down
-            docker compose up -d
-

@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
   <head>
-    <base href="/game-progress-bar/" />
     <title>Steam Library Search</title>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -18,18 +18,20 @@
         />
       </a>
     </div>
+    <header>
+      <div id="app-section" style="display: none">
+        <h2 id="welcome"></h2>
+        <button onclick="window.location = 'logout'">Logout</button>
+        <br /><br />
+        <div class="search-wrapper">
+          <input type="text" id="search" placeholder="Search your games..." />
+          <div id="results"></div>
+        </div>
+      </div>
 
-    <div id="app-section" style="display: none">
-      <h2 id="welcome"></h2>
-      <button onclick="window.location = 'logout'">Logout</button>
-      <br /><br />
-      <input type="text" id="search" placeholder="Search your games..." />
       <div id="selected-game"></div>
-      <div id="results"></div>
-    </div>
-
+    </header>
     <hr />
-
     <h2 id="configHeading">Progress Bar Configuration</h2>
 
     <main class="container">
@@ -101,6 +103,6 @@
       <iframe id="previewFrame"></iframe>
     </div>
 
-    <script src="script.js"></script>
+    <script src="dist/bundle.js"></script>
   </body>
 </html>

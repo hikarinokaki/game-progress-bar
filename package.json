@@ -1,9 +1,12 @@
 {
-  "name": "steam-mvp",
+  "name": "game-progress-bar",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A web app to generate custom game progress bars based on Steam library data.",
+  "main": "src/server.js",
   "scripts": {
+    "start": "node src/server.js",
+    "build:frontend": "node src/build.js",
+    "watch:frontend": "node src/build.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier --ignore-path .gitignore \"**/*.+(ts|tsx|js|jsx|json|css|md|mdx|html)\"",
     "format": "npm run prettier -- --write",
@@ -24,6 +27,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "esbuild": "^0.27.3",
     "eslint": "^10.0.0",
     "globals": "^17.3.0",
     "prettier": "^3.8.1"

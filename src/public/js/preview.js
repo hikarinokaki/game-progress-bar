@@ -1,0 +1,34 @@
+// src/public/js/preview.js
+
+import { state } from "./state.js";
+import { previewBtn, copyBtn, previewFrame } from "./domElements.js";
+
+function buildPreviewURL() {
+  const params = new URLSearchParams({
+    start: state.start,
+    max: state.max,
+    title: state.title,
+    style: state.style,
+    displayFormat: state.displayFormat,
+    accentColor: state.accentColor,
+  });
+  return `bar.html?${params.toString()}`;
+}
+
+export function initPreview() {
+  previewBtn.addEventListener("click", () => {
+    const url = buildPreviewURL();
+    previewFrame.src = url;
+  });
+
+  copyBtn.addEventListener("click", async () => {
+    const fullUrl = new URL(buildPreviewURL(), window.location.href).href;
+    try {
+      await navigator.clipboard.writeText(fullUrl);
+      copyBtn.textContent = "Copied!";
+      setTimeout(() => (copyBtn.textContent = "Copy URL"), 1000);
+    } catch {
+      alert("Failed to copy.");
+    }
+  });
+}

@@ -2,8 +2,7 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #f7f9fc;
-  margin-right: 24%;
-  margin-left: 24%;
+  padding: 1.5rem;
 }
 
 header {
@@ -15,15 +14,16 @@ header {
 main,
 #app-section,
 #auth-section,
+header,
 hr,
 h2 {
-  max-width: 900px; /* narrower content */
-  margin-left: 0px;
+  max-width: 56rem; /* narrower content */
+  margin-left: auto;
   margin-right: auto;
 }
 
 main {
-  margin-top: 40px;
+  margin-top: 2.5rem;
 }
 
 #configHeading {
@@ -46,21 +46,20 @@ main {
 /* ============================= */
 
 .container {
-  margin: 40px auto; /* center horizontally */
+  margin: 2.5rem auto; /* center horizontally */
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 2.5rem;
   align-items: flex-start;
 }
 
 /* Equal width columns */
 .col {
-  flex: 1 1 400px; /* equal width */
-  min-width: 200px;
-  min-width: 200px;
+  flex: 1 1 25rem; /* equal width */
+  min-width: 12.5rem;
   display: grid;
-  grid-template-columns: 90px 1fr; /* label column + input column */
-  gap: 12px 16px;
+  grid-template-columns: 5.625rem 1fr; /* label column + input column */
+  gap: 0.75rem 1rem;
   align-items: center;
 }
 
@@ -81,7 +80,7 @@ main {
   grid-column: 1 / -1;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 37.5rem) {
   .percent-row {
     grid-template-columns: 1fr;
   }
@@ -91,7 +90,7 @@ main {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 1fr 3fr; /* 1 column + 3 columns */
-  gap: 8px;
+  gap: 0.5rem;
   align-items: center;
 }
 
@@ -99,25 +98,25 @@ main {
 .input-group {
   display: flex;
   align-items: stretch;
-  max-width: 100px;
+  max-width: 6.25rem;
 }
 
 .input-group input {
   border: 1px solid #ccc;
   border-right: none;
-  padding: 8px;
+  padding: 0.5rem;
   width: 100%;
-  border-radius: 4px 0 0 4px;
+  border-radius: 0.25rem 0 0 0.25rem;
 }
 
 .input-addon {
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 0.625rem;
   background: #f0f0f0;
   border: 1px solid #ccc;
-  border-radius: 0 4px 4px 0;
-  font-size: 14px;
+  border-radius: 0 0.25rem 0.25rem 0;
+  font-size: 0.875rem;
 }
 
 /* Slider starts in column 2 and spans to the end */
@@ -132,7 +131,7 @@ main {
   display: grid;
   /* grid-template-columns: auto 140px auto 140px; */
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 12px 16px;
+  gap: 0.75rem 1rem;
   align-items: center;
 }
 
@@ -147,24 +146,24 @@ main {
 }
 
 .preview-section {
-  max-width: 900px;
-  margin: 40px auto;
+  max-width: 56rem;
+  margin: 2.5rem auto;
   text-align: center;
 }
 
 .preview-buttons {
   display: flex;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 #previewFrame {
   width: 100%;
-  /* max-width: 800px; */
-  height: 400px;
+  /* max-width: 50rem; */
+  height: 25rem;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 0.375rem;
 }
 
 /* 
@@ -179,7 +178,7 @@ main {
 
 .search-wrapper {
   position: relative;
-  max-width: 400px; /* controls width */
+  max-width: 25rem; /* controls width */
 }
 
 #search {
@@ -196,9 +195,9 @@ main {
   background: white;
   border: 1px solid #dcdcdc;
   border-top: none;
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  max-height: 300px;
+  border-radius: 0 0 0.5rem 0.5rem;
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.08);
+  max-height: 18.75rem;
   overflow-y: auto;
   z-index: 1000;
   animation: fadeIn 0.15s ease-out;
@@ -211,11 +210,11 @@ main {
 
 /* Individual result items */
 .game {
-  padding: 10px 14px;
+  padding: 0.625rem 0.875rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   transition:
     background 0.15s ease,
     transform 0.05s ease;
@@ -246,7 +245,7 @@ main {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateY(-0.25rem);
   }
   to {
     opacity: 1;
@@ -259,42 +258,40 @@ main {
 /* ============================= */
 
 /* Steam Library Search Styles */
-body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-}
 
 input {
-  padding: 8px;
-  width: 300px;
-  font-size: 16px;
+  padding: 0.5rem;
+  width: 100%;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
 select {
-  padding: 8px;
-  width: 318px;
-  font-size: 16px;
+  padding: 0.5rem;
+  width: 100%;
+  font-size: 1rem;
+  box-sizing: border-box;
   cursor: pointer;
 }
 
 input[type="color"] {
-  padding: 4px;
+  padding: 0.25rem;
   /* width: 318px; */
-  height: 40px;
+  height: 2.5rem;
   cursor: pointer;
   border: 1px solid #ccc;
 }
 
 button {
-  padding: 8px 12px;
-  font-size: 16px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
   cursor: pointer;
 }
 
 .game {
   margin: 0;
   cursor: pointer;
-  padding: 10px;
+  padding: 0.625rem;
   border-bottom: 1px solid #eee;
   transition: background-color 0.2s;
   outline: none;
@@ -311,26 +308,26 @@ button {
 .game:focus {
   background-color: #e3f2fd;
   border-left: 3px solid #2196f3;
-  padding-left: 7px;
+  padding-left: 0.4375rem;
 }
 
 img {
   vertical-align: middle;
-  margin-right: 10px;
+  margin-right: 0.625rem;
 }
 
 #selected-game {
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 0.625rem;
+  padding: 0.625rem;
   background-color: #e8f4f8;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   border-left: 4px solid #2196f3;
-  font-size: 14px;
+  font-size: 0.875rem;
 
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 #selected-game:empty {
@@ -340,25 +337,25 @@ img {
 .selected-game-content {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
 
 .apply-section {
-  margin-top: 5px;
+  margin-top: 0.3125rem;
 }
 
 .apply-label {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #666;
-  margin-bottom: 5px;
+  margin-bottom: 0.3125rem;
 }
 
 .clear-selection {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #666;
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 0.625rem;
   line-height: 1;
   transition: color 0.2s;
   user-select: none;
@@ -369,17 +366,17 @@ img {
 }
 
 .apply-time-btn {
-  padding: 6px 12px;
+  padding: 0.375rem 0.75rem;
   background-color: #2196f3;
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 0.1875rem;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 0.8125rem;
   transition: background-color 0.2s;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
 }
 
 .apply-time-btn:hover {
@@ -391,17 +388,17 @@ img {
 }
 
 .apply-max-btn {
-  padding: 6px 12px;
+  padding: 0.375rem 0.75rem;
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 0.1875rem;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 0.8125rem;
   transition: background-color 0.2s;
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
+  gap: 0.375rem;
+  margin-bottom: 0.375rem;
 }
 
 .apply-max-btn:last-child {
@@ -456,22 +453,22 @@ img {
 
 .max-time-loading,
 .max-time-error {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #666;
   font-style: italic;
 }
 
 .steam-icon {
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   fill: white;
 }
 
 #results {
-  max-height: 400px;
+  max-height: 25rem;
   overflow-y: auto;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   background-color: white;
 }
 
@@ -491,6 +488,6 @@ img {
 
 #previewFrame {
   width: 100%;
-  height: 400px;
+  height: 25rem;
   border: 1px solid #ccc;
 }
