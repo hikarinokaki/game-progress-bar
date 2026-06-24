@@ -18,6 +18,7 @@
 
 - **HLTB auth token** (`src/gameDataFetcher.js:22-201`): Puppeteer scrapes howlongtobeat.com to intercept `x-auth-token` from network traffic. Will break if HLTB changes their site. If it fails, completion-time buttons won't load.
 - **passport-steam + Express 5**: `passport-steam@1.0.18` hasn't been updated in years; may break with Express 5 routing/session changes. `returnURL` includes `BASE_PATH` but `realm` does not.
+- **steam-web patch** (`patches/steam-web+0.4.0.patch`): `steam-web@0.4.0` uses `http` on port 80. The patch switches to `https` on port 443 (applied by `patch-package` in `postinstall`). Remove if you ever upgrade `steam-web` beyond 0.4.0.
 
 ## Required Env Vars
 

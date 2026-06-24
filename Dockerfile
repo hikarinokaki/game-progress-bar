@@ -18,10 +18,12 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 # Create app directory
 WORKDIR /app
 
-# Copy package files (package.json and package-lock.json)
+# Copy package files and patches (for patch-package)
 COPY package*.json ./
+COPY patches/ patches/
 
 # Install ALL dependencies (including devDependencies needed for the frontend build)
+# postinstall will run patch-package, applying the steam-web HTTPS fix
 RUN npm ci
 
 # Copy application code
