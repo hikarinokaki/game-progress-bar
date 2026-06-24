@@ -1,4 +1,3 @@
-
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
@@ -9,7 +8,7 @@ const { getGameMaxTime, warmUpAuthToken } = require("./gameDataFetcher");
 
 const app = express();
 
-const BASE_PATH = process.env.BASE_PATH || "";
+const BASE_PATH = (process.env.BASE_PATH || "").replace(/\/+$/, "");
 
 // In-memory cache
 const libraryCache = {};
@@ -36,7 +35,10 @@ passport.deserializeUser((obj, done) => done(null, obj));
 passport.use(
   new SteamStrategy(
     {
-      returnURL: new URL(path.posix.join(BASE_PATH, 'auth/steam/return'), process.env.BASE_URL).href,
+      returnURL: new URL(
+        path.posix.join(BASE_PATH, "auth/steam/return"),
+        process.env.BASE_URL,
+      ).href,
       realm: process.env.BASE_URL,
       apiKey: process.env.STEAM_API_KEY,
     },
