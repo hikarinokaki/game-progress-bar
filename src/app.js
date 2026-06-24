@@ -1,10 +1,14 @@
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
-const SteamStrategy = require("passport-steam").Strategy;
+const { SteamOpenIdStrategy } = require("passport-steam-openid");
 const axios = require("axios");
 const path = require("path");
-const { getGameMaxTime, warmUpAuthToken } = require("./gameDataFetcher");
+const {
+  getGameMaxTime,
+  initHltbSession,
+  shutdownHltbSession,
+} = require("./gameDataFetcher");
 
 const app = express();
 
@@ -18,9 +22,12 @@ app.use(`${BASE_PATH}/dist`, express.static(path.join(__dirname, "../dist"))); /
 app.use(BASE_PATH, express.static(path.join(__dirname, "public"))); // Serve public assets from root or BASE_PATH
 app.use(express.json());
 
+const SESSION_SECRET =
+  process.env.SESSION_SECRET || "dev-secret-do-not-use-in-production";
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   }),
@@ -32,19 +39,30 @@ app.use(passport.session());
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
 
+const BASE_URL =
+  process.env.BASE_URL || "http://localhost:" + (process.env.PORT || 3000);
+
 passport.use(
-  new SteamStrategy(
+  new SteamOpenIdStrategy(
     {
       returnURL: new URL(
         path.posix.join(BASE_PATH, "auth/steam/return"),
-        process.env.BASE_URL,
+        BASE_URL,
       ).href,
-      realm: process.env.BASE_URL,
       apiKey: process.env.STEAM_API_KEY,
+      profile: true,
     },
-    (identifier, profile, done) => {
-      profile.identifier = identifier;
-      return done(null, profile);
+    (req, steamid, profile, done) => {
+      return done(null, {
+        id: profile.steamid || steamid,
+        identifier: steamid,
+        displayName: profile.personaname || "Steam User",
+        photos: [
+          { value: profile.avatar },
+          { value: profile.avatarmedium },
+          { value: profile.avatarfull },
+        ],
+      });
     },
   ),
 );
@@ -53,4 +71,4 @@ passport.use(
 const routes = require("./routes")(passport, libraryCache, BASE_PATH);
 app.use(BASE_PATH, routes);
 
-module.exports = { app, warmUpAuthToken };
+module.exports = { app, initHltbSession, shutdownHltbSession };

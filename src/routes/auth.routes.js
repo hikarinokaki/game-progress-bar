@@ -12,7 +12,7 @@ module.exports = (passport, libraryCache, BASE_PATH) => {
   router.get("/steam", authController.steamLogin);
   router.get(
     "/steam/return",
-    passport.authenticate("steam", { failureRedirect: BASE_PATH + "/" }), // Passport authenticate needs to be here to use BASE_PATH for failureRedirect
+    passport.authenticate("steam-openid", { failureRedirect: BASE_PATH + "/" }), // Passport authenticate needs to be here to use BASE_PATH for failureRedirect
     authController.steamCallback,
   );
   router.get("/logout", authController.logout);

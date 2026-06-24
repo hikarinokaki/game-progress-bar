@@ -9,7 +9,7 @@ module.exports = (passport, libraryCache, BASE_PATH) => {
     });
   };
 
-  const steamLogin = passport.authenticate("steam", {
+  const steamLogin = passport.authenticate("steam-openid", {
     failureRedirect: BASE_PATH + "/",
   });
 

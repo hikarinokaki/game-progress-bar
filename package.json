@@ -10,8 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier --ignore-path .gitignore \"**/*.+(ts|tsx|js|jsx|json|css|md|mdx|html)\"",
     "format": "npm run prettier -- --write",
-    "check-format": "npm run prettier -- --list-different",
-    "postinstall": "patch-package"
+    "check-format": "npm run prettier -- --list-different"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +22,7 @@
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "passport": "^0.7.0",
-    "passport-steam": "^1.0.18",
+    "passport-steam-openid": "^1.1.10",
     "puppeteer": "^24.37.3"
   },
   "devDependencies": {
@@ -31,7 +30,6 @@
     "esbuild": "^0.27.3",
     "eslint": "^10.0.0",
     "globals": "^17.3.0",
-    "patch-package": "^8.0.1",
     "prettier": "^3.8.1"
   }
 }
