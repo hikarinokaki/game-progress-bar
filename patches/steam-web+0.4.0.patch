@@ -1,0 +1,19 @@
+diff --git a/node_modules/steam-web/lib/steam.js b/node_modules/steam-web/lib/steam.js
+index 902c920..32bc69e 100755
+--- a/node_modules/steam-web/lib/steam.js
++++ b/node_modules/steam-web/lib/steam.js
+@@ -1,4 +1,4 @@
+-var http = require('http');
++var http = require('https');
+ var qs = require('qs');
+ 
+ /*
+@@ -448,7 +448,7 @@ steam.prototype.makeRequest = function(obj) {
+   path += qs.stringify(obj);
+   var options = {
+     host: 'api.steampowered.com',
+-    port: 80,
++    port: 443,
+     path: path
+   };
+   var req = http.get(options, function(res) {

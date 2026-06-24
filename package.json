@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prettier": "prettier --ignore-path .gitignore \"**/*.+(ts|tsx|js|jsx|json|css|md|mdx|html)\"",
     "format": "npm run prettier -- --write",
-    "check-format": "npm run prettier -- --list-different"
+    "check-format": "npm run prettier -- --list-different",
+    "postinstall": "patch-package"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +31,7 @@
     "esbuild": "^0.27.3",
     "eslint": "^10.0.0",
     "globals": "^17.3.0",
+    "patch-package": "^8.0.1",
     "prettier": "^3.8.1"
   }
 }
