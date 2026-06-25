@@ -9,6 +9,9 @@ import {
   setStyle,
   setDisplayFormat,
   setAccentColor,
+  setBgColor,
+  setDirection,
+  setInvertDisplay,
 } from "./state.js";
 import {
   startInput,
@@ -21,6 +24,9 @@ import {
   styleSelect,
   displayFormatSelect,
   accentColorInput,
+  bgColorInput,
+  directionSelect,
+  invertDisplayCheckbox,
 } from "./domElements.js";
 import {
   calculatePercent,
@@ -45,6 +51,9 @@ export function render() {
   styleSelect.value = state.style;
   displayFormatSelect.value = state.displayFormat;
   accentColorInput.value = state.accentColor;
+  bgColorInput.value = state.bgColor;
+  directionSelect.value = state.direction;
+  invertDisplayCheckbox.checked = state.invertDisplay;
 }
 
 export function initProgressBar() {
@@ -69,6 +78,24 @@ export function initProgressBar() {
   // Accent Color
   accentColorInput.addEventListener("input", (e) => {
     setAccentColor(e.target.value);
+    render();
+  });
+
+  // Track Color
+  bgColorInput.addEventListener("input", (e) => {
+    setBgColor(e.target.value);
+    render();
+  });
+
+  // Direction
+  directionSelect.addEventListener("change", (e) => {
+    setDirection(e.target.value);
+    render();
+  });
+
+  // Invert Display
+  invertDisplayCheckbox.addEventListener("change", (e) => {
+    setInvertDisplay(e.target.checked);
     render();
   });
 

@@ -147,6 +147,9 @@
       let style = params.get("style") || "progress";
       let displayFormat = params.get("displayFormat") || "percentage";
       let accentColor = params.get("accentColor") || "#4CAF50";
+      let bgColor = params.get("bgColor") || "#ddd";
+      let direction = params.get("direction") || "increment";
+      let invertDisplay = params.get("invertDisplay") === "true";
 
       if (isNaN(start) || start < 0) start = 0;
       if (isNaN(max) || max <= 0) max = 100;
@@ -168,6 +171,12 @@
                         progress::-moz-progress-bar {
                             background-color: ${accentColor};
                         }
+                        progress::-webkit-progress-bar {
+                            background-color: ${bgColor};
+                        }
+                        progress {
+                            background-color: ${bgColor};
+                        }
                     `;
             document.head.appendChild(styleEl);
 
@@ -176,6 +185,7 @@
           update(element, value, max) {
             element.max = max;
             element.value = value;
+            element.dir = direction === "countdown" ? "rtl" : "ltr";
           },
           getElement(container) {
             return container.querySelector("progress");
@@ -185,13 +195,14 @@
           init(container) {
             const div = document.createElement("div");
             div.className = "progress-bar-gradient";
-            div.style.background = `linear-gradient(${accentColor} 0 0) 0/0% no-repeat #ddd`;
+            div.style.background = `linear-gradient(${accentColor} 0 0) 0/0% no-repeat ${bgColor}`;
             container.appendChild(div);
             return div;
           },
           update(element, value, max) {
             const percent = max > 0 ? (value / max) * 100 : 0;
-            element.style.backgroundSize = `${percent}% 100%`;
+            const pos = direction === "countdown" ? "100%" : "0";
+            element.style.background = `linear-gradient(${accentColor} 0 0) ${pos}/${percent}% no-repeat ${bgColor}`;
           },
           getElement(container) {
             return container.querySelector(".progress-bar-gradient");
@@ -201,7 +212,7 @@
           init(container) {
             const div = document.createElement("div");
             div.className = "progress-bar-steps";
-            div.style.background = `linear-gradient(${accentColor} 0 0) bottom/100% 0% no-repeat #ddd`;
+            div.style.background = `linear-gradient(${accentColor} 0 0) bottom/100% 0% no-repeat ${bgColor}`;
             container.appendChild(div);
             return div;
           },
@@ -236,6 +247,11 @@
         accentColor = "#4CAF50";
       }
 
+      if (!/^#[0-9A-Fa-f]{6}$/.test(bgColor)) {
+        console.warn(`Invalid bgColor "${bgColor}", falling back to "#ddd"`);
+        bgColor = "#ddd";
+      }
+
       const container = document.getElementById("progressContainer");
       const percentageText = document.getElementById("percentage");
       const titleElement = document.getElementById("title");
@@ -255,13 +271,13 @@
       }
 
       function updateDisplay(value, maxValue) {
+        const displayVal = invertDisplay ? maxValue - value : value;
         if (displayFormat === "percentage") {
-          const percent = Math.round((value / maxValue) * 100);
+          const percent = Math.round((displayVal / maxValue) * 100);
           percentageText.textContent = percent + "%";
           percentageText.style.display = "block";
         } else if (displayFormat === "time") {
-          const remaining = maxValue - value;
-          percentageText.textContent = `${secondsToNaturalTime(value)} / ${secondsToNaturalTime(maxValue)}`;
+          percentageText.textContent = `${secondsToNaturalTime(displayVal)} / ${secondsToNaturalTime(maxValue)}`;
           percentageText.style.display = "block";
         } else if (displayFormat === "none") {
           percentageText.style.display = "none";
@@ -276,7 +292,10 @@
         newParams.set("style", style);
         newParams.set("displayFormat", displayFormat);
         newParams.set("accentColor", accentColor);
+        newParams.set("bgColor", bgColor);
         newParams.set("theme", theme);
+        newParams.set("direction", direction);
+        newParams.set("invertDisplay", invertDisplay.toString());
         const newUrl = window.location.pathname + "?" + newParams.toString();
         history.replaceState(null, "", newUrl);
       }
@@ -286,14 +305,26 @@
       updateURL(start, max);
 
       let currentValue = start;
+      const isCountdown = direction === "countdown";
       const interval = setInterval(() => {
-        if (currentValue < max) {
-          currentValue++;
-          updateProgress(currentValue, max);
-          updateDisplay(currentValue, max);
-          updateURL(currentValue, max);
+        if (isCountdown) {
+          if (currentValue > 0) {
+            currentValue--;
+            updateProgress(currentValue, max);
+            updateDisplay(currentValue, max);
+            updateURL(currentValue, max);
+          } else {
+            clearInterval(interval);
+          }
         } else {
-          clearInterval(interval);
+          if (currentValue < max) {
+            currentValue++;
+            updateProgress(currentValue, max);
+            updateDisplay(currentValue, max);
+            updateURL(currentValue, max);
+          } else {
+            clearInterval(interval);
+          }
         }
       }, 1000);
     </script>

@@ -19,12 +19,16 @@
           alt="Sign in through Steam"
         />
       </a>
+      <p class="auth-hint">
+        Login with Steam OpenID to fetch your playtime. Your profile and game
+        details have to be set to public.
+      </p>
     </div>
     <header>
       <div id="app-section" style="display: none">
         <div class="header-top">
           <h2 id="welcome"></h2>
-          <button onclick="window.location = 'logout'">Logout</button>
+          <button onclick="window.location.href = 'auth/logout'">Logout</button>
         </div>
         <br /><br />
         <div class="search-wrapper">
@@ -73,6 +77,19 @@
             <option value="medieval">Medieval</option>
           </select>
         </div>
+
+        <div class="direction-row">
+          <label for="directionSelect">Direction:</label>
+          <select id="directionSelect">
+            <option value="increment">Count Up</option>
+            <option value="countdown">Count Down</option>
+          </select>
+        </div>
+
+        <div class="invert-row">
+          <input type="checkbox" id="invertDisplayCheckbox" />
+          <label for="invertDisplayCheckbox">Invert Display</label>
+        </div>
       </div>
       <div class="col">
         <label>
@@ -92,6 +109,11 @@
         <label>
           Accent Color:
           <input type="color" id="accentColorInput" value="#4CAF50" />
+        </label>
+
+        <label>
+          Track Color:
+          <input type="color" id="bgColorInput" value="#ddd" />
         </label>
 
         <label>

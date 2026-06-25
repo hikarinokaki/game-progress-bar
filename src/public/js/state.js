@@ -9,6 +9,9 @@ export const state = {
   style: "progress",
   displayFormat: "percentage",
   accentColor: "#4CAF50",
+  bgColor: "#ddd",
+  direction: "increment",
+  invertDisplay: false,
 };
 
 export function setStart(value) {
@@ -39,4 +42,16 @@ export function setDisplayFormat(value) {
 
 export function setAccentColor(value) {
   state.accentColor = value;
+}
+
+export function setBgColor(value) {
+  state.bgColor = value;
+}
+
+export function setDirection(value) {
+  state.direction = value;
+}
+
+export function setInvertDisplay(value) {
+  state.invertDisplay = value;
 }

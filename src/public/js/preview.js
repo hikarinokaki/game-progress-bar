@@ -10,7 +10,10 @@ function buildPreviewURL() {
     style: state.style,
     displayFormat: state.displayFormat,
     accentColor: state.accentColor,
+    bgColor: state.bgColor,
     theme: getTheme(),
+    direction: state.direction,
+    invertDisplay: state.invertDisplay.toString(),
   });
   return `bar.html?${params.toString()}`;
 }

@@ -19,6 +19,11 @@ export const displayFormatSelect = document.getElementById(
   "displayFormatSelect",
 );
 export const accentColorInput = document.getElementById("accentColorInput");
+export const bgColorInput = document.getElementById("bgColorInput");
+export const directionSelect = document.getElementById("directionSelect");
+export const invertDisplayCheckbox = document.getElementById(
+  "invertDisplayCheckbox",
+);
 
 export const previewBtn = document.getElementById("previewBtn");
 export const copyBtn = document.getElementById("copyBtn");
