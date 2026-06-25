@@ -8,7 +8,11 @@ import {
   resultsDiv,
   selectedGameDiv,
 } from "./domElements.js";
-import { checkAuth, searchGames, fetchMaxTime as fetchMaxTimeApi } from "./api.js";
+import {
+  checkAuth,
+  searchGames,
+  fetchMaxTime as fetchMaxTimeApi,
+} from "./api.js";
 import { secondsToText } from "./utils.js";
 import { state, setStart, setMax, setTitle } from "./state.js";
 import { render as renderProgressBar } from "./progressBar.js"; // Will be created later
@@ -207,10 +211,12 @@ export function initSteamSearch() {
     if (data.authenticated) {
       authSection.style.display = "none";
       appSection.style.display = "block";
+      selectedGameDiv.style.display = "";
       welcome.innerText = `Welcome, ${data.name}`;
     } else {
       authSection.style.display = "block";
       appSection.style.display = "none";
+      selectedGameDiv.style.display = "none";
     }
   });
 }

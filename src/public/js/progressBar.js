@@ -22,7 +22,12 @@ import {
   displayFormatSelect,
   accentColorInput,
 } from "./domElements.js";
-import { calculatePercent, secondsToText, parseTimeToSeconds, addScroll } from "./utils.js";
+import {
+  calculatePercent,
+  secondsToText,
+  parseTimeToSeconds,
+  addScroll,
+} from "./utils.js";
 
 export function render() {
   startInput.value = state.start;

@@ -1,7 +1,6 @@
-// src/public/js/preview.js
-
 import { state } from "./state.js";
 import { previewBtn, copyBtn, previewFrame } from "./domElements.js";
+import { getTheme } from "./theme.js";
 
 function buildPreviewURL() {
   const params = new URLSearchParams({
@@ -11,6 +10,7 @@ function buildPreviewURL() {
     style: state.style,
     displayFormat: state.displayFormat,
     accentColor: state.accentColor,
+    theme: getTheme(),
   });
   return `bar.html?${params.toString()}`;
 }

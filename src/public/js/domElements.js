@@ -15,9 +15,13 @@ export const maxTimeInput = document.getElementById("maxTimeInput");
 export const startSlider = document.getElementById("startSlider");
 export const titleInput = document.getElementById("titleInput");
 export const styleSelect = document.getElementById("styleSelect");
-export const displayFormatSelect = document.getElementById("displayFormatSelect");
+export const displayFormatSelect = document.getElementById(
+  "displayFormatSelect",
+);
 export const accentColorInput = document.getElementById("accentColorInput");
 
 export const previewBtn = document.getElementById("previewBtn");
 export const copyBtn = document.getElementById("copyBtn");
 export const previewFrame = document.getElementById("previewFrame");
+
+export const themeSelect = document.getElementById("themeSelect");

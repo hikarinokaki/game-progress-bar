@@ -4,6 +4,8 @@
     <title>Steam Library Search</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -17,22 +19,24 @@
           alt="Sign in through Steam"
         />
       </a>
-            </div >
-            <header>
-              <div id="app-section" style="display: none">
-                <h2 id="welcome"></h2>
-                <button onclick="window.location = 'logout'">Logout</button>
-                <br /><br />
-                <div class="search-wrapper">
-                  <input type="text" id="search" placeholder="Search your games..." />
-                  <div id="results"></div>
-                </div>
-              </div>
-        
-              <div id="selected-game"></div>
-            </header>
-            <hr />
-            <h2 id="configHeading">Progress Bar Configuration</h2>
+    </div>
+    <header>
+      <div id="app-section" style="display: none">
+        <div class="header-top">
+          <h2 id="welcome"></h2>
+          <button onclick="window.location = 'logout'">Logout</button>
+        </div>
+        <br /><br />
+        <div class="search-wrapper">
+          <input type="text" id="search" placeholder="Search your games..." />
+          <div id="results"></div>
+        </div>
+      </div>
+
+      <div id="selected-game"></div>
+    </header>
+    <hr />
+    <h2 id="configHeading">Progress Bar Configuration</h2>
     <main class="container">
       <div class="col">
         <label id="startInputLabel" style="display: none">
@@ -60,6 +64,14 @@
           </div>
 
           <input type="range" id="startSlider" />
+        </div>
+
+        <div class="theme-row">
+          <label for="themeSelect">Theme:</label>
+          <select id="themeSelect">
+            <option value="default">Default</option>
+            <option value="medieval">Medieval</option>
+          </select>
         </div>
       </div>
       <div class="col">
