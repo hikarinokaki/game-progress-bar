@@ -7,7 +7,7 @@ export const stepsStyle = {
     titlePosition: true,
     titleFontSize: true,
     timePosition: true,
-    orientation: true,
+    orientation: false,
     maskImageUrl: false,
   },
 

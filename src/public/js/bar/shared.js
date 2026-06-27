@@ -178,7 +178,7 @@ function positionElements(params) {
   }
 }
 
-export function initBar() {
+export async function initBar() {
   const params = parseParams();
 
   const container = document.getElementById("progressContainer");
@@ -187,7 +187,7 @@ export function initBar() {
   setupTitle(params);
 
   const style = getStyle(params.style);
-  const progressElement = style.init(container, params);
+  const progressElement = await style.init(container, params);
 
   positionElements(params);
 

@@ -1,3 +1,19 @@
+async function resolveMaskUrl(url) {
+  if (!url.toLowerCase().endsWith(".svg")) return url;
+
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    const encoded = encodeURIComponent(text)
+      .replace(/'/g, "%27")
+      .replace(/"/g, "%22");
+    return `data:image/svg+xml;utf8,${encoded}`;
+  } catch {
+    console.warn("Failed to fetch SVG mask, falling back to URL");
+    return url;
+  }
+}
+
 export const maskStyle = {
   name: "mask",
   displayName: "Image Mask",
@@ -11,7 +27,9 @@ export const maskStyle = {
     maskImageUrl: true,
   },
 
-  init(container, params) {
+  async init(container, params) {
+    const maskUri = await resolveMaskUrl(params.maskImageUrl);
+
     const wrap = document.createElement("div");
     wrap.className = "progress-bar-mask";
     wrap.style.cssText = `
@@ -40,11 +58,11 @@ export const maskStyle = {
       position: absolute;
       inset: 0;
       background-color: ${params.accentColor};
-      -webkit-mask-image: url(${params.maskImageUrl});
+      -webkit-mask-image: url(${maskUri});
       -webkit-mask-size: contain;
       -webkit-mask-position: center;
       -webkit-mask-repeat: no-repeat;
-      mask-image: url(${params.maskImageUrl});
+      mask-image: url(${maskUri});
       mask-size: contain;
       mask-position: center;
       mask-repeat: no-repeat;
