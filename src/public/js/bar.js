@@ -10,6 +10,4 @@ registerStyle(gradientStyle);
 registerStyle(stepsStyle);
 registerStyle(maskStyle);
 
-document.addEventListener("DOMContentLoaded", () => {
-  initBar().catch(console.error);
-});
+document.addEventListener("DOMContentLoaded", initBar);
