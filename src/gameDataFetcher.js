@@ -20,7 +20,15 @@ async function initHltbSession() {
 
     browser = await puppeteer.launch({
       headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-background-networking",
+        "--disable-sync",
+        "--no-zygote",
+      ],
     });
 
     hltbPage = await browser.newPage();
@@ -45,13 +53,10 @@ async function initHltbSession() {
       }
     });
 
-    await hltbPage.goto(`${HLTB_BASE_URL}/?q=test`, {
-      waitUntil: "networkidle0",
-      timeout: 30000,
+    await hltbPage.goto(`${HLTB_BASE_URL}/`, {
+      waitUntil: "domcontentloaded",
+      timeout: 15000,
     });
-
-    // Wait for session to fully establish
-    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     sessionReady = true;
     console.log("HLTB session established");
@@ -86,14 +91,18 @@ async function searchGameOnHltb(searchTerms) {
     }, 20000);
   });
 
+  console.time(`hltb-search:${query}`);
+
   // Navigate to the search page — HLTB's own JS will call api/bleed
   await hltbPage.goto(`${HLTB_BASE_URL}/?q=${query}`, {
-    waitUntil: "networkidle0",
-    timeout: 30000,
+    waitUntil: "domcontentloaded",
+    timeout: 15000,
   });
 
   // Wait for the response to be captured
   const data = await searchResult;
+
+  console.timeEnd(`hltb-search:${query}`);
   return data;
 }
 
