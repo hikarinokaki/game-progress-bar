@@ -91,6 +91,7 @@
           <label for="invertDisplayCheckbox">Invert Display</label>
         </div>
       </div>
+
       <div class="col">
         <label>
           Title:
@@ -103,6 +104,7 @@
             <option value="progress">HTML Progress Bar</option>
             <option value="gradient">CSS Gradient Animation</option>
             <option value="steps">Step-wise Circle</option>
+            <option value="mask">Image Mask</option>
           </select>
         </label>
 
@@ -124,6 +126,75 @@
             <option value="none">None (hidden)</option>
           </select>
         </label>
+      </div>
+
+      <div class="col">
+        <label>
+          Bar Width:
+          <input
+            type="text"
+            id="barWidthInput"
+            value="80%"
+            placeholder="e.g. 80%, 600px"
+          />
+        </label>
+
+        <label>
+          Bar Height:
+          <input
+            type="text"
+            id="barHeightInput"
+            value="60px"
+            placeholder="e.g. 60px, 4rem"
+          />
+        </label>
+
+        <label>
+          Title Position:
+          <select id="titlePositionSelect">
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
+            <option value="hidden">Hidden</option>
+          </select>
+        </label>
+
+        <label>
+          Title Font Size:
+          <select id="titleFontSizeSelect">
+            <option value="1.5em">1.5em</option>
+            <option value="2em">2em</option>
+            <option value="2.5em" selected>2.5em</option>
+            <option value="3em">3em</option>
+          </select>
+        </label>
+
+        <label>
+          Time Position:
+          <select id="timePositionSelect">
+            <option value="bottom">Below Bar</option>
+            <option value="top">Above Bar</option>
+            <option value="hidden">Hidden</option>
+          </select>
+        </label>
+
+        <label>
+          Orientation:
+          <select id="orientationSelect">
+            <option value="horizontal">Horizontal</option>
+            <option value="vertical">Vertical</option>
+          </select>
+        </label>
+
+        <div class="option-row" id="maskImageRow" style="display: none">
+          <label>
+            Mask Image URL:
+            <input
+              type="url"
+              id="maskImageUrlInput"
+              placeholder="https://example.com/image.png"
+            />
+          </label>
+        </div>
       </div>
     </main>
 

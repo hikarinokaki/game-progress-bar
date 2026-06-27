@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Progress Bar With Live URL Updates</title>
+    <title>Progress Bar</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -47,7 +47,7 @@
         color: var(--bar-title-color);
         text-shadow: var(--bar-shadow);
         font-size: 2.5em;
-        margin: 0px;
+        margin: 0;
       }
 
       #percentage {
@@ -75,16 +75,13 @@
         background-color: var(--bar-fill-bg);
         transition: background-color 0.3s;
       }
-
       progress::-moz-progress-bar {
         background-color: var(--bar-fill-bg);
         transition: background-color 0.3s;
       }
-
       progress::-webkit-progress-bar {
         background-color: var(--bar-track-bg);
       }
-
       progress {
         background-color: var(--bar-track-bg);
       }
@@ -92,7 +89,7 @@
       .progress-bar-gradient {
         width: 100%;
         height: 60px;
-        background: linear-gradient(var(--bar-fill-bg) 0 0) 0 / 0% no-repeat
+        background: linear-gradient(var(--bar-fill-bg) 0 0) 0/0% no-repeat
           var(--bar-track-bg);
         border-radius: 5px;
         transition: background-size 0.3s ease;
@@ -102,11 +99,16 @@
         width: 200px;
         height: 200px;
         border-radius: 50%;
-        -webkit-mask: linear-gradient(0deg, #000 55%, #0000 0) bottom / 100%
+        -webkit-mask: linear-gradient(0deg, #000 55%, #0000 0) bottom/100%
           18.18%;
-        mask: linear-gradient(0deg, #000 55%, #0000 0) bottom / 100% 18.18%;
-        background: linear-gradient(var(--bar-fill-bg) 0 0) bottom / 100% 0%
+        mask: linear-gradient(0deg, #000 55%, #0000 0) bottom/100% 18.18%;
+        background: linear-gradient(var(--bar-fill-bg) 0 0) bottom/100% 0%
           no-repeat var(--bar-track-bg);
+      }
+
+      .progress-bar-mask {
+        position: relative;
+        overflow: hidden;
       }
     </style>
   </head>
@@ -115,218 +117,6 @@
     <div id="progressContainer"></div>
     <p id="percentage"></p>
 
-    <script>
-      function secondsToNaturalTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const remainingMinutes = minutes % 60;
-        const remainingSeconds = seconds % 60;
-
-        if (hours > 0 && remainingMinutes > 0) {
-          return `${hours}h ${remainingMinutes}m`;
-        }
-        if (hours > 0) {
-          return `${hours}h`;
-        }
-        if (remainingMinutes > 0) {
-          return `${remainingMinutes}m`;
-        }
-        return `${remainingSeconds}s`;
-      }
-
-      const params = new URLSearchParams(window.location.search);
-
-      const theme = params.get("theme") || "default";
-      if (theme !== "default") {
-        document.documentElement.setAttribute("data-theme", theme);
-      }
-
-      let start = parseInt(params.get("start"));
-      let max = parseInt(params.get("max"));
-      let title = params.get("title") || "";
-      let style = params.get("style") || "progress";
-      let displayFormat = params.get("displayFormat") || "percentage";
-      let accentColor = params.get("accentColor") || "#4CAF50";
-      let bgColor = params.get("bgColor") || "#ddd";
-      let direction = params.get("direction") || "increment";
-      let invertDisplay = params.get("invertDisplay") === "true";
-
-      if (isNaN(start) || start < 0) start = 0;
-      if (isNaN(max) || max <= 0) max = 100;
-      if (start > max) start = max;
-
-      const ProgressStyles = {
-        progress: {
-          init(container) {
-            const progress = document.createElement("progress");
-            progress.className = "progress-bar-html";
-            container.appendChild(progress);
-
-            const styleEl = document.createElement("style");
-            styleEl.id = "progress-color-style";
-            styleEl.textContent = `
-                        progress::-webkit-progress-value {
-                            background-color: ${accentColor};
-                        }
-                        progress::-moz-progress-bar {
-                            background-color: ${accentColor};
-                        }
-                        progress::-webkit-progress-bar {
-                            background-color: ${bgColor};
-                        }
-                        progress {
-                            background-color: ${bgColor};
-                        }
-                    `;
-            document.head.appendChild(styleEl);
-
-            return progress;
-          },
-          update(element, value, max) {
-            element.max = max;
-            element.value = value;
-            element.dir = direction === "countdown" ? "rtl" : "ltr";
-          },
-          getElement(container) {
-            return container.querySelector("progress");
-          },
-        },
-        gradient: {
-          init(container) {
-            const div = document.createElement("div");
-            div.className = "progress-bar-gradient";
-            div.style.background = `linear-gradient(${accentColor} 0 0) 0/0% no-repeat ${bgColor}`;
-            container.appendChild(div);
-            return div;
-          },
-          update(element, value, max) {
-            const percent = max > 0 ? (value / max) * 100 : 0;
-            const pos = direction === "countdown" ? "100%" : "0";
-            element.style.background = `linear-gradient(${accentColor} 0 0) ${pos}/${percent}% no-repeat ${bgColor}`;
-          },
-          getElement(container) {
-            return container.querySelector(".progress-bar-gradient");
-          },
-        },
-        steps: {
-          init(container) {
-            const div = document.createElement("div");
-            div.className = "progress-bar-steps";
-            div.style.background = `linear-gradient(${accentColor} 0 0) bottom/100% 0% no-repeat ${bgColor}`;
-            container.appendChild(div);
-            return div;
-          },
-          update(element, value, max) {
-            const percent = max > 0 ? (value / max) * 100 : 0;
-            const bgSize = (percent / 100) * 115;
-            element.style.backgroundSize = `100% ${bgSize}%`;
-          },
-          getElement(container) {
-            return container.querySelector(".progress-bar-steps");
-          },
-        },
-      };
-
-      if (!ProgressStyles[style]) {
-        console.warn(`Unknown style "${style}", falling back to "progress"`);
-        style = "progress";
-      }
-
-      const validFormats = ["percentage", "time", "none"];
-      if (!validFormats.includes(displayFormat)) {
-        console.warn(
-          `Unknown displayFormat "${displayFormat}", falling back to "percentage"`,
-        );
-        displayFormat = "percentage";
-      }
-
-      if (!/^#[0-9A-Fa-f]{6}$/.test(accentColor)) {
-        console.warn(
-          `Invalid accentColor "${accentColor}", falling back to "#4CAF50"`,
-        );
-        accentColor = "#4CAF50";
-      }
-
-      if (!/^#[0-9A-Fa-f]{6}$/.test(bgColor)) {
-        console.warn(`Invalid bgColor "${bgColor}", falling back to "#ddd"`);
-        bgColor = "#ddd";
-      }
-
-      const container = document.getElementById("progressContainer");
-      const percentageText = document.getElementById("percentage");
-      const titleElement = document.getElementById("title");
-
-      if (title) {
-        titleElement.textContent = title;
-        titleElement.style.display = "block";
-      } else {
-        titleElement.style.display = "none";
-      }
-
-      const styleRenderer = ProgressStyles[style];
-      const progressElement = styleRenderer.init(container);
-
-      function updateProgress(value, maxValue) {
-        styleRenderer.update(progressElement, value, maxValue);
-      }
-
-      function updateDisplay(value, maxValue) {
-        const displayVal = invertDisplay ? maxValue - value : value;
-        if (displayFormat === "percentage") {
-          const percent = Math.round((displayVal / maxValue) * 100);
-          percentageText.textContent = percent + "%";
-          percentageText.style.display = "block";
-        } else if (displayFormat === "time") {
-          percentageText.textContent = `${secondsToNaturalTime(displayVal)} / ${secondsToNaturalTime(maxValue)}`;
-          percentageText.style.display = "block";
-        } else if (displayFormat === "none") {
-          percentageText.style.display = "none";
-        }
-      }
-
-      function updateURL(value, maxValue) {
-        const newParams = new URLSearchParams();
-        newParams.set("start", value);
-        newParams.set("max", maxValue);
-        newParams.set("title", title);
-        newParams.set("style", style);
-        newParams.set("displayFormat", displayFormat);
-        newParams.set("accentColor", accentColor);
-        newParams.set("bgColor", bgColor);
-        newParams.set("theme", theme);
-        newParams.set("direction", direction);
-        newParams.set("invertDisplay", invertDisplay.toString());
-        const newUrl = window.location.pathname + "?" + newParams.toString();
-        history.replaceState(null, "", newUrl);
-      }
-
-      updateProgress(start, max);
-      updateDisplay(start, max);
-      updateURL(start, max);
-
-      let currentValue = start;
-      const isCountdown = direction === "countdown";
-      const interval = setInterval(() => {
-        if (isCountdown) {
-          if (currentValue > 0) {
-            currentValue--;
-            updateProgress(currentValue, max);
-            updateDisplay(currentValue, max);
-            updateURL(currentValue, max);
-          } else {
-            clearInterval(interval);
-          }
-        } else {
-          if (currentValue < max) {
-            currentValue++;
-            updateProgress(currentValue, max);
-            updateDisplay(currentValue, max);
-            updateURL(currentValue, max);
-          } else {
-            clearInterval(interval);
-          }
-        }
-      }, 1000);
-    </script>
+    <script src="dist/bar.bundle.js"></script>
   </body>
 </html>

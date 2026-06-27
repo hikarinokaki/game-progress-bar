@@ -14,7 +14,18 @@ function buildPreviewURL() {
     theme: getTheme(),
     direction: state.direction,
     invertDisplay: state.invertDisplay.toString(),
+    barWidth: state.barWidth,
+    barHeight: state.barHeight,
+    titlePosition: state.titlePosition,
+    timePosition: state.timePosition,
+    titleFontSize: state.titleFontSize,
+    orientation: state.orientation,
   });
+
+  if (state.maskImageUrl) {
+    params.set("maskImageUrl", state.maskImageUrl);
+  }
+
   return `bar.html?${params.toString()}`;
 }
 

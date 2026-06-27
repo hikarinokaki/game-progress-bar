@@ -1,5 +1,3 @@
-// src/public/js/progressBar.js
-
 import {
   state,
   setStart,
@@ -12,6 +10,13 @@ import {
   setBgColor,
   setDirection,
   setInvertDisplay,
+  setBarWidth,
+  setBarHeight,
+  setTitlePosition,
+  setTimePosition,
+  setTitleFontSize,
+  setOrientation,
+  setMaskImageUrl,
 } from "./state.js";
 import {
   startInput,
@@ -27,6 +32,13 @@ import {
   bgColorInput,
   directionSelect,
   invertDisplayCheckbox,
+  barWidthInput,
+  barHeightInput,
+  titlePositionSelect,
+  timePositionSelect,
+  titleFontSizeSelect,
+  orientationSelect,
+  maskImageUrlInput,
 } from "./domElements.js";
 import {
   calculatePercent,
@@ -34,6 +46,31 @@ import {
   parseTimeToSeconds,
   addScroll,
 } from "./utils.js";
+import { registerStyle, getSupportedOptions } from "./bar/registry.js";
+import { progressStyle } from "./bar/progressStyle.js";
+import { gradientStyle } from "./bar/gradientStyle.js";
+import { stepsStyle } from "./bar/stepsStyle.js";
+import { maskStyle } from "./bar/maskStyle.js";
+
+registerStyle(progressStyle);
+registerStyle(gradientStyle);
+registerStyle(stepsStyle);
+registerStyle(maskStyle);
+
+function syncSupportedOptions() {
+  const options = getSupportedOptions(state.style);
+  document.getElementById("maskImageRow").style.display = options.maskImageUrl
+    ? ""
+    : "none";
+  // Hide parent labels for un-supported options
+  const label = (id) => document.getElementById(id)?.closest("label");
+  const lbl = label("barWidthInput");
+  if (lbl) lbl.style.display = options.barWidth ? "" : "none";
+  const hlbl = label("barHeightInput");
+  if (hlbl) hlbl.style.display = options.barHeight ? "" : "none";
+  const olbl = label("orientationSelect");
+  if (olbl) olbl.style.display = options.orientation ? "" : "none";
+}
 
 export function render() {
   startInput.value = state.start;
@@ -54,52 +91,54 @@ export function render() {
   bgColorInput.value = state.bgColor;
   directionSelect.value = state.direction;
   invertDisplayCheckbox.checked = state.invertDisplay;
+
+  barWidthInput.value = state.barWidth;
+  barHeightInput.value = state.barHeight;
+  titlePositionSelect.value = state.titlePosition;
+  timePositionSelect.value = state.timePosition;
+  titleFontSizeSelect.value = state.titleFontSize;
+  orientationSelect.value = state.orientation;
+  maskImageUrlInput.value = state.maskImageUrl;
+
+  syncSupportedOptions();
 }
 
 export function initProgressBar() {
-  // Title
   titleInput.addEventListener("input", (e) => {
     setTitle(e.target.value);
     render();
   });
 
-  // Style
   styleSelect.addEventListener("change", (e) => {
     setStyle(e.target.value);
     render();
   });
 
-  // Display Format
   displayFormatSelect.addEventListener("change", (e) => {
     setDisplayFormat(e.target.value);
     render();
   });
 
-  // Accent Color
   accentColorInput.addEventListener("input", (e) => {
     setAccentColor(e.target.value);
     render();
   });
 
-  // Track Color
   bgColorInput.addEventListener("input", (e) => {
     setBgColor(e.target.value);
     render();
   });
 
-  // Direction
   directionSelect.addEventListener("change", (e) => {
     setDirection(e.target.value);
     render();
   });
 
-  // Invert Display
   invertDisplayCheckbox.addEventListener("change", (e) => {
     setInvertDisplay(e.target.checked);
     render();
   });
 
-  // Numeric Inputs
   startInput.addEventListener("input", (e) => {
     setStart(e.target.value);
     render();
@@ -113,7 +152,6 @@ export function initProgressBar() {
     render();
   });
 
-  // Time text inputs
   startTimeInput.addEventListener("change", (e) => {
     const seconds = parseTimeToSeconds(e.target.value);
     if (seconds !== null) {
@@ -130,23 +168,56 @@ export function initProgressBar() {
     }
   });
 
-  // Slider
   startSlider.addEventListener("input", (e) => {
     setStart(e.target.value);
     render();
   });
 
-  // Scroll support
   addScroll(percentInput, (d) => {
     setPercent(calculatePercent(state.start, state.max) + d);
     render();
   });
 
   addScroll(startSlider, (d) => {
-    const increment = Math.max(1, Math.round(state.max * 0.01)); // 1% of max, minimum 1
+    const increment = Math.max(1, Math.round(state.max * 0.01));
     setStart(state.start + d * increment);
     render();
   });
 
-  render(); // Initial render
+  barWidthInput.addEventListener("change", (e) => {
+    setBarWidth(e.target.value);
+    render();
+  });
+
+  barHeightInput.addEventListener("change", (e) => {
+    setBarHeight(e.target.value);
+    render();
+  });
+
+  titlePositionSelect.addEventListener("change", (e) => {
+    setTitlePosition(e.target.value);
+    render();
+  });
+
+  timePositionSelect.addEventListener("change", (e) => {
+    setTimePosition(e.target.value);
+    render();
+  });
+
+  titleFontSizeSelect.addEventListener("change", (e) => {
+    setTitleFontSize(e.target.value);
+    render();
+  });
+
+  orientationSelect.addEventListener("change", (e) => {
+    setOrientation(e.target.value);
+    render();
+  });
+
+  maskImageUrlInput.addEventListener("change", (e) => {
+    setMaskImageUrl(e.target.value);
+    render();
+  });
+
+  render();
 }

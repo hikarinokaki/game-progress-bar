@@ -377,6 +377,26 @@ main {
   cursor: pointer;
 }
 
+.option-row {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.option-row label {
+  margin: 0;
+  white-space: nowrap;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.option-row input {
+  flex: 1;
+}
+
 .preview-section {
   max-width: 56rem;
   margin: 2.5rem auto;

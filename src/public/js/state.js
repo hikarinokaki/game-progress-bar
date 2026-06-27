@@ -1,5 +1,3 @@
-// src/public/js/state.js
-
 import { clamp, calculatePercent } from "./utils.js";
 
 export const state = {
@@ -12,6 +10,13 @@ export const state = {
   bgColor: "#ddd",
   direction: "increment",
   invertDisplay: false,
+  barWidth: "80%",
+  barHeight: "60px",
+  titlePosition: "top",
+  timePosition: "bottom",
+  titleFontSize: "2.5em",
+  orientation: "horizontal",
+  maskImageUrl: "",
 };
 
 export function setStart(value) {
@@ -19,8 +24,8 @@ export function setStart(value) {
 }
 
 export function setMax(value) {
-  state.max = clamp(Number(value), 0, Infinity); // Max can't be negative
-  state.start = clamp(state.start, 0, state.max); // Ensure start is within new max
+  state.max = clamp(Number(value), 0, Infinity);
+  state.start = clamp(state.start, 0, state.max);
 }
 
 export function setPercent(percent) {
@@ -54,4 +59,32 @@ export function setDirection(value) {
 
 export function setInvertDisplay(value) {
   state.invertDisplay = value;
+}
+
+export function setBarWidth(value) {
+  state.barWidth = value;
+}
+
+export function setBarHeight(value) {
+  state.barHeight = value;
+}
+
+export function setTitlePosition(value) {
+  state.titlePosition = value;
+}
+
+export function setTimePosition(value) {
+  state.timePosition = value;
+}
+
+export function setTitleFontSize(value) {
+  state.titleFontSize = value;
+}
+
+export function setOrientation(value) {
+  state.orientation = value;
+}
+
+export function setMaskImageUrl(value) {
+  state.maskImageUrl = value;
 }

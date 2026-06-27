@@ -1,5 +1,3 @@
-// src/public/js/domElements.js
-
 export const authSection = document.getElementById("auth-section");
 export const appSection = document.getElementById("app-section");
 export const welcome = document.getElementById("welcome");
@@ -24,6 +22,18 @@ export const directionSelect = document.getElementById("directionSelect");
 export const invertDisplayCheckbox = document.getElementById(
   "invertDisplayCheckbox",
 );
+
+export const barWidthInput = document.getElementById("barWidthInput");
+export const barHeightInput = document.getElementById("barHeightInput");
+export const titlePositionSelect = document.getElementById(
+  "titlePositionSelect",
+);
+export const timePositionSelect = document.getElementById("timePositionSelect");
+export const titleFontSizeSelect = document.getElementById(
+  "titleFontSizeSelect",
+);
+export const orientationSelect = document.getElementById("orientationSelect");
+export const maskImageUrlInput = document.getElementById("maskImageUrlInput");
 
 export const previewBtn = document.getElementById("previewBtn");
 export const copyBtn = document.getElementById("copyBtn");
