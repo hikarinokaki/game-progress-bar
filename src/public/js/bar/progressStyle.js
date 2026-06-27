@@ -14,8 +14,8 @@ export const progressStyle = {
   init(container, params) {
     const progress = document.createElement("progress");
     progress.className = "progress-bar-html";
-    progress.style.width = params.barWidth;
-    progress.style.height = params.barHeight;
+    progress.style.width = params.barWidth + "px";
+    progress.style.height = params.barHeight + "px";
 
     const styleEl = document.createElement("style");
     styleEl.id = "progress-color-style";

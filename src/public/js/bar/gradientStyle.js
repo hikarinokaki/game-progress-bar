@@ -14,8 +14,8 @@ export const gradientStyle = {
   init(container, params) {
     const div = document.createElement("div");
     div.className = "progress-bar-gradient";
-    div.style.width = params.barWidth;
-    div.style.height = params.barHeight;
+    div.style.width = params.barWidth + "px";
+    div.style.height = params.barHeight + "px";
 
     if (params.orientation === "vertical") {
       div.style.background = `linear-gradient(${params.accentColor} 0 0) bottom/100% 0% no-repeat ${params.bgColor}`;

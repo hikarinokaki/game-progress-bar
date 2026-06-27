@@ -16,8 +16,8 @@ export const maskStyle = {
     wrap.className = "progress-bar-mask";
     wrap.style.cssText = `
       position: relative;
-      width: ${params.barWidth};
-      height: ${params.barHeight};
+      width: ${params.barWidth}px;
+      height: ${params.barHeight}px;
       background: ${params.bgColor};
       overflow: hidden;
     `;
