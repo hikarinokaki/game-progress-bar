@@ -20,9 +20,13 @@ function buildPreviewURL() {
     titleY: state.titleY,
     timeX: state.timeX,
     timeY: state.timeY,
+    barX: state.barX,
+    barY: state.barY,
     orientation: state.orientation,
     canvasWidth: state.canvasWidth,
     canvasHeight: state.canvasHeight,
+    titleFontSize: state.titleFontSize,
+    timeFontSize: state.timeFontSize,
   });
 
   if (state.maskImageUrl) {

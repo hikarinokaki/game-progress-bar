@@ -160,6 +160,16 @@
         </label>
 
         <label>
+          Bar X (px):
+          <input type="number" id="barXInput" placeholder="blank = flow" />
+        </label>
+
+        <label>
+          Bar Y (px):
+          <input type="number" id="barYInput" placeholder="blank = flow" />
+        </label>
+
+        <label>
           Canvas Width (px):
           <input
             type="number"
@@ -201,6 +211,28 @@
           <input type="number" id="timeYInput" placeholder="blank = flow" />
         </label>
 
+        <label>
+          Title Font Size (px):
+          <input
+            type="number"
+            id="titleFontSizeInput"
+            value="40"
+            min="8"
+            max="200"
+          />
+        </label>
+
+        <label>
+          Time Font Size (px):
+          <input
+            type="number"
+            id="timeFontSizeInput"
+            value="32"
+            min="8"
+            max="200"
+          />
+        </label>
+
         <div class="option-row" id="maskImageRow" style="display: none">
           <label>
             Mask Image URL:
@@ -219,6 +251,7 @@
         <button id="previewBtn">Preview</button>
         <button id="copyBtn">Copy URL</button>
         <button id="positionModeBtn">Position Mode</button>
+        <button id="snapBtn">Snap: Off</button>
       </div>
 
       <iframe id="previewFrame"></iframe>

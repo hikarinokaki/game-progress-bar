@@ -29,9 +29,12 @@ export const titleXInput = document.getElementById("titleXInput");
 export const titleYInput = document.getElementById("titleYInput");
 export const timeXInput = document.getElementById("timeXInput");
 export const timeYInput = document.getElementById("timeYInput");
+export const barXInput = document.getElementById("barXInput");
+export const barYInput = document.getElementById("barYInput");
 export const orientationSelect = document.getElementById("orientationSelect");
 export const maskImageUrlInput = document.getElementById("maskImageUrlInput");
 export const positionModeBtn = document.getElementById("positionModeBtn");
+export const snapBtn = document.getElementById("snapBtn");
 export const canvasWidthInput = document.getElementById("canvasWidthInput");
 export const canvasHeightInput = document.getElementById("canvasHeightInput");
 
@@ -40,3 +43,5 @@ export const copyBtn = document.getElementById("copyBtn");
 export const previewFrame = document.getElementById("previewFrame");
 
 export const themeSelect = document.getElementById("themeSelect");
+export const titleFontSizeInput = document.getElementById("titleFontSizeInput");
+export const timeFontSizeInput = document.getElementById("timeFontSizeInput");

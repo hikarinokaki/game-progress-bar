@@ -20,6 +20,10 @@ import {
   setMaskImageUrl,
   setCanvasWidth,
   setCanvasHeight,
+  setBarX,
+  setBarY,
+  setTitleFontSize,
+  setTimeFontSize,
 } from "./state.js";
 import {
   startInput,
@@ -44,9 +48,14 @@ import {
   orientationSelect,
   maskImageUrlInput,
   positionModeBtn,
+  snapBtn,
   previewFrame,
   canvasWidthInput,
   canvasHeightInput,
+  barXInput,
+  barYInput,
+  titleFontSizeInput,
+  timeFontSizeInput,
 } from "./domElements.js";
 import {
   calculatePercent,
@@ -66,6 +75,69 @@ registerStyle(stepsStyle);
 registerStyle(maskStyle);
 
 let positionModeActive = false;
+let snapActive = false;
+
+const MAX_UNDO = 50;
+const undoStack = [];
+const redoStack = [];
+let _undoBatch = false;
+
+function snapshotState() {
+  return {
+    titleX: state.titleX,
+    titleY: state.titleY,
+    timeX: state.timeX,
+    timeY: state.timeY,
+    barX: state.barX,
+    barY: state.barY,
+    barWidth: state.barWidth,
+    barHeight: state.barHeight,
+    titleFontSize: state.titleFontSize,
+    timeFontSize: state.timeFontSize,
+  };
+}
+
+function pushUndoState() {
+  undoStack.push(snapshotState());
+  redoStack.length = 0;
+  if (undoStack.length > MAX_UNDO) undoStack.shift();
+}
+
+function applyState(snap) {
+  setTitleX(snap.titleX);
+  setTitleY(snap.titleY);
+  setTimeX(snap.timeX);
+  setTimeY(snap.timeY);
+  setBarX(snap.barX);
+  setBarY(snap.barY);
+  setBarWidth(snap.barWidth);
+  setBarHeight(snap.barHeight);
+  setTitleFontSize(snap.titleFontSize);
+  setTimeFontSize(snap.timeFontSize);
+  render();
+  if (positionModeActive) {
+    previewFrame.contentWindow?.postMessage(
+      { type: "bar-state", ...snap },
+      "*",
+    );
+  }
+}
+
+function undo() {
+  if (undoStack.length === 0) return;
+  const current = snapshotState();
+  const previous = undoStack.pop();
+  redoStack.push(current);
+  applyState(previous);
+}
+
+function redo() {
+  if (redoStack.length === 0) return;
+  const current = snapshotState();
+  const next = redoStack.pop();
+  undoStack.push(current);
+  applyState(next);
+}
 
 function syncSupportedOptions() {
   const options = getSupportedOptions(state.style);
@@ -81,6 +153,15 @@ function syncSupportedOptions() {
   if (olbl) olbl.style.display = options.orientation ? "" : "none";
 }
 
+function syncPreviewFrameSize() {
+  const cw = parseInt(state.canvasWidth) || 1920;
+  const ch = parseInt(state.canvasHeight) || 1080;
+  const maxHeight = window.innerHeight * 0.8;
+  const width = previewFrame.clientWidth;
+  const naturalHeight = width * (ch / cw);
+  previewFrame.style.height = Math.min(naturalHeight, maxHeight) + "px";
+}
+
 function togglePositionMode() {
   positionModeActive = !positionModeActive;
   positionModeBtn.textContent = positionModeActive
@@ -89,14 +170,27 @@ function togglePositionMode() {
 
   if (positionModeActive) {
     previewFrame.src = buildPreviewURL(true);
+    syncPreviewFrameSize();
     positionModeBtn.style.background = "#d32f2f";
     positionModeBtn.style.color = "#fff";
   } else {
     previewFrame.contentWindow?.postMessage({ type: "disable-drag" }, "*");
     previewFrame.src = buildPreviewURL(false);
+    syncPreviewFrameSize();
     positionModeBtn.style.background = "";
     positionModeBtn.style.color = "";
   }
+}
+
+function toggleSnap() {
+  snapActive = !snapActive;
+  snapBtn.textContent = snapActive ? "Snap: On" : "Snap: Off";
+  snapBtn.style.background = snapActive ? "#4CAF50" : "";
+  snapBtn.style.color = snapActive ? "#fff" : "";
+  previewFrame.contentWindow?.postMessage(
+    { type: "snap", enabled: snapActive },
+    "*",
+  );
 }
 
 function buildPreviewURL(forPositionMode) {
@@ -116,9 +210,13 @@ function buildPreviewURL(forPositionMode) {
     titleY: state.titleY,
     timeX: state.timeX,
     timeY: state.timeY,
+    barX: state.barX,
+    barY: state.barY,
     orientation: state.orientation,
     canvasWidth: state.canvasWidth,
     canvasHeight: state.canvasHeight,
+    titleFontSize: state.titleFontSize,
+    timeFontSize: state.timeFontSize,
     theme: document.documentElement.getAttribute("data-theme") || "default",
   });
 
@@ -159,10 +257,14 @@ export function render() {
   titleYInput.value = state.titleY;
   timeXInput.value = state.timeX;
   timeYInput.value = state.timeY;
+  barXInput.value = state.barX;
+  barYInput.value = state.barY;
   orientationSelect.value = state.orientation;
   maskImageUrlInput.value = state.maskImageUrl;
   canvasWidthInput.value = state.canvasWidth;
   canvasHeightInput.value = state.canvasHeight;
+  titleFontSizeInput.value = state.titleFontSize;
+  timeFontSizeInput.value = state.timeFontSize;
 
   syncSupportedOptions();
 }
@@ -291,16 +393,48 @@ export function initProgressBar() {
   canvasWidthInput.addEventListener("change", (e) => {
     setCanvasWidth(e.target.value);
     render();
+    syncPreviewFrameSize();
   });
 
   canvasHeightInput.addEventListener("change", (e) => {
     setCanvasHeight(e.target.value);
     render();
+    syncPreviewFrameSize();
+  });
+
+  barXInput.addEventListener("change", (e) => {
+    setBarX(e.target.value);
+    render();
+  });
+
+  barYInput.addEventListener("change", (e) => {
+    setBarY(e.target.value);
+    render();
+  });
+
+  titleFontSizeInput.addEventListener("change", (e) => {
+    setTitleFontSize(e.target.value);
+    render();
+  });
+
+  timeFontSizeInput.addEventListener("change", (e) => {
+    setTimeFontSize(e.target.value);
+    render();
   });
 
   positionModeBtn.addEventListener("click", togglePositionMode);
+  snapBtn.addEventListener("click", toggleSnap);
 
   window.addEventListener("message", (event) => {
+    if (event.data?.type === "position" || event.data?.type === "resize") {
+      if (!_undoBatch) {
+        _undoBatch = true;
+        pushUndoState();
+        setTimeout(() => {
+          _undoBatch = false;
+        }, 0);
+      }
+    }
     if (event.data?.type === "position") {
       const { target, x, y } = event.data;
       if (target === "title") {
@@ -309,17 +443,53 @@ export function initProgressBar() {
       } else if (target === "time") {
         setTimeX(String(x));
         setTimeY(String(y));
+      } else if (target === "bar") {
+        setBarX(String(x));
+        setBarY(String(y));
+      }
+      render();
+    } else if (event.data?.type === "resize") {
+      const { target, fontSize, width, height } = event.data;
+      if (target === "title" && fontSize) {
+        setTitleFontSize(String(fontSize));
+      } else if (target === "time" && fontSize) {
+        setTimeFontSize(String(fontSize));
+      } else if (target === "bar" && width && height) {
+        setBarWidth(String(width));
+        setBarHeight(String(height));
       }
       render();
     }
   });
 
-  // Handle iframe load to enable drag mode
+  // Handle iframe load to enable drag mode, sync size, and restore snap
   previewFrame.addEventListener("load", () => {
+    syncPreviewFrameSize();
     if (positionModeActive) {
       previewFrame.contentWindow?.postMessage({ type: "enable-drag" }, "*");
+    }
+    if (snapActive) {
+      previewFrame.contentWindow?.postMessage(
+        { type: "snap", enabled: true },
+        "*",
+      );
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
+      e.preventDefault();
+      undo();
+    } else if (
+      (e.ctrlKey || e.metaKey) &&
+      (e.key === "y" || (e.key === "z" && e.shiftKey))
+    ) {
+      e.preventDefault();
+      redo();
     }
   });
 
   render();
+  syncPreviewFrameSize();
+  window.addEventListener("resize", syncPreviewFrameSize);
 }
