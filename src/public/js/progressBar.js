@@ -12,11 +12,14 @@ import {
   setInvertDisplay,
   setBarWidth,
   setBarHeight,
-  setTitlePosition,
-  setTimePosition,
-  setTitleFontSize,
+  setTitleX,
+  setTitleY,
+  setTimeX,
+  setTimeY,
   setOrientation,
   setMaskImageUrl,
+  setCanvasWidth,
+  setCanvasHeight,
 } from "./state.js";
 import {
   startInput,
@@ -34,11 +37,16 @@ import {
   invertDisplayCheckbox,
   barWidthInput,
   barHeightInput,
-  titlePositionSelect,
-  timePositionSelect,
-  titleFontSizeSelect,
+  titleXInput,
+  titleYInput,
+  timeXInput,
+  timeYInput,
   orientationSelect,
   maskImageUrlInput,
+  positionModeBtn,
+  previewFrame,
+  canvasWidthInput,
+  canvasHeightInput,
 } from "./domElements.js";
 import {
   calculatePercent,
@@ -57,12 +65,13 @@ registerStyle(gradientStyle);
 registerStyle(stepsStyle);
 registerStyle(maskStyle);
 
+let positionModeActive = false;
+
 function syncSupportedOptions() {
   const options = getSupportedOptions(state.style);
   document.getElementById("maskImageRow").style.display = options.maskImageUrl
     ? ""
     : "none";
-  // Hide parent labels for un-supported options
   const label = (id) => document.getElementById(id)?.closest("label");
   const lbl = label("barWidthInput");
   if (lbl) lbl.style.display = options.barWidth ? "" : "none";
@@ -70,6 +79,58 @@ function syncSupportedOptions() {
   if (hlbl) hlbl.style.display = options.barHeight ? "" : "none";
   const olbl = label("orientationSelect");
   if (olbl) olbl.style.display = options.orientation ? "" : "none";
+}
+
+function togglePositionMode() {
+  positionModeActive = !positionModeActive;
+  positionModeBtn.textContent = positionModeActive
+    ? "Exit Position Mode"
+    : "Position Mode";
+
+  if (positionModeActive) {
+    previewFrame.src = buildPreviewURL(true);
+    positionModeBtn.style.background = "#d32f2f";
+    positionModeBtn.style.color = "#fff";
+  } else {
+    previewFrame.contentWindow?.postMessage({ type: "disable-drag" }, "*");
+    previewFrame.src = buildPreviewURL(false);
+    positionModeBtn.style.background = "";
+    positionModeBtn.style.color = "";
+  }
+}
+
+function buildPreviewURL(forPositionMode) {
+  const params = new URLSearchParams({
+    start: forPositionMode ? state.max : state.start,
+    max: state.max,
+    title: state.title,
+    style: state.style,
+    displayFormat: state.displayFormat,
+    accentColor: state.accentColor,
+    bgColor: state.bgColor,
+    direction: forPositionMode ? "increment" : state.direction,
+    invertDisplay: "false",
+    barWidth: state.barWidth,
+    barHeight: state.barHeight,
+    titleX: state.titleX,
+    titleY: state.titleY,
+    timeX: state.timeX,
+    timeY: state.timeY,
+    orientation: state.orientation,
+    canvasWidth: state.canvasWidth,
+    canvasHeight: state.canvasHeight,
+    theme: document.documentElement.getAttribute("data-theme") || "default",
+  });
+
+  if (forPositionMode) {
+    params.set("positionMode", "1");
+  }
+
+  if (state.maskImageUrl) {
+    params.set("maskImageUrl", state.maskImageUrl);
+  }
+
+  return "bar.html?" + params.toString();
 }
 
 export function render() {
@@ -94,11 +155,14 @@ export function render() {
 
   barWidthInput.value = state.barWidth;
   barHeightInput.value = state.barHeight;
-  titlePositionSelect.value = state.titlePosition;
-  timePositionSelect.value = state.timePosition;
-  titleFontSizeSelect.value = state.titleFontSize;
+  titleXInput.value = state.titleX;
+  titleYInput.value = state.titleY;
+  timeXInput.value = state.timeX;
+  timeYInput.value = state.timeY;
   orientationSelect.value = state.orientation;
   maskImageUrlInput.value = state.maskImageUrl;
+  canvasWidthInput.value = state.canvasWidth;
+  canvasHeightInput.value = state.canvasHeight;
 
   syncSupportedOptions();
 }
@@ -194,18 +258,23 @@ export function initProgressBar() {
     render();
   });
 
-  titlePositionSelect.addEventListener("change", (e) => {
-    setTitlePosition(e.target.value);
+  titleXInput.addEventListener("change", (e) => {
+    setTitleX(e.target.value);
     render();
   });
 
-  timePositionSelect.addEventListener("change", (e) => {
-    setTimePosition(e.target.value);
+  titleYInput.addEventListener("change", (e) => {
+    setTitleY(e.target.value);
     render();
   });
 
-  titleFontSizeSelect.addEventListener("change", (e) => {
-    setTitleFontSize(e.target.value);
+  timeXInput.addEventListener("change", (e) => {
+    setTimeX(e.target.value);
+    render();
+  });
+
+  timeYInput.addEventListener("change", (e) => {
+    setTimeY(e.target.value);
     render();
   });
 
@@ -217,6 +286,39 @@ export function initProgressBar() {
   maskImageUrlInput.addEventListener("change", (e) => {
     setMaskImageUrl(e.target.value);
     render();
+  });
+
+  canvasWidthInput.addEventListener("change", (e) => {
+    setCanvasWidth(e.target.value);
+    render();
+  });
+
+  canvasHeightInput.addEventListener("change", (e) => {
+    setCanvasHeight(e.target.value);
+    render();
+  });
+
+  positionModeBtn.addEventListener("click", togglePositionMode);
+
+  window.addEventListener("message", (event) => {
+    if (event.data?.type === "position") {
+      const { target, x, y } = event.data;
+      if (target === "title") {
+        setTitleX(String(x));
+        setTitleY(String(y));
+      } else if (target === "time") {
+        setTimeX(String(x));
+        setTimeY(String(y));
+      }
+      render();
+    }
+  });
+
+  // Handle iframe load to enable drag mode
+  previewFrame.addEventListener("load", () => {
+    if (positionModeActive) {
+      previewFrame.contentWindow?.postMessage({ type: "enable-drag" }, "*");
+    }
   });
 
   render();

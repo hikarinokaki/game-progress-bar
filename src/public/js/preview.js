@@ -16,10 +16,13 @@ function buildPreviewURL() {
     invertDisplay: state.invertDisplay.toString(),
     barWidth: state.barWidth,
     barHeight: state.barHeight,
-    titlePosition: state.titlePosition,
-    timePosition: state.timePosition,
-    titleFontSize: state.titleFontSize,
+    titleX: state.titleX,
+    titleY: state.titleY,
+    timeX: state.timeX,
+    timeY: state.timeY,
     orientation: state.orientation,
+    canvasWidth: state.canvasWidth,
+    canvasHeight: state.canvasHeight,
   });
 
   if (state.maskImageUrl) {

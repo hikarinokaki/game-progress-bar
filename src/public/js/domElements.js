@@ -25,15 +25,15 @@ export const invertDisplayCheckbox = document.getElementById(
 
 export const barWidthInput = document.getElementById("barWidthInput");
 export const barHeightInput = document.getElementById("barHeightInput");
-export const titlePositionSelect = document.getElementById(
-  "titlePositionSelect",
-);
-export const timePositionSelect = document.getElementById("timePositionSelect");
-export const titleFontSizeSelect = document.getElementById(
-  "titleFontSizeSelect",
-);
+export const titleXInput = document.getElementById("titleXInput");
+export const titleYInput = document.getElementById("titleYInput");
+export const timeXInput = document.getElementById("timeXInput");
+export const timeYInput = document.getElementById("timeYInput");
 export const orientationSelect = document.getElementById("orientationSelect");
 export const maskImageUrlInput = document.getElementById("maskImageUrlInput");
+export const positionModeBtn = document.getElementById("positionModeBtn");
+export const canvasWidthInput = document.getElementById("canvasWidthInput");
+export const canvasHeightInput = document.getElementById("canvasHeightInput");
 
 export const previewBtn = document.getElementById("previewBtn");
 export const copyBtn = document.getElementById("copyBtn");

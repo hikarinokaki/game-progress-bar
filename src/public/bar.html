@@ -35,19 +35,40 @@
       }
 
       body {
+        margin: 0;
+        overflow: hidden;
         font-family: var(--font-body);
-        padding: 40px;
-        max-width: 80%;
-        margin: 0 auto;
         background: var(--bar-bg-body);
+        width: 100vw;
+        height: 100vh;
       }
 
-      h1 {
+      #bar-stage {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      #bar-canvas {
+        position: relative;
+        transform-origin: center center;
+        flex-shrink: 0;
+        overflow: visible;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #bar-canvas h1 {
         text-align: center;
         color: var(--bar-title-color);
         text-shadow: var(--bar-shadow);
         font-size: 2.5em;
         margin: 0;
+        user-select: none;
       }
 
       #percentage {
@@ -57,10 +78,10 @@
         margin-top: 0;
         color: var(--bar-text-color);
         text-shadow: var(--bar-shadow);
+        user-select: none;
       }
 
       #progressContainer {
-        min-height: 30vh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -113,9 +134,13 @@
     </style>
   </head>
   <body>
-    <h1 id="title"></h1>
-    <div id="progressContainer"></div>
-    <p id="percentage"></p>
+    <div id="bar-stage">
+      <div id="bar-canvas">
+        <h1 id="title"></h1>
+        <div id="progressContainer"></div>
+        <p id="percentage"></p>
+      </div>
+    </div>
 
     <script src="dist/bar.bundle.js"></script>
   </body>

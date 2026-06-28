@@ -1,5 +1,8 @@
 import { getStyle } from "./registry.js";
 
+let currentScale = 1;
+let naturalPositions = {};
+
 function secondsToNaturalTime(seconds) {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
@@ -39,11 +42,15 @@ function parseParams() {
     invertDisplay: params.get("invertDisplay") === "true",
     barWidth: params.get("barWidth") || "500",
     barHeight: params.get("barHeight") || "60",
-    titlePosition: params.get("titlePosition") || "top",
-    timePosition: params.get("timePosition") || "bottom",
-    titleFontSize: params.get("titleFontSize") || "2.5em",
+    titleX: params.get("titleX") || "",
+    titleY: params.get("titleY") || "",
+    timeX: params.get("timeX") || "",
+    timeY: params.get("timeY") || "",
     orientation: params.get("orientation") || "horizontal",
     maskImageUrl: params.get("maskImageUrl") || "",
+    canvasWidth: params.get("canvasWidth") || "1920",
+    canvasHeight: params.get("canvasHeight") || "1080",
+    positionMode: params.get("positionMode") === "1",
   };
 
   if (isNaN(p.start) || p.start < 0) p.start = 0;
@@ -75,22 +82,171 @@ function parseParams() {
     p.style = "progress";
   }
 
-  const validTitlePositions = ["top", "bottom", "hidden"];
-  if (!validTitlePositions.includes(p.titlePosition)) {
-    p.titlePosition = "top";
-  }
-
-  const validTimePositions = ["top", "bottom", "hidden"];
-  if (!validTimePositions.includes(p.timePosition)) {
-    p.timePosition = "bottom";
-  }
-
   const validOrientations = ["horizontal", "vertical"];
   if (!validOrientations.includes(p.orientation)) {
     p.orientation = "horizontal";
   }
 
   return p;
+}
+
+function initCanvas(params) {
+  const canvas = document.getElementById("bar-canvas");
+  const cw = parseInt(params.canvasWidth) || 1920;
+  const ch = parseInt(params.canvasHeight) || 1080;
+
+  canvas.style.width = cw + "px";
+  canvas.style.height = ch + "px";
+
+  function resize() {
+    const scaleX = window.innerWidth / cw;
+    const scaleY = window.innerHeight / ch;
+    currentScale = Math.min(scaleX, scaleY);
+    canvas.style.transform = `scale(${currentScale})`;
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+}
+
+function captureNaturalPositions() {
+  const canvas = document.getElementById("bar-canvas");
+  if (!canvas) return;
+  const scale = currentScale;
+  const canvasRect = canvas.getBoundingClientRect();
+
+  document.querySelectorAll("#title, #percentage").forEach((label) => {
+    if (label.style.display === "none") return;
+    const savedTransform = label.style.transform || "";
+    if (savedTransform) label.style.transform = "none";
+    const rect = label.getBoundingClientRect();
+    if (savedTransform) label.style.transform = savedTransform;
+    naturalPositions[label.id] = {
+      x: Math.round((rect.left - canvasRect.left) / scale),
+      y: Math.round((rect.top - canvasRect.top) / scale),
+    };
+  });
+}
+
+function applyPositions(params) {
+  setElementPosition(
+    document.getElementById("title"),
+    params.titleX,
+    params.titleY,
+  );
+  setElementPosition(
+    document.getElementById("percentage"),
+    params.timeX,
+    params.timeY,
+  );
+}
+
+function setElementPosition(el, x, y) {
+  if (!el) return;
+  if (x !== "" && y !== "") {
+    const nat = naturalPositions[el.id];
+    if (nat) {
+      el.style.transform = `translate(${x - nat.x}px, ${y - nat.y}px)`;
+    }
+    el.style.margin = "0";
+    el.style.position = "";
+    el.style.left = "";
+    el.style.top = "";
+  } else {
+    el.style.transform = "";
+    el.style.margin = "";
+    el.style.position = "";
+    el.style.left = "";
+    el.style.top = "";
+  }
+}
+
+function setupDragEnvironment(params) {
+  const canvas = document.getElementById("bar-canvas");
+  if (!canvas) return;
+
+  document.querySelectorAll("#title, #percentage").forEach((label) => {
+    if (label.style.display === "none") return;
+    label.style.cursor = "grab";
+  });
+
+  let dragEl = null;
+  let dragStartCX = 0;
+  let dragStartCY = 0;
+  let dragStartTx = 0;
+  let dragStartTy = 0;
+
+  function getCanvasCoords(e) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      cx: (e.clientX - rect.left) / currentScale,
+      cy: (e.clientY - rect.top) / currentScale,
+    };
+  }
+
+  function parseTranslate(el) {
+    const m = el.style.transform.match(
+      /translate\(([\d.-]+)px,\s*([\d.-]+)px\)/,
+    );
+    if (m) return [parseFloat(m[1]), parseFloat(m[2])];
+    return [0, 0];
+  }
+
+  function onPointerDown(e) {
+    const label = e.target.closest("#title, #percentage");
+    if (!label) return;
+    dragEl = label;
+    const { cx, cy } = getCanvasCoords(e);
+    [dragStartTx, dragStartTy] = parseTranslate(dragEl);
+    dragStartCX = cx;
+    dragStartCY = cy;
+    dragEl.setPointerCapture(e.pointerId);
+    dragEl.style.cursor = "grabbing";
+    e.preventDefault();
+  }
+
+  function onPointerMove(e) {
+    if (!dragEl) return;
+    const { cx, cy } = getCanvasCoords(e);
+    const tx = dragStartTx + (cx - dragStartCX);
+    const ty = dragStartTy + (cy - dragStartCY);
+    dragEl.style.transform = `translate(${tx}px, ${ty}px)`;
+    e.preventDefault();
+  }
+
+  function onPointerUp(e) {
+    if (!dragEl) return;
+    const { cx, cy } = getCanvasCoords(e);
+    const target = dragEl.id === "title" ? "title" : "time";
+    const tx = Math.round(dragStartTx + (cx - dragStartCX));
+    const ty = Math.round(dragStartTy + (cy - dragStartCY));
+
+    const nat = naturalPositions[dragEl.id];
+    const absX = nat ? nat.x + tx : tx;
+    const absY = nat ? nat.y + ty : ty;
+
+    dragEl.style.cursor = "grab";
+    dragEl.releasePointerCapture(e.pointerId);
+    dragEl = null;
+
+    window.parent.postMessage(
+      { type: "position", target, x: absX, y: absY },
+      "*",
+    );
+  }
+
+  document.addEventListener("pointerdown", onPointerDown);
+  document.addEventListener("pointermove", onPointerMove);
+  document.addEventListener("pointerup", onPointerUp);
+
+  canvas._dragCleanup = () => {
+    document.removeEventListener("pointerdown", onPointerDown);
+    document.removeEventListener("pointermove", onPointerMove);
+    document.removeEventListener("pointerup", onPointerUp);
+    document.querySelectorAll("#title, #percentage").forEach((label) => {
+      label.style.cursor = "";
+    });
+  };
 }
 
 function updateDisplay(currentValue, maxValue, params) {
@@ -125,10 +281,13 @@ function updateURL(currentValue, maxValue, params) {
   searchParams.set("invertDisplay", params.invertDisplay.toString());
   searchParams.set("barWidth", params.barWidth);
   searchParams.set("barHeight", params.barHeight);
-  searchParams.set("titlePosition", params.titlePosition);
-  searchParams.set("timePosition", params.timePosition);
-  searchParams.set("titleFontSize", params.titleFontSize);
+  searchParams.set("titleX", params.titleX);
+  searchParams.set("titleY", params.titleY);
+  searchParams.set("timeX", params.timeX);
+  searchParams.set("timeY", params.timeY);
   searchParams.set("orientation", params.orientation);
+  searchParams.set("canvasWidth", params.canvasWidth);
+  searchParams.set("canvasHeight", params.canvasHeight);
 
   if (params.maskImageUrl) {
     searchParams.set("maskImageUrl", params.maskImageUrl);
@@ -143,53 +302,27 @@ function setupTitle(params) {
   if (params.title) {
     titleElement.textContent = params.title;
     titleElement.style.display = "block";
-    titleElement.style.fontSize = params.titleFontSize;
   } else {
     titleElement.style.display = "none";
-  }
-}
-
-function positionElements(params) {
-  const titleElement = document.getElementById("title");
-  const percentageText = document.getElementById("percentage");
-  const container = document.getElementById("progressContainer");
-
-  if (params.titlePosition === "hidden") {
-    titleElement.style.display = "none";
-  } else if (params.title) {
-    titleElement.style.display = "block";
-  }
-
-  if (params.timePosition === "hidden") {
-    percentageText.style.display = "none";
-  }
-
-  const parent = container.parentNode;
-  const children = Array.from(parent.children);
-
-  if (params.titlePosition === "bottom" && params.title) {
-    parent.insertBefore(container, titleElement);
-  }
-
-  if (params.timePosition === "top") {
-    parent.insertBefore(percentageText, container);
-  } else {
-    parent.insertBefore(percentageText, container.nextSibling);
   }
 }
 
 export function initBar() {
   const params = parseParams();
 
-  const container = document.getElementById("progressContainer");
-  const titleElement = document.getElementById("title");
+  initCanvas(params);
 
   setupTitle(params);
 
   const style = getStyle(params.style);
-  const progressElement = style.init(container, params);
+  const progressElement = style.init(
+    document.getElementById("progressContainer"),
+    params,
+  );
 
-  positionElements(params);
+  captureNaturalPositions();
+
+  applyPositions(params);
 
   function updateProgress(value, maxValue) {
     style.update(progressElement, value, maxValue, params);
@@ -199,27 +332,46 @@ export function initBar() {
   updateDisplay(params.start, params.max, params);
   updateURL(params.start, params.max, params);
 
-  let currentValue = params.start;
-  const isCountdown = params.direction === "countdown";
-  const interval = setInterval(() => {
-    if (isCountdown) {
-      if (currentValue > 0) {
-        currentValue--;
-        updateProgress(currentValue, params.max);
-        updateDisplay(currentValue, params.max, params);
-        updateURL(currentValue, params.max, params);
+  if (!params.positionMode) {
+    let currentValue = params.start;
+    const isCountdown = params.direction === "countdown";
+    const interval = setInterval(() => {
+      if (isCountdown) {
+        if (currentValue > 0) {
+          currentValue--;
+          updateProgress(currentValue, params.max);
+          updateDisplay(currentValue, params.max, params);
+          updateURL(currentValue, params.max, params);
+        } else {
+          clearInterval(interval);
+        }
       } else {
-        clearInterval(interval);
+        if (currentValue < params.max) {
+          currentValue++;
+          updateProgress(currentValue, params.max);
+          updateDisplay(currentValue, params.max, params);
+          updateURL(currentValue, params.max, params);
+        } else {
+          clearInterval(interval);
+        }
       }
-    } else {
-      if (currentValue < params.max) {
-        currentValue++;
-        updateProgress(currentValue, params.max);
-        updateDisplay(currentValue, params.max, params);
-        updateURL(currentValue, params.max, params);
-      } else {
-        clearInterval(interval);
+    }, 1000);
+  }
+
+  window.addEventListener("message", (event) => {
+    if (event.data?.type === "enable-drag") {
+      const canvas = document.getElementById("bar-canvas");
+      if (canvas && canvas._dragCleanup) {
+        canvas._dragCleanup();
+        delete canvas._dragCleanup;
+      }
+      setupDragEnvironment(params);
+    } else if (event.data?.type === "disable-drag") {
+      const canvas = document.getElementById("bar-canvas");
+      if (canvas && canvas._dragCleanup) {
+        canvas._dragCleanup();
+        delete canvas._dragCleanup;
       }
     }
-  }, 1000);
+  });
 }

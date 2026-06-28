@@ -152,39 +152,53 @@
         </label>
 
         <label>
-          Title Position:
-          <select id="titlePositionSelect">
-            <option value="top">Top</option>
-            <option value="bottom">Bottom</option>
-            <option value="hidden">Hidden</option>
-          </select>
-        </label>
-
-        <label>
-          Title Font Size:
-          <select id="titleFontSizeSelect">
-            <option value="1.5em">1.5em</option>
-            <option value="2em">2em</option>
-            <option value="2.5em" selected>2.5em</option>
-            <option value="3em">3em</option>
-          </select>
-        </label>
-
-        <label>
-          Time Position:
-          <select id="timePositionSelect">
-            <option value="bottom">Below Bar</option>
-            <option value="top">Above Bar</option>
-            <option value="hidden">Hidden</option>
-          </select>
-        </label>
-
-        <label>
           Orientation:
           <select id="orientationSelect">
             <option value="horizontal">Horizontal</option>
             <option value="vertical">Vertical</option>
           </select>
+        </label>
+
+        <label>
+          Canvas Width (px):
+          <input
+            type="number"
+            id="canvasWidthInput"
+            value="1920"
+            min="320"
+            max="7680"
+          />
+        </label>
+
+        <label>
+          Canvas Height (px):
+          <input
+            type="number"
+            id="canvasHeightInput"
+            value="1080"
+            min="240"
+            max="4320"
+          />
+        </label>
+
+        <label>
+          Title X (px):
+          <input type="number" id="titleXInput" placeholder="blank = flow" />
+        </label>
+
+        <label>
+          Title Y (px):
+          <input type="number" id="titleYInput" placeholder="blank = flow" />
+        </label>
+
+        <label>
+          Time X (px):
+          <input type="number" id="timeXInput" placeholder="blank = flow" />
+        </label>
+
+        <label>
+          Time Y (px):
+          <input type="number" id="timeYInput" placeholder="blank = flow" />
         </label>
 
         <div class="option-row" id="maskImageRow" style="display: none">
@@ -204,6 +218,7 @@
       <div class="preview-buttons">
         <button id="previewBtn">Preview</button>
         <button id="copyBtn">Copy URL</button>
+        <button id="positionModeBtn">Position Mode</button>
       </div>
 
       <iframe id="previewFrame"></iframe>

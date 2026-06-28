@@ -12,11 +12,14 @@ export const state = {
   invertDisplay: false,
   barWidth: "500",
   barHeight: "60",
-  titlePosition: "top",
-  timePosition: "bottom",
-  titleFontSize: "2.5em",
+  titleX: "",
+  titleY: "",
+  timeX: "",
+  timeY: "",
   orientation: "horizontal",
   maskImageUrl: "",
+  canvasWidth: "1920",
+  canvasHeight: "1080",
 };
 
 export function setStart(value) {
@@ -69,16 +72,20 @@ export function setBarHeight(value) {
   state.barHeight = value;
 }
 
-export function setTitlePosition(value) {
-  state.titlePosition = value;
+export function setTitleX(value) {
+  state.titleX = value;
 }
 
-export function setTimePosition(value) {
-  state.timePosition = value;
+export function setTitleY(value) {
+  state.titleY = value;
 }
 
-export function setTitleFontSize(value) {
-  state.titleFontSize = value;
+export function setTimeX(value) {
+  state.timeX = value;
+}
+
+export function setTimeY(value) {
+  state.timeY = value;
 }
 
 export function setOrientation(value) {
@@ -87,4 +94,12 @@ export function setOrientation(value) {
 
 export function setMaskImageUrl(value) {
   state.maskImageUrl = value;
+}
+
+export function setCanvasWidth(value) {
+  state.canvasWidth = value;
+}
+
+export function setCanvasHeight(value) {
+  state.canvasHeight = value;
 }
