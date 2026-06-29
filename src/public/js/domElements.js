@@ -45,3 +45,10 @@ export const previewFrame = document.getElementById("previewFrame");
 export const themeSelect = document.getElementById("themeSelect");
 export const titleFontSizeInput = document.getElementById("titleFontSizeInput");
 export const timeFontSizeInput = document.getElementById("timeFontSizeInput");
+export const todoXInput = document.getElementById("todoXInput");
+export const todoYInput = document.getElementById("todoYInput");
+export const todoFontSizeInput = document.getElementById("todoFontSizeInput");
+export const twitchChannelInput = document.getElementById("twitchChannelInput");
+export const twitchUsernameInput = document.getElementById(
+  "twitchUsernameInput",
+);

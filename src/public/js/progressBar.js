@@ -25,6 +25,12 @@ import {
   setTitleFontSize,
   setTimeFontSize,
   setMilestones,
+  setTodos,
+  setTodoX,
+  setTodoY,
+  setTodoFontSize,
+  setTwitchChannel,
+  setTwitchUsername,
 } from "./state.js";
 import {
   startInput,
@@ -57,6 +63,11 @@ import {
   barYInput,
   titleFontSizeInput,
   timeFontSizeInput,
+  todoXInput,
+  todoYInput,
+  todoFontSizeInput,
+  twitchChannelInput,
+  twitchUsernameInput,
 } from "./domElements.js";
 import {
   calculatePercent,
@@ -95,6 +106,9 @@ function snapshotState() {
     barHeight: state.barHeight,
     titleFontSize: state.titleFontSize,
     timeFontSize: state.timeFontSize,
+    todoX: state.todoX,
+    todoY: state.todoY,
+    todoFontSize: state.todoFontSize,
   };
 }
 
@@ -115,6 +129,9 @@ function applyState(snap) {
   setBarHeight(snap.barHeight);
   setTitleFontSize(snap.titleFontSize);
   setTimeFontSize(snap.timeFontSize);
+  setTodoX(snap.todoX);
+  setTodoY(snap.todoY);
+  setTodoFontSize(snap.todoFontSize);
   render();
   if (positionModeActive) {
     previewFrame.contentWindow?.postMessage(
@@ -215,6 +232,54 @@ function renderMilestoneList() {
   });
 }
 
+function renderTodoList() {
+  const list = document.getElementById("todo-list");
+  if (!list) return;
+  list.innerHTML = "";
+
+  state.todos.forEach((todo, i) => {
+    const row = document.createElement("div");
+    row.className = "todo-row";
+
+    const doneCheckbox = document.createElement("input");
+    doneCheckbox.type = "checkbox";
+    doneCheckbox.className = "todo-done-checkbox";
+    doneCheckbox.checked = todo.done;
+    doneCheckbox.addEventListener("change", () => {
+      const updated = [...state.todos];
+      updated[i] = { ...updated[i], done: doneCheckbox.checked };
+      setTodos(updated);
+      render();
+    });
+
+    const textInput = document.createElement("input");
+    textInput.type = "text";
+    textInput.className = "todo-text-input";
+    textInput.placeholder = "Todo text";
+    textInput.value = todo.text;
+    textInput.addEventListener("change", () => {
+      const updated = [...state.todos];
+      updated[i] = { ...updated[i], text: textInput.value };
+      setTodos(updated);
+      render();
+    });
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "todo-remove-btn";
+    removeBtn.textContent = "\u00d7";
+    removeBtn.addEventListener("click", () => {
+      const updated = state.todos.filter((_, idx) => idx !== i);
+      setTodos(updated);
+      render();
+    });
+
+    row.appendChild(doneCheckbox);
+    row.appendChild(textInput);
+    row.appendChild(removeBtn);
+    list.appendChild(row);
+  });
+}
+
 function syncPreviewFrameSize() {
   const cw = parseInt(state.canvasWidth) || 1920;
   const ch = parseInt(state.canvasHeight) || 1080;
@@ -284,6 +349,11 @@ function buildPreviewURL(forPositionMode) {
     titleFontSize: state.titleFontSize,
     timeFontSize: state.timeFontSize,
     theme: document.documentElement.getAttribute("data-theme") || "default",
+    todoX: state.todoX,
+    todoY: state.todoY,
+    todoFontSize: state.todoFontSize,
+    twitchChannel: state.twitchChannel,
+    twitchUsername: state.twitchUsername,
   });
 
   if (forPositionMode) {
@@ -296,6 +366,10 @@ function buildPreviewURL(forPositionMode) {
 
   if (state.milestones.length > 0) {
     params.set("milestones", JSON.stringify(state.milestones));
+  }
+
+  if (state.todos.length > 0) {
+    params.set("todos", JSON.stringify(state.todos));
   }
 
   return "bar.html?" + params.toString();
@@ -336,8 +410,15 @@ export function render() {
   titleFontSizeInput.value = state.titleFontSize;
   timeFontSizeInput.value = state.timeFontSize;
 
+  todoXInput.value = state.todoX;
+  todoYInput.value = state.todoY;
+  todoFontSizeInput.value = state.todoFontSize;
+  twitchChannelInput.value = state.twitchChannel;
+  twitchUsernameInput.value = state.twitchUsername;
+
   syncSupportedOptions();
   renderMilestoneList();
+  renderTodoList();
 }
 
 export function initProgressBar() {
@@ -493,6 +574,31 @@ export function initProgressBar() {
     render();
   });
 
+  todoXInput.addEventListener("change", (e) => {
+    setTodoX(e.target.value);
+    render();
+  });
+
+  todoYInput.addEventListener("change", (e) => {
+    setTodoY(e.target.value);
+    render();
+  });
+
+  todoFontSizeInput.addEventListener("change", (e) => {
+    setTodoFontSize(e.target.value);
+    render();
+  });
+
+  twitchChannelInput.addEventListener("change", (e) => {
+    setTwitchChannel(e.target.value);
+    render();
+  });
+
+  twitchUsernameInput.addEventListener("change", (e) => {
+    setTwitchUsername(e.target.value);
+    render();
+  });
+
   positionModeBtn.addEventListener("click", togglePositionMode);
   snapBtn.addEventListener("click", toggleSnap);
   syncSnapUI();
@@ -506,7 +612,32 @@ export function initProgressBar() {
     });
   }
 
+  const addTodoBtn = document.getElementById("addTodoBtn");
+  if (addTodoBtn) {
+    addTodoBtn.addEventListener("click", () => {
+      const updated = [...state.todos, { text: "", done: false }];
+      setTodos(updated);
+      render();
+    });
+  }
+
   window.addEventListener("message", (event) => {
+    if (event.data?.type === "todoToggle") {
+      const { index, done } = event.data;
+      const updated = [...state.todos];
+      if (index >= 0 && index < updated.length) {
+        updated[index] = { ...updated[index], done };
+        setTodos(updated);
+        render();
+      }
+      return;
+    }
+    if (event.data?.type === "progressJump") {
+      const { value } = event.data;
+      setStart(value);
+      render();
+      return;
+    }
     if (event.data?.type === "position" || event.data?.type === "resize") {
       if (!_undoBatch) {
         _undoBatch = true;
@@ -527,6 +658,9 @@ export function initProgressBar() {
       } else if (target === "bar") {
         setBarX(String(x));
         setBarY(String(y));
+      } else if (target === "todo") {
+        setTodoX(String(x));
+        setTodoY(String(y));
       }
       render();
     } else if (event.data?.type === "resize") {
@@ -538,6 +672,8 @@ export function initProgressBar() {
       } else if (target === "bar" && width && height) {
         setBarWidth(String(width));
         setBarHeight(String(height));
+      } else if (target === "todo" && fontSize) {
+        setTodoFontSize(String(fontSize));
       }
       render();
     }

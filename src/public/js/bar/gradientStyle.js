@@ -32,7 +32,7 @@ export const gradientStyle = {
     const isCountdown = params.direction === "countdown";
 
     if (params.orientation === "vertical") {
-      const bgSize = (percent / 100) * 115;
+      const bgSize = percent;
       element.style.backgroundSize = `100% ${bgSize}%`;
       element.style.backgroundPosition = "bottom";
     } else {

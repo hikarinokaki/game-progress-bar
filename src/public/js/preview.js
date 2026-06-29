@@ -27,6 +27,11 @@ function buildPreviewURL() {
     canvasHeight: state.canvasHeight,
     titleFontSize: state.titleFontSize,
     timeFontSize: state.timeFontSize,
+    todoX: state.todoX,
+    todoY: state.todoY,
+    todoFontSize: state.todoFontSize,
+    twitchChannel: state.twitchChannel,
+    twitchUsername: state.twitchUsername,
   });
 
   if (state.maskImageUrl) {
@@ -35,6 +40,10 @@ function buildPreviewURL() {
 
   if (state.milestones && state.milestones.length > 0) {
     params.set("milestones", JSON.stringify(state.milestones));
+  }
+
+  if (state.todos && state.todos.length > 0) {
+    params.set("todos", JSON.stringify(state.todos));
   }
 
   return `bar.html?${params.toString()}`;

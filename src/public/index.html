@@ -98,6 +98,28 @@
             + Add Milestone
           </button>
         </div>
+
+        <h3 class="section-heading">Todo List</h3>
+        <div id="todo-list"></div>
+        <div class="input-group-row">
+          <button id="addTodoBtn" class="btn-primary">+ Add Todo Item</button>
+        </div>
+
+        <h3 class="section-heading">Twitch Integration</h3>
+        <div class="twitch-row">
+          <label class="compact-field">
+            <span class="field-label">Channel Name</span>
+            <input type="text" id="twitchChannelInput" placeholder="e.g. xqc" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Allow Username</span>
+            <input
+              type="text"
+              id="twitchUsernameInput"
+              placeholder="e.g. nightbot (leave empty for any)"
+            />
+          </label>
+        </div>
       </div>
 
       <div class="col">
@@ -239,6 +261,27 @@
               <option value="horizontal">Horizontal</option>
               <option value="vertical">Vertical</option>
             </select>
+          </label>
+        </div>
+
+        <div class="input-group-row">
+          <label class="compact-field">
+            <span class="field-label">Todo X (px)</span>
+            <input type="number" id="todoXInput" placeholder="auto" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Todo Y (px)</span>
+            <input type="number" id="todoYInput" placeholder="auto" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Todo Font (px)</span>
+            <input
+              type="number"
+              id="todoFontSizeInput"
+              value="20"
+              min="8"
+              max="200"
+            />
           </label>
         </div>
 

@@ -495,6 +495,101 @@ main {
   background: var(--btn-primary-hover);
 }
 
+/* Todo rows in config UI */
+#todo-list {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.todo-row {
+  display: flex;
+  gap: 0.375rem;
+  align-items: center;
+}
+
+.todo-row input {
+  padding: 0.25rem 0.375rem;
+  font-size: 0.8125rem;
+  border: 1px solid var(--border-input);
+  border-radius: 0.1875rem;
+  background: var(--bg-input);
+  color: var(--text-body);
+}
+
+.todo-done-checkbox {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todo-text-input {
+  flex: 1;
+  min-width: 4rem;
+}
+
+.todo-remove-btn {
+  background: none;
+  border: none;
+  color: var(--text-danger, #d32f2f);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.125rem 0.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+#addTodoBtn {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8125rem;
+  border: none;
+  border-radius: 0.1875rem;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#addTodoBtn:hover {
+  background: var(--btn-primary-hover);
+}
+
+/* Twitch config row */
+.twitch-row {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.twitch-row .compact-field {
+  flex: 1;
+  min-width: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.twitch-row .compact-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.25rem 0.375rem;
+  font-size: 0.8125rem;
+  border: 1px solid var(--border-input);
+  border-radius: 0.1875rem;
+  background: var(--bg-input);
+  color: var(--text-body);
+}
+
+.twitch-status {
+  font-size: 0.75rem;
+  color: var(--text-muted, #666);
+  grid-column: 1 / -1;
+  margin-top: -0.25rem;
+}
+
 /* Bar milestone markers */
 .milestone-marker {
   position: absolute;

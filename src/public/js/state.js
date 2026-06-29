@@ -25,6 +25,12 @@ export const state = {
   titleFontSize: "40",
   timeFontSize: "32",
   milestones: [],
+  todos: [],
+  todoX: "",
+  todoY: "",
+  todoFontSize: "20",
+  twitchChannel: "",
+  twitchUsername: "",
 };
 
 export function setStart(value) {
@@ -127,4 +133,28 @@ export function setTimeFontSize(value) {
 
 export function setMilestones(value) {
   state.milestones = value;
+}
+
+export function setTodos(value) {
+  state.todos = value;
+}
+
+export function setTodoX(value) {
+  state.todoX = value;
+}
+
+export function setTodoY(value) {
+  state.todoY = value;
+}
+
+export function setTodoFontSize(value) {
+  state.todoFontSize = value;
+}
+
+export function setTwitchChannel(value) {
+  state.twitchChannel = value;
+}
+
+export function setTwitchUsername(value) {
+  state.twitchUsername = value;
 }

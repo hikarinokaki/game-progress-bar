@@ -1,4 +1,5 @@
 import { getStyle } from "./registry.js";
+import tmi from "tmi.js";
 
 let currentScale = 1;
 
@@ -71,6 +72,12 @@ function parseParams() {
     timeFontSize: params.get("timeFontSize") || "32",
     positionMode: params.get("positionMode") === "1",
     milestones: [],
+    todos: [],
+    todoX: params.get("todoX") || "",
+    todoY: params.get("todoY") || "",
+    todoFontSize: params.get("todoFontSize") || "20",
+    twitchChannel: params.get("twitchChannel") || "",
+    twitchUsername: params.get("twitchUsername") || "",
   };
 
   if (isNaN(p.start) || p.start < 0) p.start = 0;
@@ -114,6 +121,23 @@ function parseParams() {
     // invalid milestones param, ignore
   }
 
+  try {
+    const raw = params.get("todos");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        p.todos = parsed
+          .map((t) => ({
+            text: String(t.text || ""),
+            done: !!t.done,
+          }))
+          .filter((t) => t.text);
+      }
+    }
+  } catch {
+    // invalid todos param, ignore
+  }
+
   if (!getStyle(p.style)) {
     console.warn(`Unknown style "${p.style}", falling back to "progress"`);
     p.style = "progress";
@@ -153,7 +177,7 @@ function makeAbsolute() {
   const canvasRect = canvas.getBoundingClientRect();
 
   document
-    .querySelectorAll("#title, #percentage, #progressContainer")
+    .querySelectorAll("#title, #percentage, #progressContainer, #todoContainer")
     .forEach((label) => {
       if (label.style.display === "none") return;
       const savedTransform = label.style.transform || "";
@@ -179,6 +203,13 @@ function applyFontSizes(params) {
   if (percEl) {
     percEl.style.fontSize = params.timeFontSize + "px";
   }
+  const todoContainer = document.getElementById("todoContainer");
+  if (todoContainer) {
+    todoContainer.style.setProperty(
+      "--todo-font-size",
+      params.todoFontSize + "px",
+    );
+  }
 }
 
 function applyPositions(params) {
@@ -196,6 +227,11 @@ function applyPositions(params) {
     document.getElementById("progressContainer"),
     params.barX,
     params.barY,
+  );
+  setElementPosition(
+    document.getElementById("todoContainer"),
+    params.todoX,
+    params.todoY,
   );
   applyFontSizes(params);
 }
@@ -433,7 +469,9 @@ function getCorner(el, cx, cy) {
 }
 
 function isTextElement(el) {
-  return el.id === "title" || el.id === "percentage";
+  return (
+    el.id === "title" || el.id === "percentage" || el.id === "todoContainer"
+  );
 }
 
 function parsePosition(el) {
@@ -479,7 +517,7 @@ function setupDragEnvironment(params) {
   const canvas = document.getElementById("bar-canvas");
   if (!canvas) return;
 
-  const TARGETS = "#title, #percentage, #progressContainer";
+  const TARGETS = "#title, #percentage, #progressContainer, #todoContainer";
 
   document.querySelectorAll(TARGETS).forEach((label) => {
     if (label.style.display === "none") return;
@@ -550,9 +588,14 @@ function setupDragEnvironment(params) {
         const cr = getElementCanvasRect(label);
 
         if (isTextElement(label)) {
-          const currentFontSize = parseInt(
-            label.style.fontSize || (label.id === "title" ? "40" : "32"),
-          );
+          let currentFontSize;
+          if (label.id === "todoContainer") {
+            currentFontSize = parseInt(params.todoFontSize) || 20;
+          } else {
+            currentFontSize = parseInt(
+              label.style.fontSize || (label.id === "title" ? "40" : "32"),
+            );
+          }
           resizeStartData = {
             type: "text",
             startFontSize: currentFontSize,
@@ -636,7 +679,12 @@ function setupDragEnvironment(params) {
         const newSize = Math.round(
           Math.max(8, Math.min(200, startFontSize * ratio)),
         );
-        resizeEl.style.fontSize = newSize + "px";
+        if (resizeEl.id === "todoContainer") {
+          resizeEl.style.setProperty("--todo-font-size", newSize + "px");
+          params.todoFontSize = String(newSize);
+        } else {
+          resizeEl.style.fontSize = newSize + "px";
+        }
       } else {
         // bar
         const { anchorX, anchorY } = resizeStartData;
@@ -767,11 +815,17 @@ function setupDragEnvironment(params) {
         title: "title",
         percentage: "time",
         progressContainer: "bar",
+        todoContainer: "todo",
       };
       const target = targetMap[resizeEl.id] || "bar";
 
       if (isTextElement(resizeEl)) {
-        const fontSize = parseInt(resizeEl.style.fontSize) || 40;
+        let fontSize;
+        if (resizeEl.id === "todoContainer") {
+          fontSize = parseInt(params.todoFontSize) || 20;
+        } else {
+          fontSize = parseInt(resizeEl.style.fontSize) || 40;
+        }
         window.parent.postMessage({ type: "resize", target, fontSize }, "*");
       } else {
         const w = parseInt(resizeEl.style.width) || 500;
@@ -789,11 +843,13 @@ function setupDragEnvironment(params) {
         document.getElementById("title"),
         document.getElementById("percentage"),
         document.getElementById("progressContainer"),
+        document.getElementById("todoContainer"),
       ];
       const syncTargetMap = {
         title: "title",
         percentage: "time",
         progressContainer: "bar",
+        todoContainer: "todo",
       };
       for (const el of syncTargets) {
         if (!el || el.style.display === "none") continue;
@@ -856,6 +912,7 @@ function setupDragEnvironment(params) {
       title: "title",
       percentage: "time",
       progressContainer: "bar",
+      todoContainer: "todo",
     };
 
     for (const el of draggedElements) {
@@ -947,8 +1004,23 @@ function updateURL(currentValue, maxValue, params) {
     searchParams.set("maskImageUrl", params.maskImageUrl);
   }
 
+  searchParams.set("todoX", params.todoX);
+  searchParams.set("todoY", params.todoY);
+  searchParams.set("todoFontSize", params.todoFontSize);
+
+  if (params.twitchChannel) {
+    searchParams.set("twitchChannel", params.twitchChannel);
+  }
+  if (params.twitchUsername) {
+    searchParams.set("twitchUsername", params.twitchUsername);
+  }
+
   if (params.milestones && params.milestones.length > 0) {
     searchParams.set("milestones", JSON.stringify(params.milestones));
+  }
+
+  if (params.todos && params.todos.length > 0) {
+    searchParams.set("todos", JSON.stringify(params.todos));
   }
 
   const newUrl = window.location.pathname + "?" + searchParams.toString();
@@ -1010,6 +1082,160 @@ function renderMilestones(params) {
   });
 }
 
+function renderTodos(params) {
+  const container = document.getElementById("todoContainer");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!params.todos || params.todos.length === 0) {
+    container.style.display = "none";
+    return;
+  }
+
+  container.style.display = "";
+  container.style.setProperty(
+    "--todo-font-size",
+    (params.todoFontSize || "20") + "px",
+  );
+
+  params.todos.forEach((todo) => {
+    const item = document.createElement("div");
+    item.className = "todo-item" + (todo.done ? " done" : "");
+
+    const bullet = document.createElement("div");
+    bullet.className = "todo-item-bullet";
+
+    const text = document.createElement("span");
+    text.className = "todo-item-text";
+    text.textContent = todo.text;
+
+    item.appendChild(bullet);
+    item.appendChild(text);
+    container.appendChild(item);
+  });
+}
+
+let twitchClient = null;
+
+function toggleTodo(params, index, done) {
+  if (!params.todos || index < 0 || index >= params.todos.length) return;
+  params.todos[index] = { ...params.todos[index], done };
+  renderTodos(params);
+}
+
+function initTwitch(params, callbacks) {
+  const statusEl = document.getElementById("twitch-status");
+  if (!params.twitchChannel) {
+    if (statusEl) statusEl.style.display = "none";
+    return;
+  }
+
+  const channel = params.twitchChannel.replace(/^#/, "").toLowerCase();
+  if (!channel) {
+    if (statusEl) statusEl.style.display = "none";
+    return;
+  }
+
+  if (statusEl) {
+    statusEl.textContent = "Twitch: connecting...";
+    statusEl.style.display = "";
+  }
+
+  try {
+    const client = new tmi.Client({
+      channels: [channel],
+    });
+
+    client.on("connected", () => {
+      if (statusEl) statusEl.textContent = "Twitch: connected to #" + channel;
+    });
+
+    client.on("disconnected", (reason) => {
+      if (statusEl)
+        statusEl.textContent =
+          "Twitch: disconnected (" + (reason || "unknown") + ")";
+    });
+
+    client.on("message", (_channel, userstate, message, _self) => {
+      const username = (
+        userstate["display-name"] ||
+        userstate.username ||
+        ""
+      ).toLowerCase();
+
+      // Check if a specific username is required
+      if (params.twitchUsername) {
+        const allowed = params.twitchUsername.toLowerCase();
+        if (username !== allowed) return;
+      }
+
+      const trimmed = message.trim();
+
+      // Parse !progress milestone <n> command
+      const progressMatch = trimmed.match(
+        /^!progress\s+milestone\s+(\d+)\s*$/i,
+      );
+      if (progressMatch && callbacks && callbacks.setProgressValue) {
+        const msIndex = parseInt(progressMatch[1], 10) - 1;
+        if (
+          msIndex >= 0 &&
+          msIndex < params.milestones.length &&
+          params.max > 0
+        ) {
+          const value = Math.min(
+            params.milestones[msIndex].seconds,
+            params.max,
+          );
+          callbacks.setProgressValue(value);
+          window.parent.postMessage({ type: "progressJump", value }, "*");
+        }
+        return;
+      }
+
+      // Parse !todo commands
+      const todoMatch = trimmed.match(
+        /^!todo\s+(\d+)\s+(done|undone|toggle|check|uncheck)\s*$/i,
+      );
+      if (!todoMatch) return;
+
+      const index = parseInt(todoMatch[1], 10) - 1; // 1-indexed in chat, 0-indexed in code
+      const action = todoMatch[2].toLowerCase();
+
+      let newDone;
+      if (action === "done" || action === "check") {
+        newDone = true;
+      } else if (action === "undone" || action === "uncheck") {
+        newDone = false;
+      } else {
+        // toggle
+        if (index >= 0 && index < params.todos.length) {
+          newDone = !params.todos[index].done;
+        } else {
+          return;
+        }
+      }
+
+      toggleTodo(params, index, newDone);
+
+      // Update the URL so the state persists on refresh
+      updateURL(params.start, params.max, params);
+
+      // Notify parent iframe (for preview mode)
+      window.parent.postMessage(
+        { type: "todoToggle", index, done: newDone },
+        "*",
+      );
+    });
+
+    client.connect();
+    twitchClient = client;
+  } catch (err) {
+    if (statusEl) statusEl.textContent = "Twitch: error (" + err.message + ")";
+    console.error("Twitch init error:", err);
+  }
+}
+
 function setupTitle(params) {
   const titleElement = document.getElementById("title");
   if (params.title) {
@@ -1037,6 +1263,20 @@ export function initBar() {
   applyPositions(params);
 
   renderMilestones(params);
+  renderTodos(params);
+
+  let currentValue = params.start;
+
+  const twitchCallbacks = {
+    setProgressValue: (value) => {
+      params.start = value;
+      currentValue = value;
+      updateProgress(value, params.max);
+      updateDisplay(value, params.max, params);
+      updateURL(value, params.max, params);
+    },
+  };
+  initTwitch(params, twitchCallbacks);
 
   function updateProgress(value, maxValue) {
     style.update(progressElement, value, maxValue, params);
@@ -1047,7 +1287,6 @@ export function initBar() {
   updateURL(params.start, params.max, params);
 
   if (!params.positionMode) {
-    let currentValue = params.start;
     const isCountdown = params.direction === "countdown";
     const interval = setInterval(() => {
       if (isCountdown) {
@@ -1101,6 +1340,11 @@ export function initBar() {
         d.barX,
         d.barY,
       );
+      setElementPosition(
+        document.getElementById("todoContainer"),
+        d.todoX,
+        d.todoY,
+      );
       if (d.barWidth) {
         const barEl = document.getElementById("progressContainer");
         barEl.style.width = d.barWidth + "px";
@@ -1117,6 +1361,10 @@ export function initBar() {
       if (d.timeFontSize)
         document.getElementById("percentage").style.fontSize =
           d.timeFontSize + "px";
+      if (d.todoFontSize) {
+        const tc = document.getElementById("todoContainer");
+        if (tc) tc.style.setProperty("--todo-font-size", d.todoFontSize + "px");
+      }
     }
   });
 }
