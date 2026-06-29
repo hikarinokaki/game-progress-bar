@@ -32,6 +32,9 @@ function buildPreviewURL() {
     todoFontSize: state.todoFontSize,
     twitchChannel: state.twitchChannel,
     twitchUsername: state.twitchUsername,
+    msLabelOffsetX: state.msLabelOffsetX,
+    msLabelOffsetY: state.msLabelOffsetY,
+    msLabelFontSize: state.msLabelFontSize,
   });
 
   if (state.maskImageUrl) {

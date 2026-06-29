@@ -31,6 +31,9 @@ export const state = {
   todoFontSize: "20",
   twitchChannel: "",
   twitchUsername: "",
+  msLabelOffsetX: "0",
+  msLabelOffsetY: "4",
+  msLabelFontSize: "14",
 };
 
 export function setStart(value) {
@@ -157,4 +160,16 @@ export function setTwitchChannel(value) {
 
 export function setTwitchUsername(value) {
   state.twitchUsername = value;
+}
+
+export function setMsLabelOffsetX(value) {
+  state.msLabelOffsetX = value;
+}
+
+export function setMsLabelOffsetY(value) {
+  state.msLabelOffsetY = value;
+}
+
+export function setMsLabelFontSize(value) {
+  state.msLabelFontSize = value;
 }

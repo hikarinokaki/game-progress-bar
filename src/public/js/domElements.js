@@ -52,3 +52,12 @@ export const twitchChannelInput = document.getElementById("twitchChannelInput");
 export const twitchUsernameInput = document.getElementById(
   "twitchUsernameInput",
 );
+export const msLabelOffsetXInput = document.getElementById(
+  "msLabelOffsetXInput",
+);
+export const msLabelOffsetYInput = document.getElementById(
+  "msLabelOffsetYInput",
+);
+export const msLabelFontSizeInput = document.getElementById(
+  "msLabelFontSizeInput",
+);

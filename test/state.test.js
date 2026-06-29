@@ -32,6 +32,9 @@ import {
   setTodoFontSize,
   setTwitchChannel,
   setTwitchUsername,
+  setMsLabelOffsetX,
+  setMsLabelOffsetY,
+  setMsLabelFontSize,
 } from "../src/public/js/state.js";
 
 beforeEach(() => {
@@ -53,6 +56,9 @@ beforeEach(() => {
   state.todos = [];
   state.twitchChannel = "";
   state.twitchUsername = "";
+  state.msLabelOffsetX = "0";
+  state.msLabelOffsetY = "4";
+  state.msLabelFontSize = "14";
 });
 
 describe("setStart", () => {
@@ -181,5 +187,20 @@ describe("simple setters", () => {
   it("setTwitchUsername", () => {
     setTwitchUsername("nightbot");
     expect(state.twitchUsername).toBe("nightbot");
+  });
+
+  it("setMsLabelOffsetX", () => {
+    setMsLabelOffsetX("8");
+    expect(state.msLabelOffsetX).toBe("8");
+  });
+
+  it("setMsLabelOffsetY", () => {
+    setMsLabelOffsetY("12");
+    expect(state.msLabelOffsetY).toBe("12");
+  });
+
+  it("setMsLabelFontSize", () => {
+    setMsLabelFontSize("18");
+    expect(state.msLabelFontSize).toBe("18");
   });
 });

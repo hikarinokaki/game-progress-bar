@@ -4,7 +4,7 @@
 
 - `npm run build:frontend` — bundle frontend JS with esbuild (entry: `src/public/js/main.js` → output: `dist/bundle.js`)
 - `npm start` — run server at `src/server.js`
-- `npm test` — vitest run (98 tests across 4 test files)
+- `npm test` — vitest run (135 tests across 6 test files)
 - `npm run test:watch` — vitest watch mode
 - `npm run fallow` — run fallow static analysis
 - `npm run fallow:health` — fallow complexity/health analysis only
@@ -22,48 +22,52 @@
 
 - **HLTB session** (`src/gameDataFetcher.js`): A persistent headless Chromium browser navigates howlongtobeat.com search pages and intercepts `api/bleed` JSON responses for completion times. If HLTB changes their site or API, it will break. The browser session is initialized at server startup and stays alive until shutdown.
 - **Steam API key restrictions**: The current API key returns 403 for `GetPlayerSummaries` and 401 for `GetOwnedGames`. Auth works (profile is built from OpenID), but the game library won't load until a key with proper permissions is used.
-- **shared.js (bar logic)**: At 1297 lines, `src/public/js/bar/shared.js` is the biggest complexity hotspot. The drag system (`setupDragEnvironment`, `onPointerMove`, `onPointerUp`, `onPointerDown`) accounts for ~800 lines and is tightly coupled to DOM/iframe messaging. `parseParams` is cyclomatic 34. Refactoring this file is the top priority.
+- **HLTB auth token expiry**: The Puppeteer session must periodically re-fetch the HLTB auth token; if it expires mid-session, `getGameMaxTime` returns 403 until the next refresh cycle.
+- **Twitch tmi.js**: Bundled via esbuild into `dist/bar.bundle.js` (~64 KB total). If tmi.js changes its API or CDN dependency, the chat command system breaks.
+
+## Module Architecture (bar page)
+
+| Module      | Lines | Exports                                                                                                                                               | Role                                                           |
+| ----------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `shared.js` | 175   | `initBar`                                                                                                                                             | Orchestrator: `parseParams`, `updateURL`, postMessage listener |
+| `logic.js`  | 116   | `secondsToNaturalTime`, `rectsIntersect`, validators, parsers                                                                                         | Pure functions, no DOM                                         |
+| `timer.js`  | 24    | `createTimer`                                                                                                                                         | Owns `currentValue`, `setInterval` tick                        |
+| `twitch.js` | 107   | `initTwitch`                                                                                                                                          | tmi.js chat client, todo toggle                                |
+| `render.js` | 215   | `canvasState`, `initCanvas`, `makeAbsolute`, `applyPositions`, `setElementPosition`, `updateDisplay`, `renderMilestones`, `renderTodos`, `setupTitle` | DOM rendering, canvas scale state                              |
+| `drag.js`   | 726   | `setupDragEnvironment`, `setSnapEnabled`                                                                                                              | Pointer-based drag/resize/select/snap                          |
+
+**Key invariants**:
+
+- `currentValue` lives in `timer.js` (module-level closure via `createTimer`), accessible via `getCurrentValue`/`setCurrentValue`
+- `params` object is mutated in-place (toggleTodo, timer, etc.)
+- `updateURL` reads `params.start` and `params.max` directly (not through `timer.getCurrentValue()` — intentional)
+- Twitch `callbacks.setProgressValue` is `timer.setCurrentValue`, which updates `currentValue` AND `params.start` AND calls `onProgressChange` → `updateProgress`/`updateDisplay`/`updateURL`
+- Style plugin lifecycle: `getStyle(params.style).init(container, params)` then `style.update(element, value, max, params)`
+- `canvasState` (`render.js:3`) is a mutable object passed by reference — allows `drag.js` and `render.js` to share the current canvas scale
 
 ## Testing
 
 - **Framework**: Vitest with jsdom environment
 - **Test location**: `test/` directory, mirrors source structure
-- **4 test files, 98 tests**:
+- **6 test files, ~135 tests**:
   - `test/utils.test.js` — pure utility functions
   - `test/bar/logic.test.js` — extracted bar logic (secondsToNaturalTime, command parsers, validation, todos)
+  - `test/bar/timer.test.js` — createTimer tick, get/set currentValue
+  - `test/bar/drag.test.js` — drag helpers (geometry, snap, candidates)
   - `test/state.test.js` — config UI state setters
   - `test/api.controller.test.js` — server API controller (with mocked `getGameMaxTime` via dependency injection)
 - **Mocking pattern for CJS controllers**: Pass mock as second arg (`require("../controllers/api.controller")(libraryCache, mockFn)`)
-- **Style plugins** (`gradientStyle.js`, `maskStyle.js`, etc.) and DOM-heavy files (`progressBar.js`, `shared.js` drag system) have no tests yet — are tightly coupled to browser DOM
+- **DOM tests** (`drag.test.js`): set up minimal DOM elements (progressContainer, title, percentage, todoContainer) with style properties; test geometry/snap functions that depend on `document.getElementById`
 
 ## Fallow (static analysis)
 
 - `.fallowrc.json` configures proper esbuild entry points (`src/public/js/main.js`, `src/public/js/bar.js`)
-- Metrics: MI 93.2, 0% dead exports, 1 refactoring target remaining (shared.js complexity)
+- Metrics: MI 92.8, 0% dead exports, 2 refactoring targets (logic.js complexity, drag.js onPointerMove complexity)
 - Run `npm run fallow` before major refactors to verify no regressions
-- Known false positive: `src/public/styles.css` is reported as dead (loaded from HTML, not JS)
+- Known false positives:
+  - `src/public/styles.css` — reported as dead (loaded from HTML, not JS)
+  - `src/public/bar.html:1 ./dist/bar.bundle.js` and `src/public/index.html:1 ./dist/bundle.js` — HTML plugin can't resolve esbuild output paths
 - Test files are automatically excluded from dead-code analysis
-
-## Upcoming: shared.js Refactoring Priority
-
-`src/public/js/bar/shared.js` needs splitting. Current structure (functions-to-extract):
-
-1. **Drag system** (`setupDragEnvironment` 442L, `onPointerMove` 141L, `onPointerUp` 129L, `onPointerDown` 103L, `applySnapAbs` 57L, `updateSnapGuides` 34L, `setCursorForTarget` 13L, `getBarCanvasBounds` 15L, `closestCandidate` 14L) → extract to `bar/drag.js`
-2. **URL management** (`updateURL` 52L, `parseParams` 61L) — `parseParams` is already partially refactored to use `logic.js` helpers. The remaining DOM-dependent part (reading `window.location.search`, setting `data-theme` on document) stays, but param validation uses `logic.js`
-3. **Timer** (`initBar` timer logic, `currentValue` hoisting, `setProgressValue` callback) → extract to `bar/timer.js`
-4. **Twitch** (`initTwitch` 100L, `twitchClient`, `toggleTodo` 5L) → extract to `bar/twitch.js`
-5. **Rendering** (`renderMilestones` 54L, `renderTodos` 33L, `setupTitle`, `applyPositions`, `initCanvas`, `makeAbsolute`, `updateDisplay`, `setElementPosition`, `applyFontSizes`) → could stay in `shared.js` or go to `bar/render.js`
-6. **PostMessage handling** (the `window.addEventListener("message", ...)` block in `initBar`) → belongs with the drag system
-
-**Strategy**: Extract one module at a time, starting with the least-coupled (timer), then twitch, then rendering, and finally the drag system. Run `npm test && npm run build:frontend && npm run fallow` after each extraction to confirm zero regressions.
-
-**Key invariants to preserve**:
-
-- `currentValue` must be hoisted to function scope accessible by both timer interval and `setProgressValue` callback
-- `params` object is mutated in-place (toggleTodo, timer, etc.)
-- `updateURL` reads `params.start` and `params.max` directly (not the `currentValue` variable — intentional)
-- Twitch `callbacks.setProgressValue` must update `currentValue` AND `params.start` AND call `updateProgress`/`updateDisplay`/`updateURL`
-- Style plugin lifecycle: `getStyle(params.style).init(container, params)` then `style.update(element, value, max, params)`
 
 ## Required Env Vars
 
@@ -85,7 +89,7 @@
 
 ## CI (`deploy.yml`)
 
-- On push to `main`: builds Docker image, tags `latest`+`sha`, pushes to GHCR, then **SSHes into the VPS** (`progress.ookaminohikari.com`) to `docker compose pull && docker compose up -d`
+- On push to `main`: `npm ci` → `npm test` → `npm run fallow` → `npm run build:frontend` → Docker build/push → **SSH into VPS** (`progress.ookaminohikari.com`) to `docker compose pull && docker compose up -d`
 - Requires repo secret `SSH_PRIVATE_KEY` (root SSH key for the VPS)
 - The hostname is a DNS A record managed by the `vps-config` Terraform project — idempotent across VPS IP changes
 

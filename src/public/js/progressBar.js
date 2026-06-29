@@ -31,6 +31,9 @@ import {
   setTodoFontSize,
   setTwitchChannel,
   setTwitchUsername,
+  setMsLabelOffsetX,
+  setMsLabelOffsetY,
+  setMsLabelFontSize,
 } from "./state.js";
 import {
   startInput,
@@ -68,6 +71,9 @@ import {
   todoFontSizeInput,
   twitchChannelInput,
   twitchUsernameInput,
+  msLabelOffsetXInput,
+  msLabelOffsetYInput,
+  msLabelFontSizeInput,
 } from "./domElements.js";
 import {
   calculatePercent,
@@ -354,6 +360,9 @@ function buildPreviewURL(forPositionMode) {
     todoFontSize: state.todoFontSize,
     twitchChannel: state.twitchChannel,
     twitchUsername: state.twitchUsername,
+    msLabelOffsetX: state.msLabelOffsetX,
+    msLabelOffsetY: state.msLabelOffsetY,
+    msLabelFontSize: state.msLabelFontSize,
   });
 
   if (forPositionMode) {
@@ -418,6 +427,9 @@ export function render() {
 
   syncSupportedOptions();
   renderMilestoneList();
+  msLabelOffsetXInput.value = state.msLabelOffsetX;
+  msLabelOffsetYInput.value = state.msLabelOffsetY;
+  msLabelFontSizeInput.value = state.msLabelFontSize;
   renderTodoList();
 }
 
@@ -611,6 +623,21 @@ export function initProgressBar() {
       render();
     });
   }
+
+  msLabelOffsetXInput.addEventListener("change", (e) => {
+    setMsLabelOffsetX(e.target.value);
+    render();
+  });
+
+  msLabelOffsetYInput.addEventListener("change", (e) => {
+    setMsLabelOffsetY(e.target.value);
+    render();
+  });
+
+  msLabelFontSizeInput.addEventListener("change", (e) => {
+    setMsLabelFontSize(e.target.value);
+    render();
+  });
 
   const addTodoBtn = document.getElementById("addTodoBtn");
   if (addTodoBtn) {
