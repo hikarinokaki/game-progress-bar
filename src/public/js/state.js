@@ -24,6 +24,7 @@ export const state = {
   canvasHeight: "1080",
   titleFontSize: "40",
   timeFontSize: "32",
+  milestones: [],
 };
 
 export function setStart(value) {
@@ -122,4 +123,8 @@ export function setTitleFontSize(value) {
 
 export function setTimeFontSize(value) {
   state.timeFontSize = value;
+}
+
+export function setMilestones(value) {
+  state.milestones = value;
 }

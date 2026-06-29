@@ -90,6 +90,14 @@
           <input type="checkbox" id="invertDisplayCheckbox" />
           <label for="invertDisplayCheckbox">Invert Display</label>
         </div>
+
+        <h3 class="section-heading">Milestones</h3>
+        <div id="milestone-list"></div>
+        <div class="input-group-row">
+          <button id="addMilestoneBtn" class="btn-primary">
+            + Add Milestone
+          </button>
+        </div>
       </div>
 
       <div class="col">
@@ -129,109 +137,110 @@
       </div>
 
       <div class="col">
-        <label>
-          Bar Width (px):
-          <input
-            type="number"
-            id="barWidthInput"
-            value="500"
-            min="50"
-            max="2000"
-          />
-        </label>
+        <h3 class="section-heading">Position &amp; Size</h3>
 
-        <label>
-          Bar Height (px):
-          <input
-            type="number"
-            id="barHeightInput"
-            value="60"
-            min="10"
-            max="500"
-          />
-        </label>
+        <div class="input-group-row">
+          <label class="compact-field">
+            <span class="field-label">Title X (px)</span>
+            <input type="number" id="titleXInput" placeholder="auto" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Title Y (px)</span>
+            <input type="number" id="titleYInput" placeholder="auto" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Title Font (px)</span>
+            <input
+              type="number"
+              id="titleFontSizeInput"
+              value="40"
+              min="8"
+              max="200"
+            />
+          </label>
+        </div>
 
-        <label>
-          Orientation:
-          <select id="orientationSelect">
-            <option value="horizontal">Horizontal</option>
-            <option value="vertical">Vertical</option>
-          </select>
-        </label>
+        <div class="input-group-row">
+          <label class="compact-field">
+            <span class="field-label">Time X (px)</span>
+            <input type="number" id="timeXInput" placeholder="auto" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Time Y (px)</span>
+            <input type="number" id="timeYInput" placeholder="auto" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Time Font (px)</span>
+            <input
+              type="number"
+              id="timeFontSizeInput"
+              value="32"
+              min="8"
+              max="200"
+            />
+          </label>
+        </div>
 
-        <label>
-          Bar X (px):
-          <input type="number" id="barXInput" placeholder="blank = flow" />
-        </label>
+        <div class="input-group-row">
+          <label class="compact-field">
+            <span class="field-label">Bar X (px)</span>
+            <input type="number" id="barXInput" placeholder="auto" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Bar Y (px)</span>
+            <input type="number" id="barYInput" placeholder="auto" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Width (px)</span>
+            <input
+              type="number"
+              id="barWidthInput"
+              value="500"
+              min="50"
+              max="2000"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Height (px)</span>
+            <input
+              type="number"
+              id="barHeightInput"
+              value="60"
+              min="10"
+              max="500"
+            />
+          </label>
+        </div>
 
-        <label>
-          Bar Y (px):
-          <input type="number" id="barYInput" placeholder="blank = flow" />
-        </label>
-
-        <label>
-          Canvas Width (px):
-          <input
-            type="number"
-            id="canvasWidthInput"
-            value="1920"
-            min="320"
-            max="7680"
-          />
-        </label>
-
-        <label>
-          Canvas Height (px):
-          <input
-            type="number"
-            id="canvasHeightInput"
-            value="1080"
-            min="240"
-            max="4320"
-          />
-        </label>
-
-        <label>
-          Title X (px):
-          <input type="number" id="titleXInput" placeholder="blank = flow" />
-        </label>
-
-        <label>
-          Title Y (px):
-          <input type="number" id="titleYInput" placeholder="blank = flow" />
-        </label>
-
-        <label>
-          Time X (px):
-          <input type="number" id="timeXInput" placeholder="blank = flow" />
-        </label>
-
-        <label>
-          Time Y (px):
-          <input type="number" id="timeYInput" placeholder="blank = flow" />
-        </label>
-
-        <label>
-          Title Font Size (px):
-          <input
-            type="number"
-            id="titleFontSizeInput"
-            value="40"
-            min="8"
-            max="200"
-          />
-        </label>
-
-        <label>
-          Time Font Size (px):
-          <input
-            type="number"
-            id="timeFontSizeInput"
-            value="32"
-            min="8"
-            max="200"
-          />
-        </label>
+        <div class="input-group-row">
+          <label class="compact-field">
+            <span class="field-label">Canvas Width (px)</span>
+            <input
+              type="number"
+              id="canvasWidthInput"
+              value="1920"
+              min="320"
+              max="7680"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Canvas Height (px)</span>
+            <input
+              type="number"
+              id="canvasHeightInput"
+              value="1080"
+              min="240"
+              max="4320"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Orientation</span>
+            <select id="orientationSelect">
+              <option value="horizontal">Horizontal</option>
+              <option value="vertical">Vertical</option>
+            </select>
+          </label>
+        </div>
 
         <div class="option-row" id="maskImageRow" style="display: none">
           <label>

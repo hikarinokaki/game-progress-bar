@@ -24,6 +24,7 @@ import {
   setBarY,
   setTitleFontSize,
   setTimeFontSize,
+  setMilestones,
 } from "./state.js";
 import {
   startInput,
@@ -75,7 +76,7 @@ registerStyle(stepsStyle);
 registerStyle(maskStyle);
 
 let positionModeActive = false;
-let snapActive = false;
+let snapActive = true;
 
 const MAX_UNDO = 50;
 const undoStack = [];
@@ -153,6 +154,67 @@ function syncSupportedOptions() {
   if (olbl) olbl.style.display = options.orientation ? "" : "none";
 }
 
+function renderMilestoneList() {
+  const list = document.getElementById("milestone-list");
+  if (!list) return;
+  list.innerHTML = "";
+
+  state.milestones.forEach((ms, i) => {
+    const row = document.createElement("div");
+    row.className = "milestone-row";
+
+    const timeInput = document.createElement("input");
+    timeInput.type = "text";
+    timeInput.className = "milestone-time-input";
+    timeInput.placeholder = "e.g. 1h 30m";
+    timeInput.value = secondsToText(ms.seconds);
+    timeInput.addEventListener("change", () => {
+      const val = timeInput.value.trim().toLowerCase();
+      let seconds = null;
+      if (val.endsWith("%")) {
+        const pct = parseFloat(val);
+        if (!isNaN(pct)) {
+          seconds = Math.round((pct / 100) * state.max);
+        }
+      } else {
+        seconds = parseTimeToSeconds(val);
+      }
+      if (seconds !== null) {
+        const updated = [...state.milestones];
+        updated[i] = { ...updated[i], seconds: Math.min(seconds, state.max) };
+        setMilestones(updated);
+        render();
+      }
+    });
+
+    const labelInput = document.createElement("input");
+    labelInput.type = "text";
+    labelInput.className = "milestone-label-input";
+    labelInput.placeholder = "Label";
+    labelInput.value = ms.text;
+    labelInput.addEventListener("change", () => {
+      const updated = [...state.milestones];
+      updated[i] = { ...updated[i], text: labelInput.value };
+      setMilestones(updated);
+      render();
+    });
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "milestone-remove-btn";
+    removeBtn.textContent = "\u00d7";
+    removeBtn.addEventListener("click", () => {
+      const updated = state.milestones.filter((_, idx) => idx !== i);
+      setMilestones(updated);
+      render();
+    });
+
+    row.appendChild(timeInput);
+    row.appendChild(labelInput);
+    row.appendChild(removeBtn);
+    list.appendChild(row);
+  });
+}
+
 function syncPreviewFrameSize() {
   const cw = parseInt(state.canvasWidth) || 1920;
   const ch = parseInt(state.canvasHeight) || 1080;
@@ -182,11 +244,15 @@ function togglePositionMode() {
   }
 }
 
-function toggleSnap() {
-  snapActive = !snapActive;
+function syncSnapUI() {
   snapBtn.textContent = snapActive ? "Snap: On" : "Snap: Off";
   snapBtn.style.background = snapActive ? "#4CAF50" : "";
   snapBtn.style.color = snapActive ? "#fff" : "";
+}
+
+function toggleSnap() {
+  snapActive = !snapActive;
+  syncSnapUI();
   previewFrame.contentWindow?.postMessage(
     { type: "snap", enabled: snapActive },
     "*",
@@ -228,6 +294,10 @@ function buildPreviewURL(forPositionMode) {
     params.set("maskImageUrl", state.maskImageUrl);
   }
 
+  if (state.milestones.length > 0) {
+    params.set("milestones", JSON.stringify(state.milestones));
+  }
+
   return "bar.html?" + params.toString();
 }
 
@@ -267,6 +337,7 @@ export function render() {
   timeFontSizeInput.value = state.timeFontSize;
 
   syncSupportedOptions();
+  renderMilestoneList();
 }
 
 export function initProgressBar() {
@@ -424,6 +495,16 @@ export function initProgressBar() {
 
   positionModeBtn.addEventListener("click", togglePositionMode);
   snapBtn.addEventListener("click", toggleSnap);
+  syncSnapUI();
+
+  const addMilestoneBtn = document.getElementById("addMilestoneBtn");
+  if (addMilestoneBtn) {
+    addMilestoneBtn.addEventListener("click", () => {
+      const updated = [...state.milestones, { seconds: 0, text: "" }];
+      setMilestones(updated);
+      render();
+    });
+  }
 
   window.addEventListener("message", (event) => {
     if (event.data?.type === "position" || event.data?.type === "resize") {

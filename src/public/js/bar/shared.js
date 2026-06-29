@@ -70,6 +70,7 @@ function parseParams() {
     titleFontSize: params.get("titleFontSize") || "40",
     timeFontSize: params.get("timeFontSize") || "32",
     positionMode: params.get("positionMode") === "1",
+    milestones: [],
   };
 
   if (isNaN(p.start) || p.start < 0) p.start = 0;
@@ -94,6 +95,23 @@ function parseParams() {
   if (!/^#[0-9A-Fa-f]{6}$/.test(p.bgColor)) {
     console.warn(`Invalid bgColor "${p.bgColor}", falling back to "#ddd"`);
     p.bgColor = "#ddd";
+  }
+
+  try {
+    const raw = params.get("milestones");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        p.milestones = parsed
+          .map((m) => ({
+            seconds: Math.min(Math.max(0, Number(m.seconds) || 0), p.max),
+            text: String(m.text || ""),
+          }))
+          .filter((m) => m.seconds > 0 || m.text);
+      }
+    }
+  } catch {
+    // invalid milestones param, ignore
   }
 
   if (!getStyle(p.style)) {
@@ -427,7 +445,7 @@ function parsePosition(el) {
 function addHandles(el) {
   if (!el) return;
   const corners = ["nw", "ne", "sw", "se"];
-  const half = 5; // half of handle size (10)
+  const half = 7; // half of handle size (14)
   const pos = {
     nw: { top: -half + "px", left: -half + "px" },
     ne: { top: -half + "px", right: -half + "px" },
@@ -929,8 +947,67 @@ function updateURL(currentValue, maxValue, params) {
     searchParams.set("maskImageUrl", params.maskImageUrl);
   }
 
+  if (params.milestones && params.milestones.length > 0) {
+    searchParams.set("milestones", JSON.stringify(params.milestones));
+  }
+
   const newUrl = window.location.pathname + "?" + searchParams.toString();
   history.replaceState(null, "", newUrl);
+}
+
+function renderMilestones(params) {
+  const container = document.getElementById("progressContainer");
+  if (!container) return;
+
+  container.querySelectorAll(".milestone-marker").forEach((el) => el.remove());
+
+  if (!params.milestones || params.milestones.length === 0) return;
+  if (params.max <= 0) return;
+
+  const w = parseInt(params.barWidth) || 500;
+  const h = parseInt(params.barHeight) || 60;
+  const isHorizontal = params.orientation !== "vertical";
+
+  params.milestones.forEach((ms) => {
+    const ratio = ms.seconds / params.max;
+    const group = document.createElement("div");
+    group.className = "milestone-marker";
+
+    const line = document.createElement("div");
+    line.className = "milestone-marker-line";
+
+    const label = document.createElement("span");
+    label.className = "milestone-marker-label";
+    label.textContent = ms.text;
+
+    if (isHorizontal) {
+      const lineX = ratio * w;
+      line.style.left = lineX + "px";
+      line.style.top = "0";
+      line.style.width = "2px";
+      line.style.height = h + "px";
+
+      label.style.left = lineX + "px";
+      label.style.top = h + 4 + "px";
+      label.style.transform = "translateX(-50%)";
+    } else {
+      const lineY = (1 - ratio) * h;
+      line.style.left = "0";
+      line.style.top = lineY + "px";
+      line.style.width = w + "px";
+      line.style.height = "2px";
+
+      label.style.left = w + 4 + "px";
+      label.style.top = lineY + "px";
+      label.style.transform = "translateY(-50%)";
+    }
+
+    group.appendChild(line);
+    if (ms.text) {
+      group.appendChild(label);
+    }
+    container.appendChild(group);
+  });
 }
 
 function setupTitle(params) {
@@ -958,6 +1035,8 @@ export function initBar() {
   makeAbsolute();
 
   applyPositions(params);
+
+  renderMilestones(params);
 
   function updateProgress(value, maxValue) {
     style.update(progressElement, value, maxValue, params);

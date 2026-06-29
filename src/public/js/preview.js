@@ -33,6 +33,10 @@ function buildPreviewURL() {
     params.set("maskImageUrl", state.maskImageUrl);
   }
 
+  if (state.milestones && state.milestones.length > 0) {
+    params.set("milestones", JSON.stringify(state.milestones));
+  }
+
   return `bar.html?${params.toString()}`;
 }
 

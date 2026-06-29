@@ -397,6 +397,126 @@ main {
   flex: 1;
 }
 
+.section-heading {
+  grid-column: 1 / -1;
+  margin: 0.75rem 0 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted, #666);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input-group-row {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.input-group-row .compact-field {
+  flex: 1;
+  min-width: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.field-label {
+  font-size: 0.7rem;
+  color: var(--text-muted, #666);
+  white-space: nowrap;
+}
+
+.input-group-row .compact-field input,
+.input-group-row .compact-field select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.25rem 0.375rem;
+  font-size: 0.8125rem;
+}
+
+/* Milestone rows in config UI */
+#milestone-list {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.milestone-row {
+  display: flex;
+  gap: 0.375rem;
+  align-items: center;
+}
+
+.milestone-row input {
+  padding: 0.25rem 0.375rem;
+  font-size: 0.8125rem;
+  border: 1px solid var(--border-input);
+  border-radius: 0.1875rem;
+  background: var(--bg-input);
+  color: var(--text-body);
+}
+
+.milestone-time-input {
+  width: 5rem;
+  flex-shrink: 0;
+}
+
+.milestone-label-input {
+  flex: 1;
+  min-width: 4rem;
+}
+
+.milestone-remove-btn {
+  background: none;
+  border: none;
+  color: var(--text-danger, #d32f2f);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.125rem 0.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+#addMilestoneBtn {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8125rem;
+  border: none;
+  border-radius: 0.1875rem;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#addMilestoneBtn:hover {
+  background: var(--btn-primary-hover);
+}
+
+/* Bar milestone markers */
+.milestone-marker {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.milestone-marker-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 1px;
+}
+
+.milestone-marker-label {
+  position: absolute;
+  color: var(--bar-text-color);
+  text-shadow: var(--bar-shadow);
+  font-size: 14px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
 .preview-section {
   max-width: 56rem;
   margin: 2.5rem auto;
@@ -414,7 +534,6 @@ main {
   width: 100%;
   height: 25rem;
   border: 1px solid var(--border-preview);
-  border-radius: 0.375rem;
 }
 
 /* 
