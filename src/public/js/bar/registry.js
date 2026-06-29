@@ -8,7 +8,7 @@ export function getStyle(name) {
   return styles[name] || null;
 }
 
-export function getAllStyles() {
+function getAllStyles() {
   return Object.values(styles);
 }
 

@@ -1,6 +1,6 @@
-const { getGameMaxTime } = require("../gameDataFetcher");
-
-module.exports = (libraryCache) => {
+module.exports = (libraryCache, getGameMaxTimeOverride) => {
+  const getGameMaxTime =
+    getGameMaxTimeOverride || require("../gameDataFetcher").getGameMaxTime;
   const searchGames = (req, res) => {
     if (!req.user) return res.status(401).json({ error: "Not authenticated" });
 

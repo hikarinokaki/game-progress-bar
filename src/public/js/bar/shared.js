@@ -1,5 +1,16 @@
 import { getStyle } from "./registry.js";
 import tmi from "tmi.js";
+import {
+  secondsToNaturalTime,
+  rectsIntersect,
+  validateColor,
+  validateDisplayFormat,
+  validateOrientation,
+  parseMilestones,
+  parseTodos,
+  parseProgressCommand,
+  parseTodoCommand,
+} from "./logic.js";
 
 let currentScale = 1;
 
@@ -13,29 +24,7 @@ let boxSelectOrigin = null;
 let boxSelectActive = false;
 const BOX_SELECT_THRESHOLD = 4;
 
-function rectsIntersect(a, b) {
-  return (
-    a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top
-  );
-}
-
-function secondsToNaturalTime(seconds) {
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  const remainingSeconds = seconds % 60;
-
-  if (hours > 0 && remainingMinutes > 0) {
-    return `${hours}h ${remainingMinutes}m`;
-  }
-  if (hours > 0) {
-    return `${hours}h`;
-  }
-  if (remainingMinutes > 0) {
-    return `${remainingMinutes}m`;
-  }
-  return `${remainingSeconds}s`;
-}
+// rectsIntersect and secondsToNaturalTime are imported from ./logic.js
 
 function parseParams() {
   const params = new URLSearchParams(window.location.search);
@@ -84,68 +73,16 @@ function parseParams() {
   if (isNaN(p.max) || p.max <= 0) p.max = 100;
   if (p.start > p.max) p.start = p.max;
 
-  const validFormats = ["percentage", "time", "none"];
-  if (!validFormats.includes(p.displayFormat)) {
-    console.warn(
-      `Unknown displayFormat "${p.displayFormat}", falling back to "percentage"`,
-    );
-    p.displayFormat = "percentage";
-  }
-
-  if (!/^#[0-9A-Fa-f]{6}$/.test(p.accentColor)) {
-    console.warn(
-      `Invalid accentColor "${p.accentColor}", falling back to "#4CAF50"`,
-    );
-    p.accentColor = "#4CAF50";
-  }
-
-  if (!/^#[0-9A-Fa-f]{6}$/.test(p.bgColor)) {
-    console.warn(`Invalid bgColor "${p.bgColor}", falling back to "#ddd"`);
-    p.bgColor = "#ddd";
-  }
-
-  try {
-    const raw = params.get("milestones");
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        p.milestones = parsed
-          .map((m) => ({
-            seconds: Math.min(Math.max(0, Number(m.seconds) || 0), p.max),
-            text: String(m.text || ""),
-          }))
-          .filter((m) => m.seconds > 0 || m.text);
-      }
-    }
-  } catch {
-    // invalid milestones param, ignore
-  }
-
-  try {
-    const raw = params.get("todos");
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) {
-        p.todos = parsed
-          .map((t) => ({
-            text: String(t.text || ""),
-            done: !!t.done,
-          }))
-          .filter((t) => t.text);
-      }
-    }
-  } catch {
-    // invalid todos param, ignore
-  }
+  p.displayFormat = validateDisplayFormat(p.displayFormat);
+  p.accentColor = validateColor(p.accentColor, "#4CAF50");
+  p.bgColor = validateColor(p.bgColor, "#ddd");
+  p.milestones = parseMilestones(params.get("milestones"), p.max);
+  p.todos = parseTodos(params.get("todos"));
+  p.orientation = validateOrientation(p.orientation);
 
   if (!getStyle(p.style)) {
     console.warn(`Unknown style "${p.style}", falling back to "progress"`);
     p.style = "progress";
-  }
-
-  const validOrientations = ["horizontal", "vertical"];
-  if (!validOrientations.includes(p.orientation)) {
-    p.orientation = "horizontal";
   }
 
   return p;
@@ -1173,39 +1110,28 @@ function initTwitch(params, callbacks) {
       const trimmed = message.trim();
 
       // Parse !progress milestone <n> command
-      const progressMatch = trimmed.match(
-        /^!progress\s+milestone\s+(\d+)\s*$/i,
-      );
-      if (progressMatch && callbacks && callbacks.setProgressValue) {
-        const msIndex = parseInt(progressMatch[1], 10) - 1;
-        if (
-          msIndex >= 0 &&
-          msIndex < params.milestones.length &&
-          params.max > 0
-        ) {
-          const value = Math.min(
-            params.milestones[msIndex].seconds,
-            params.max,
-          );
+      if (callbacks && callbacks.setProgressValue) {
+        const value = parseProgressCommand(
+          trimmed,
+          params.milestones,
+          params.max,
+        );
+        if (value !== null) {
           callbacks.setProgressValue(value);
           window.parent.postMessage({ type: "progressJump", value }, "*");
+          return;
         }
-        return;
       }
 
       // Parse !todo commands
-      const todoMatch = trimmed.match(
-        /^!todo\s+(\d+)\s+(done|undone|toggle|check|uncheck)\s*$/i,
-      );
-      if (!todoMatch) return;
+      const todoCmd = parseTodoCommand(trimmed);
+      if (!todoCmd) return;
 
-      const index = parseInt(todoMatch[1], 10) - 1; // 1-indexed in chat, 0-indexed in code
-      const action = todoMatch[2].toLowerCase();
-
+      const { index, action } = todoCmd;
       let newDone;
-      if (action === "done" || action === "check") {
+      if (action === "done") {
         newDone = true;
-      } else if (action === "undone" || action === "uncheck") {
+      } else if (action === "undone") {
         newDone = false;
       } else {
         // toggle

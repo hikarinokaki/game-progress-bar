@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": ["src/public/js/main.js", "src/public/js/bar.js"],
+  "duplicates": {
+    "minOccurrences": 2
+  },
+  "rules": {
+    "unused-dependencies": "warn"
+  }
+}

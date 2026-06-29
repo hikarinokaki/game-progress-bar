@@ -251,7 +251,6 @@ main {
 /* Make inputs/selects stretch nicely */
 .col input,
 .col select {
-  width: 100%;
   box-sizing: border-box;
 }
 

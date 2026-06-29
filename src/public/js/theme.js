@@ -4,7 +4,7 @@ export function getTheme() {
   return localStorage.getItem(STORAGE_KEY) || "default";
 }
 
-export function setTheme(theme) {
+function setTheme(theme) {
   document.documentElement.setAttribute(
     "data-theme",
     theme === "default" ? "" : theme,

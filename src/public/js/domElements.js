@@ -42,7 +42,7 @@ export const previewBtn = document.getElementById("previewBtn");
 export const copyBtn = document.getElementById("copyBtn");
 export const previewFrame = document.getElementById("previewFrame");
 
-export const themeSelect = document.getElementById("themeSelect");
+const themeSelect = document.getElementById("themeSelect");
 export const titleFontSizeInput = document.getElementById("titleFontSizeInput");
 export const timeFontSizeInput = document.getElementById("timeFontSizeInput");
 export const todoXInput = document.getElementById("todoXInput");

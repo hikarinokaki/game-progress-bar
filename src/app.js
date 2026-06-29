@@ -4,11 +4,6 @@ const passport = require("passport");
 const { SteamOpenIdStrategy } = require("passport-steam-openid");
 const axios = require("axios");
 const path = require("path");
-const {
-  getGameMaxTime,
-  initHltbSession,
-  shutdownHltbSession,
-} = require("./gameDataFetcher");
 
 const app = express();
 
@@ -71,4 +66,4 @@ passport.use(
 const routes = require("./routes")(passport, libraryCache, BASE_PATH);
 app.use(BASE_PATH, routes);
 
-module.exports = { app, initHltbSession, shutdownHltbSession };
+module.exports = { app };

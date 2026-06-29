@@ -1,5 +1,6 @@
 require("dotenv").config();
-const { app, initHltbSession, shutdownHltbSession } = require("./app");
+const { app } = require("./app");
+const { initHltbSession, shutdownHltbSession } = require("./gameDataFetcher");
 
 const PORT = process.env.PORT || 3000;
 const BASE_PATH = process.env.BASE_PATH || "";

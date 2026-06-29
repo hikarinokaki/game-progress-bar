@@ -161,14 +161,8 @@ async function shutdownHltbSession() {
   }
 }
 
-function clearCache() {
-  Object.keys(maxTimeCache).forEach((key) => delete maxTimeCache[key]);
-  console.log("Max time cache cleared");
-}
-
 module.exports = {
   getGameMaxTime,
-  clearCache,
   initHltbSession,
   shutdownHltbSession,
 };

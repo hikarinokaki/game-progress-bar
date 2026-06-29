@@ -7,7 +7,10 @@
     "start": "node src/server.js",
     "build:frontend": "node src/build.js",
     "watch:frontend": "node src/build.js --watch",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "fallow": "npx fallow",
+    "fallow:health": "npx fallow health",
     "prettier": "prettier --ignore-path .gitignore \"**/*.+(ts|tsx|js|jsx|json|css|md|mdx|html)\"",
     "format": "npm run prettier -- --write",
     "check-format": "npm run prettier -- --list-different"
@@ -31,6 +34,8 @@
     "esbuild": "^0.27.3",
     "eslint": "^10.0.0",
     "globals": "^17.3.0",
-    "prettier": "^3.8.1"
+    "jsdom": "^29.1.1",
+    "prettier": "^3.8.1",
+    "vitest": "^4.1.9"
   }
 }
