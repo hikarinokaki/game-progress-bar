@@ -1,4 +1,4 @@
-import { parseProgressCommand, parseTodoCommand } from "./logic.js";
+import { parseBarCommand, findTodoIndex } from "./logic.js";
 import tmi from "tmi.js";
 
 let twitchClient = null;
@@ -55,47 +55,104 @@ export function initTwitch(params, callbacks) {
       }
 
       const trimmed = message.trim();
+      const cmd = parseBarCommand(trimmed, params.milestones, params.max);
 
-      if (callbacks && callbacks.setProgressValue) {
-        const value = parseProgressCommand(
-          trimmed,
-          params.milestones,
-          params.max,
-        );
-        if (value !== null) {
-          callbacks.setProgressValue(value);
-          window.parent.postMessage({ type: "progressJump", value }, "*");
-          return;
+      if (cmd) {
+        switch (cmd.type) {
+          case "set":
+            callbacks.setProgressValue(cmd.value);
+            window.parent.postMessage(
+              { type: "progressJump", value: cmd.value },
+              "*",
+            );
+            return;
+
+          case "setMilestone": {
+            const value = Math.min(
+              params.milestones[cmd.index].seconds,
+              params.max,
+            );
+            callbacks.setProgressValue(value);
+            window.parent.postMessage({ type: "progressJump", value }, "*");
+            return;
+          }
+
+          case "pause":
+            if (callbacks.pauseTimer) callbacks.pauseTimer();
+            if (statusEl) statusEl.textContent = "Twitch: paused";
+            return;
+
+          case "resume":
+            if (callbacks.resumeTimer) callbacks.resumeTimer();
+            if (statusEl)
+              statusEl.textContent = "Twitch: connected to #" + channel;
+            return;
+
+          case "todoAction": {
+            const index = findTodoIndex(params.todos, cmd.id);
+            if (index < 0) return;
+            let newDone;
+            if (cmd.action === "done") newDone = true;
+            else if (cmd.action === "undone") newDone = false;
+            else newDone = !params.todos[index].done;
+            toggleTodo(params, index, newDone, callbacks);
+            callbacks.updateURL();
+            window.parent.postMessage(
+              { type: "todoToggle", index, done: newDone },
+              "*",
+            );
+            return;
+          }
+
+          case "todoAdd":
+            params.todos.push({ text: cmd.text, done: false });
+            callbacks.renderTodos();
+            callbacks.updateURL();
+            window.parent.postMessage({ type: "todoAdd", text: cmd.text }, "*");
+            return;
+
+          case "todoDelete": {
+            const index = findTodoIndex(params.todos, cmd.id);
+            if (index < 0) return;
+            params.todos.splice(index, 1);
+            callbacks.renderTodos();
+            callbacks.updateURL();
+            window.parent.postMessage({ type: "todoDelete", index }, "*");
+            return;
+          }
+
+          case "milestoneAdd":
+            params.milestones.push({
+              seconds: cmd.seconds,
+              text: cmd.text || "",
+            });
+            params.milestones.sort((a, b) => a.seconds - b.seconds);
+            callbacks.renderMilestones();
+            callbacks.updateURL();
+            window.parent.postMessage(
+              {
+                type: "milestoneAdd",
+                seconds: cmd.seconds,
+                text: cmd.text,
+              },
+              "*",
+            );
+            return;
+
+          case "milestoneRemove":
+            if (cmd.index >= 0 && cmd.index < params.milestones.length) {
+              params.milestones.splice(cmd.index, 1);
+              callbacks.renderMilestones();
+              callbacks.updateURL();
+              window.parent.postMessage(
+                { type: "milestoneRemove", index: cmd.index },
+                "*",
+              );
+            }
+            return;
         }
+        return;
       }
-
-      const todoCmd = parseTodoCommand(trimmed);
-      if (!todoCmd) return;
-
-      const { index, action } = todoCmd;
-      let newDone;
-      if (action === "done") {
-        newDone = true;
-      } else if (action === "undone") {
-        newDone = false;
-      } else {
-        if (index >= 0 && index < params.todos.length) {
-          newDone = !params.todos[index].done;
-        } else {
-          return;
-        }
-      }
-
-      toggleTodo(params, index, newDone, callbacks);
-
-      if (callbacks.updateURL) {
-        callbacks.updateURL();
-      }
-
-      window.parent.postMessage(
-        { type: "todoToggle", index, done: newDone },
-        "*",
-      );
     });
 
     client.connect();

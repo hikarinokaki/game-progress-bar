@@ -11,6 +11,9 @@ import {
   parseProgressCommand,
   parseTodoCommand,
   applyTodoAction,
+  parseTimeExpression,
+  parseBarCommand,
+  findTodoIndex,
 } from "../../src/public/js/bar/logic.js";
 
 describe("secondsToNaturalTime", () => {
@@ -311,5 +314,351 @@ describe("applyTodoAction", () => {
 
   it("returns null for null todos", () => {
     expect(applyTodoAction(null, 0, "done")).toBeNull();
+  });
+});
+
+describe("parseTimeExpression", () => {
+  it("parses hours and minutes format", () => {
+    expect(parseTimeExpression("1h 30m")).toBe(5400);
+  });
+
+  it("parses hours only", () => {
+    expect(parseTimeExpression("2 hours")).toBe(7200);
+  });
+
+  it("parses minutes only", () => {
+    expect(parseTimeExpression("30min")).toBe(1800);
+  });
+
+  it("parses implicit format (1h30)", () => {
+    expect(parseTimeExpression("1h30")).toBe(5400);
+  });
+
+  it("handles bare number as seconds", () => {
+    expect(parseTimeExpression("3600")).toBe(3600);
+  });
+
+  it("handles zero", () => {
+    expect(parseTimeExpression("0")).toBe(0);
+  });
+
+  it("returns null for empty string", () => {
+    expect(parseTimeExpression("")).toBeNull();
+  });
+
+  it("returns null for invalid input", () => {
+    expect(parseTimeExpression("foobar")).toBeNull();
+  });
+
+  it("returns null for null/undefined", () => {
+    expect(parseTimeExpression(null)).toBeNull();
+    expect(parseTimeExpression(undefined)).toBeNull();
+  });
+});
+
+describe("parseBarCommand", () => {
+  const milestones = [
+    { seconds: 1800, text: "Half" },
+    { seconds: 3600, text: "Full" },
+  ];
+
+  it("parses !bar set with seconds", () => {
+    expect(parseBarCommand("!bar set 500", milestones, 7200)).toEqual({
+      type: "set",
+      value: 500,
+    });
+  });
+
+  it("parses !bar set with time expression", () => {
+    expect(parseBarCommand("!bar set 1h 30m", milestones, 7200)).toEqual({
+      type: "set",
+      value: 5400,
+    });
+  });
+
+  it("clamps !bar set value to max", () => {
+    expect(parseBarCommand("!bar set 99999", milestones, 5000)).toEqual({
+      type: "set",
+      value: 5000,
+    });
+  });
+
+  it("parses !bar set milestone <n>", () => {
+    expect(parseBarCommand("!bar set milestone 1", milestones, 7200)).toEqual({
+      type: "setMilestone",
+      index: 0,
+    });
+    expect(parseBarCommand("!bar set milestone 2", milestones, 7200)).toEqual({
+      type: "setMilestone",
+      index: 1,
+    });
+  });
+
+  it("returns null for !bar set milestone with out-of-range index", () => {
+    expect(
+      parseBarCommand("!bar set milestone 0", milestones, 7200),
+    ).toBeNull();
+    expect(
+      parseBarCommand("!bar set milestone 99", milestones, 7200),
+    ).toBeNull();
+  });
+
+  it("returns null for !bar set milestone with empty milestones", () => {
+    expect(parseBarCommand("!bar set milestone 1", [], 7200)).toBeNull();
+  });
+
+  it("returns null for !bar set with invalid value", () => {
+    expect(parseBarCommand("!bar set foobar", milestones, 7200)).toBeNull();
+  });
+
+  it("parses !bar pause", () => {
+    expect(parseBarCommand("!bar pause", milestones, 7200)).toEqual({
+      type: "pause",
+    });
+  });
+
+  it("parses !bar resume", () => {
+    expect(parseBarCommand("!bar resume", milestones, 7200)).toEqual({
+      type: "resume",
+    });
+  });
+
+  it("parses !bar todo <n> done", () => {
+    expect(parseBarCommand("!bar todo 1 done", milestones, 7200)).toEqual({
+      type: "todoAction",
+      id: "1",
+      action: "done",
+    });
+  });
+
+  it("parses !bar todo <n> toggle", () => {
+    expect(parseBarCommand("!bar todo 1 toggle", milestones, 7200)).toEqual({
+      type: "todoAction",
+      id: "1",
+      action: "toggle",
+    });
+  });
+
+  it("parses !bar todo <n> check as done", () => {
+    expect(parseBarCommand("!bar todo 1 check", milestones, 7200)).toEqual({
+      type: "todoAction",
+      id: "1",
+      action: "done",
+    });
+  });
+
+  it("parses !bar todo add <text>", () => {
+    expect(parseBarCommand("!bar todo add Buy milk", milestones, 7200)).toEqual(
+      {
+        type: "todoAdd",
+        text: "Buy milk",
+      },
+    );
+  });
+
+  it("parses !bar todo delete <n>", () => {
+    expect(parseBarCommand("!bar todo delete 3", milestones, 7200)).toEqual({
+      type: "todoDelete",
+      id: "3",
+    });
+  });
+
+  it("parses !bar todo with quoted id", () => {
+    expect(
+      parseBarCommand('!bar todo "dragon boss" done', milestones, 7200),
+    ).toEqual({
+      type: "todoAction",
+      id: "dragon boss",
+      action: "done",
+    });
+  });
+
+  it("parses !bar todo with unquoted fuzzy id", () => {
+    expect(
+      parseBarCommand("!bar todo dragon boss toggle", milestones, 7200),
+    ).toEqual({
+      type: "todoAction",
+      id: "dragon boss",
+      action: "toggle",
+    });
+  });
+
+  it("parses !bar todo delete with quoted id", () => {
+    expect(
+      parseBarCommand('!bar todo delete "dragon boss"', milestones, 7200),
+    ).toEqual({
+      type: "todoDelete",
+      id: "dragon boss",
+    });
+  });
+
+  it("parses !bar todo delete with unquoted fuzzy id", () => {
+    expect(
+      parseBarCommand("!bar todo delete dragon boss", milestones, 7200),
+    ).toEqual({
+      type: "todoDelete",
+      id: "dragon boss",
+    });
+  });
+
+  it("handles quoted todo with id containing spaces", () => {
+    expect(
+      parseBarCommand(
+        '!bar todo "something with spaces" undone',
+        milestones,
+        7200,
+      ),
+    ).toEqual({
+      type: "todoAction",
+      id: "something with spaces",
+      action: "undone",
+    });
+  });
+
+  it("parses !bar milestone add <seconds> [label]", () => {
+    expect(
+      parseBarCommand("!bar milestone add 1800 Halfway", milestones, 7200),
+    ).toEqual({
+      type: "milestoneAdd",
+      seconds: 1800,
+      text: "Halfway",
+    });
+  });
+
+  it("parses !bar milestone add without label", () => {
+    expect(
+      parseBarCommand("!bar milestone add 3600", milestones, 7200),
+    ).toEqual({
+      type: "milestoneAdd",
+      seconds: 3600,
+      text: "",
+    });
+  });
+
+  it("parses !bar milestone add with time expression", () => {
+    expect(
+      parseBarCommand("!bar milestone add 1h 30m Mid", milestones, 7200),
+    ).toEqual({
+      type: "milestoneAdd",
+      seconds: 5400,
+      text: "Mid",
+    });
+  });
+
+  it("parses !bar milestone add with implicit format", () => {
+    expect(
+      parseBarCommand("!bar milestone add 1h30m Implicit", milestones, 7200),
+    ).toEqual({
+      type: "milestoneAdd",
+      seconds: 5400,
+      text: "Implicit",
+    });
+  });
+
+  it("clamps !bar milestone add seconds to max", () => {
+    expect(
+      parseBarCommand("!bar milestone add 99999 Over", milestones, 5000),
+    ).toEqual({
+      type: "milestoneAdd",
+      seconds: 5000,
+      text: "Over",
+    });
+  });
+
+  it("parses !bar milestone remove <n>", () => {
+    expect(
+      parseBarCommand("!bar milestone remove 2", milestones, 7200),
+    ).toEqual({
+      type: "milestoneRemove",
+      index: 1,
+    });
+  });
+
+  it("returns null for !bar milestone add with invalid value", () => {
+    expect(
+      parseBarCommand("!bar milestone add foobar", milestones, 7200),
+    ).toBeNull();
+  });
+
+  it("returns null for unknown !bar subcommand", () => {
+    expect(parseBarCommand("!bar unknown", milestones, 7200)).toBeNull();
+  });
+
+  it("returns null for non-!bar messages", () => {
+    expect(parseBarCommand("hello", milestones, 7200)).toBeNull();
+    expect(
+      parseBarCommand("!progress milestone 1", milestones, 7200),
+    ).toBeNull();
+    expect(parseBarCommand("!todo 1 done", milestones, 7200)).toBeNull();
+  });
+
+  it("returns null for empty message", () => {
+    expect(parseBarCommand("", milestones, 7200)).toBeNull();
+  });
+
+  it("returns null for null/undefined", () => {
+    expect(parseBarCommand(null, milestones, 7200)).toBeNull();
+    expect(parseBarCommand(undefined, milestones, 7200)).toBeNull();
+  });
+
+  it("returns null when max is 0", () => {
+    expect(parseBarCommand("!bar set 500", milestones, 0)).toBeNull();
+    expect(parseBarCommand("!bar set milestone 1", milestones, 0)).toBeNull();
+    expect(
+      parseBarCommand("!bar milestone add 1800", milestones, 0),
+    ).toBeNull();
+  });
+});
+
+describe("findTodoIndex", () => {
+  const todos = [
+    { text: "Defeat the dragon boss", done: false },
+    { text: "Collect 10 herbs", done: false },
+    { text: "Upgrade sword", done: true },
+  ];
+
+  it("resolves numeric index (1-indexed)", () => {
+    expect(findTodoIndex(todos, "1")).toBe(0);
+    expect(findTodoIndex(todos, "2")).toBe(1);
+    expect(findTodoIndex(todos, "3")).toBe(2);
+  });
+
+  it("returns -1 for out-of-range numeric", () => {
+    expect(findTodoIndex(todos, "4")).toBe(-1);
+    expect(findTodoIndex(todos, "99")).toBe(-1);
+  });
+
+  it("fuzzy matches by substring", () => {
+    expect(findTodoIndex(todos, "dragon")).toBe(0);
+    expect(findTodoIndex(todos, "boss")).toBe(0);
+    expect(findTodoIndex(todos, "herbs")).toBe(1);
+    expect(findTodoIndex(todos, "sword")).toBe(2);
+  });
+
+  it("fuzzy match is case-insensitive", () => {
+    expect(findTodoIndex(todos, "DRAGON")).toBe(0);
+    expect(findTodoIndex(todos, "Herbs")).toBe(1);
+    expect(findTodoIndex(todos, "SWORD")).toBe(2);
+  });
+
+  it("returns -1 for non-matching fuzzy", () => {
+    expect(findTodoIndex(todos, "xyzzy")).toBe(-1);
+    expect(findTodoIndex(todos, "nonexistent")).toBe(-1);
+  });
+
+  it("returns first match when multiple todos contain the string", () => {
+    const dupes = [
+      { text: "alpha beta", done: false },
+      { text: "beta gamma", done: false },
+    ];
+    expect(findTodoIndex(dupes, "beta")).toBe(0);
+  });
+
+  it("returns -1 for null todos", () => {
+    expect(findTodoIndex(null, "1")).toBe(-1);
+  });
+
+  it("returns -1 for null id", () => {
+    expect(findTodoIndex(todos, null)).toBe(-1);
   });
 });

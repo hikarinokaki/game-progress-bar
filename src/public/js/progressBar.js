@@ -34,6 +34,7 @@ import {
   setMsLabelOffsetX,
   setMsLabelOffsetY,
   setMsLabelFontSize,
+  setPaused,
 } from "./state.js";
 import {
   startInput,
@@ -74,6 +75,7 @@ import {
   msLabelOffsetXInput,
   msLabelOffsetYInput,
   msLabelFontSizeInput,
+  pauseBtn,
 } from "./domElements.js";
 import {
   calculatePercent,
@@ -313,6 +315,7 @@ function togglePositionMode() {
     positionModeBtn.style.background = "";
     positionModeBtn.style.color = "";
   }
+  syncPauseUI(positionModeActive);
 }
 
 function syncSnapUI() {
@@ -367,6 +370,10 @@ function buildPreviewURL(forPositionMode) {
 
   if (forPositionMode) {
     params.set("positionMode", "1");
+  }
+
+  if (state.paused && !forPositionMode) {
+    params.set("paused", "1");
   }
 
   if (state.maskImageUrl) {
@@ -615,6 +622,26 @@ export function initProgressBar() {
   snapBtn.addEventListener("click", toggleSnap);
   syncSnapUI();
 
+  function syncPauseUI(positionActive) {
+    const isPositionMode =
+      positionActive !== undefined ? positionActive : positionModeActive;
+    if (isPositionMode) {
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = "Paused (pos. mode)";
+    } else {
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = state.paused ? "Resume Timer" : "Pause Timer";
+    }
+  }
+
+  pauseBtn.addEventListener("click", () => {
+    if (positionModeActive) return;
+    setPaused(!state.paused);
+    previewFrame.src = buildPreviewURL(false);
+    syncPauseUI(false);
+    render();
+  });
+
   const addMilestoneBtn = document.getElementById("addMilestoneBtn");
   if (addMilestoneBtn) {
     addMilestoneBtn.addEventListener("click", () => {
@@ -719,6 +746,8 @@ export function initProgressBar() {
       );
     }
   });
+
+  syncPauseUI(false);
 
   document.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {

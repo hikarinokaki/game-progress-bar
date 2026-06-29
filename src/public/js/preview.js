@@ -41,6 +41,10 @@ function buildPreviewURL() {
     params.set("maskImageUrl", state.maskImageUrl);
   }
 
+  if (state.paused) {
+    params.set("paused", "1");
+  }
+
   if (state.milestones && state.milestones.length > 0) {
     params.set("milestones", JSON.stringify(state.milestones));
   }

@@ -35,6 +35,7 @@ import {
   setMsLabelOffsetX,
   setMsLabelOffsetY,
   setMsLabelFontSize,
+  setPaused,
 } from "../src/public/js/state.js";
 
 beforeEach(() => {
@@ -59,6 +60,7 @@ beforeEach(() => {
   state.msLabelOffsetX = "0";
   state.msLabelOffsetY = "4";
   state.msLabelFontSize = "14";
+  state.paused = false;
 });
 
 describe("setStart", () => {
@@ -202,5 +204,25 @@ describe("simple setters", () => {
   it("setMsLabelFontSize", () => {
     setMsLabelFontSize("18");
     expect(state.msLabelFontSize).toBe("18");
+  });
+
+  it("setPaused defaults to false", () => {
+    expect(state.paused).toBe(false);
+  });
+
+  it("setPaused sets to true", () => {
+    setPaused(true);
+    expect(state.paused).toBe(true);
+  });
+
+  it("setPaused coerce truthy to boolean", () => {
+    setPaused(1);
+    expect(state.paused).toBe(true);
+  });
+
+  it("setPaused sets back to false", () => {
+    setPaused(true);
+    setPaused(false);
+    expect(state.paused).toBe(false);
   });
 });

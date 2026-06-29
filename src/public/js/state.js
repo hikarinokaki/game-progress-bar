@@ -34,6 +34,7 @@ export const state = {
   msLabelOffsetX: "0",
   msLabelOffsetY: "4",
   msLabelFontSize: "14",
+  paused: false,
 };
 
 export function setStart(value) {
@@ -172,4 +173,8 @@ export function setMsLabelOffsetY(value) {
 
 export function setMsLabelFontSize(value) {
   state.msLabelFontSize = value;
+}
+
+export function setPaused(value) {
+  state.paused = !!value;
 }

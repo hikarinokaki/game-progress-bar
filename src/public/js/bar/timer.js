@@ -1,5 +1,24 @@
 export function createTimer(params, callbacks) {
   let currentValue = params.start;
+  let intervalId = null;
+  let paused = params.paused === true;
+
+  const tick = () => {
+    const isCountdown = params.direction === "countdown";
+    const done = isCountdown ? currentValue <= 0 : currentValue >= params.max;
+    if (done) {
+      clearInterval(intervalId);
+      intervalId = null;
+      return;
+    }
+    currentValue += isCountdown ? -1 : 1;
+    callbacks.onProgressChange(currentValue);
+  };
+
+  const startInterval = () => {
+    if (intervalId) clearInterval(intervalId);
+    intervalId = setInterval(tick, 1000);
+  };
 
   const setCurrentValue = (value) => {
     params.start = value;
@@ -7,18 +26,31 @@ export function createTimer(params, callbacks) {
     callbacks.onProgressChange(value);
   };
 
-  if (!params.positionMode) {
-    const isCountdown = params.direction === "countdown";
-    const interval = setInterval(() => {
-      const done = isCountdown ? currentValue <= 0 : currentValue >= params.max;
-      if (done) {
-        clearInterval(interval);
-        return;
-      }
-      currentValue += isCountdown ? -1 : 1;
-      callbacks.onProgressChange(currentValue);
-    }, 1000);
+  const pause = () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+    paused = true;
+  };
+
+  const resume = () => {
+    if (paused && params.positionMode) return;
+    paused = false;
+    startInterval();
+  };
+
+  const isPaused = () => paused;
+
+  if (!params.positionMode && !params.paused) {
+    startInterval();
   }
 
-  return { getCurrentValue: () => currentValue, setCurrentValue };
+  return {
+    getCurrentValue: () => currentValue,
+    setCurrentValue,
+    pause,
+    resume,
+    isPaused,
+  };
 }

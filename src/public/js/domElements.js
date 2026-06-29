@@ -61,3 +61,4 @@ export const msLabelOffsetYInput = document.getElementById(
 export const msLabelFontSizeInput = document.getElementById(
   "msLabelFontSizeInput",
 );
+export const pauseBtn = document.getElementById("pauseBtn");

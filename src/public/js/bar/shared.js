@@ -55,6 +55,7 @@ function parseParams() {
     titleFontSize: params.get("titleFontSize") || "40",
     timeFontSize: params.get("timeFontSize") || "32",
     positionMode: params.get("positionMode") === "1",
+    paused: params.get("paused") === "1",
     milestones: [],
     todos: [],
     todoX: params.get("todoX") || "",
@@ -131,6 +132,10 @@ function updateURL(currentValue, maxValue, params) {
   searchParams.set("msLabelOffsetY", params.msLabelOffsetY);
   searchParams.set("msLabelFontSize", params.msLabelFontSize);
 
+  if (params.paused) {
+    searchParams.set("paused", "1");
+  }
+
   if (params.milestones && params.milestones.length > 0) {
     searchParams.set("milestones", JSON.stringify(params.milestones));
   }
@@ -177,7 +182,18 @@ export function initBar() {
   const twitchCallbacks = {
     setProgressValue: timer.setCurrentValue,
     renderTodos: () => renderTodos(params),
+    renderMilestones: () => renderMilestones(params),
     updateURL: () => updateURL(params.start, params.max, params),
+    pauseTimer: () => {
+      timer.pause();
+      params.paused = true;
+      updateURL(timer.getCurrentValue(), params.max, params);
+    },
+    resumeTimer: () => {
+      timer.resume();
+      params.paused = false;
+      updateURL(timer.getCurrentValue(), params.max, params);
+    },
   };
   initTwitch(params, twitchCallbacks);
 
