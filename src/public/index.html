@@ -1,9 +1,55 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Steam Library Search</title>
+    <title>Game Progress Bar — OBS Stream Overlay for Steam Playtime</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Configure a real-time game progress bar overlay for OBS Studio. Syncs with Steam playtime, supports milestones, todo lists, and Twitch chat commands."
+    />
+    <link
+      rel="canonical"
+      href="https://progress.ookaminohikari.com/game-progress-bar/"
+    />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Game Progress Bar — OBS Stream Overlay"
+    />
+    <meta
+      property="og:description"
+      content="Real-time game progress overlay for OBS Studio with Steam integration, milestones, todo lists, and Twitch chat commands."
+    />
+    <meta
+      property="og:url"
+      content="https://progress.ookaminohikari.com/game-progress-bar/"
+    />
+    <meta
+      property="og:image"
+      content="https://progress.ookaminohikari.com/game-progress-bar/og-image.svg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Game Progress Bar — OBS Stream Overlay"
+    />
+    <meta
+      name="twitter:description"
+      content="Real-time game progress overlay for OBS Studio with Steam integration."
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Game Progress Bar",
+        "description": "Configure a real-time game progress bar overlay for OBS Studio. Syncs with Steam playtime, supports milestones, todo lists, and Twitch chat commands.",
+        "applicationCategory": "Multimedia",
+        "operatingSystem": "All",
+        "url": "https://progress.ookaminohikari.com/game-progress-bar/"
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="css/base.css" />
@@ -36,19 +82,19 @@
           <button onclick="window.location.href = 'auth/logout'">Logout</button>
         </div>
         <br /><br />
-        <div class="search-wrapper">
+        <div class="search-wrapper" role="search">
           <input type="text" id="search" placeholder="Search your games..." />
-          <div id="results"></div>
+          <div id="results" aria-live="polite"></div>
         </div>
       </div>
 
-      <div id="selected-game"></div>
+      <div id="selected-game" aria-live="polite"></div>
     </header>
     <hr />
-    <h2 id="configHeading">Progress Bar Configuration</h2>
+    <h1 id="configHeading">Progress Bar Configuration</h1>
     <main class="container">
-      <div class="col">
-        <h3 class="section-heading">General</h3>
+      <section class="col" aria-labelledby="general-heading">
+        <h3 id="general-heading" class="section-heading">General</h3>
         <label id="startInputLabel" style="display: none">
           Start (seconds):
           <input type="number" id="startInput" />
@@ -59,31 +105,35 @@
           <input type="number" id="maxInput" />
         </label>
 
-        <div class="time-row">
-          <label for="startTimeInput">Start from:</label>
-          <input
-            type="text"
-            id="startTimeInput"
-            placeholder="e.g. 1h 30m"
-            title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
-          />
-          <label for="maxTimeInput">Max time:</label>
-          <input
-            type="text"
-            id="maxTimeInput"
-            placeholder="e.g. 2 hours"
-            title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
-          />
-        </div>
+        <fieldset class="time-group">
+          <legend class="sr-only">Time Configuration</legend>
 
-        <div class="percent-row">
-          <div class="input-group">
-            <input type="number" id="percentInput" min="0" max="100" />
-            <span class="input-addon">%</span>
+          <div class="time-row">
+            <label for="startTimeInput">Start from:</label>
+            <input
+              type="text"
+              id="startTimeInput"
+              placeholder="e.g. 1h 30m"
+              title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
+            />
+            <label for="maxTimeInput">Max time:</label>
+            <input
+              type="text"
+              id="maxTimeInput"
+              placeholder="e.g. 2 hours"
+              title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
+            />
           </div>
 
-          <input type="range" id="startSlider" />
-        </div>
+          <div class="percent-row">
+            <div class="input-group">
+              <input type="number" id="percentInput" min="0" max="100" />
+              <span class="input-addon">%</span>
+            </div>
+
+            <input type="range" id="startSlider" />
+          </div>
+        </fieldset>
 
         <div class="theme-row">
           <label for="themeSelect">Theme:</label>
@@ -117,6 +167,14 @@
           >
             Show Remaining
           </label>
+        </div>
+
+        <div class="direction-row">
+          <label for="orientationSelect">Orientation:</label>
+          <select id="orientationSelect">
+            <option value="horizontal">Horizontal</option>
+            <option value="vertical">Vertical</option>
+          </select>
         </div>
 
         <label>
@@ -160,10 +218,12 @@
             <option value="none">None (hidden)</option>
           </select>
         </label>
-      </div>
+      </section>
 
-      <div class="col">
-        <h3 class="section-heading">Position &amp; Size</h3>
+      <section class="col" aria-labelledby="position-heading">
+        <h3 id="position-heading" class="section-heading">
+          Position &amp; Size
+        </h3>
 
         <div class="input-group-row">
           <label class="compact-field">
@@ -187,13 +247,6 @@
               max="4320"
               title="Total canvas height for OBS source (default: 1080)"
             />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Orientation</span>
-            <select id="orientationSelect">
-              <option value="horizontal">Horizontal</option>
-              <option value="vertical">Vertical</option>
-            </select>
           </label>
         </div>
 
@@ -314,102 +367,114 @@
             />
           </label>
         </div>
-      </div>
+      </section>
 
       <div class="col">
-        <h3 class="section-heading">Milestones</h3>
-        <div id="milestone-list"></div>
-        <div class="input-group-row">
-          <button id="addMilestoneBtn" class="btn-primary">
-            + Add Milestone
-          </button>
-        </div>
+        <section aria-labelledby="milestones-heading">
+          <h3 id="milestones-heading" class="section-heading">Milestones</h3>
+          <div id="milestone-list" aria-live="polite"></div>
+          <div class="input-group-row">
+            <button id="addMilestoneBtn" class="btn-primary">
+              + Add Milestone
+            </button>
+          </div>
 
-        <h4 class="sub-heading">Milestone Labels</h4>
+          <h4 class="sub-heading">Milestone Labels</h4>
 
-        <div class="input-group-row">
-          <label class="compact-field">
-            <span class="field-label">Offset X (px)</span>
-            <input
-              type="number"
-              id="msLabelOffsetXInput"
-              title="Horizontal offset from the milestone line"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Offset Y (px)</span>
-            <input
-              type="number"
-              id="msLabelOffsetYInput"
-              title="Vertical offset from the milestone line"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Font Size (px)</span>
-            <input
-              type="number"
-              id="msLabelFontSizeInput"
-              title="Font size for milestone labels"
-            />
-          </label>
-        </div>
+          <div class="input-group-row">
+            <label class="compact-field">
+              <span class="field-label">Offset X (px)</span>
+              <input
+                type="number"
+                id="msLabelOffsetXInput"
+                title="Horizontal offset from the milestone line"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Offset Y (px)</span>
+              <input
+                type="number"
+                id="msLabelOffsetYInput"
+                title="Vertical offset from the milestone line"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Font Size (px)</span>
+              <input
+                type="number"
+                id="msLabelFontSizeInput"
+                title="Font size for milestone labels"
+              />
+            </label>
+          </div>
+        </section>
 
-        <h3 class="section-heading">Todo List</h3>
-        <div id="todo-list"></div>
-        <div class="input-group-row">
-          <button id="addTodoBtn" class="btn-primary">+ Add Todo Item</button>
-        </div>
+        <section aria-labelledby="todo-list-heading">
+          <h3 id="todo-list-heading" class="section-heading">Todo List</h3>
+          <div id="todo-list" aria-live="polite"></div>
+          <div class="input-group-row">
+            <button id="addTodoBtn" class="btn-primary">+ Add Todo Item</button>
+          </div>
 
-        <div class="input-group-row group-sep"></div>
+          <div class="input-group-row group-sep"></div>
 
-        <h4 class="sub-heading">Todos</h4>
-        <div class="input-group-row">
-          <label class="compact-field">
-            <span class="field-label">X Coordinate (px)</span>
-            <input
-              type="number"
-              id="todoXInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the todo list on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Y Coordinate (px)</span>
-            <input
-              type="number"
-              id="todoYInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the todo list on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Font Size (px)</span>
-            <input
-              type="number"
-              id="todoFontSizeInput"
-              value="20"
-              min="8"
-              max="200"
-            />
-          </label>
-        </div>
+          <h4 class="sub-heading">Todos</h4>
+          <div class="input-group-row">
+            <label class="compact-field">
+              <span class="field-label">X Coordinate (px)</span>
+              <input
+                type="number"
+                id="todoXInput"
+                placeholder="auto"
+                title="Leave empty for auto, or drag the todo list on the preview canvas"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Y Coordinate (px)</span>
+              <input
+                type="number"
+                id="todoYInput"
+                placeholder="auto"
+                title="Leave empty for auto, or drag the todo list on the preview canvas"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Font Size (px)</span>
+              <input
+                type="number"
+                id="todoFontSizeInput"
+                value="20"
+                min="8"
+                max="200"
+              />
+            </label>
+          </div>
+        </section>
 
-        <h3 class="section-heading">Twitch Integration</h3>
-        <div class="twitch-row">
-          <label class="compact-field">
-            <span class="field-label">Channel Name</span>
-            <input type="text" id="twitchChannelInput" placeholder="e.g. xqc" />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Command Sender</span>
-            <input
-              type="text"
-              id="twitchUsernameInput"
-              placeholder="Username (leave empty for any chatter)"
-              title="Only this Twitch user can run !bar commands (leave empty for any chatter)"
-            />
-          </label>
-        </div>
+        <section aria-labelledby="twitch-heading">
+          <h3 id="twitch-heading" class="section-heading">
+            Twitch Integration
+          </h3>
+          <div class="twitch-row">
+            <label class="compact-field">
+              <span class="field-label">Channel Name</span>
+              <input
+                type="text"
+                id="twitchChannelInput"
+                placeholder="e.g. xqc"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Command Sender</span>
+              <input
+                type="text"
+                id="twitchUsernameInput"
+                placeholder="Username (leave empty for any chatter)"
+                title="Only this Twitch user can run !bar commands (leave empty for any chatter)"
+              />
+            </label>
+          </div>
+        </section>
       </div>
     </main>
 

@@ -82,9 +82,9 @@ function selectGame(game) {
 
   selectedGameDiv.innerHTML = `
     <div class="selected-game-content">
-      <span class="clear-selection" title="Clear selection">&times;</span>
+      <span class="clear-selection" title="Clear selection" aria-label="Clear selection">&times;</span>
       <img src="https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.icon}.jpg" />
-      <strong>${game.name}</strong>
+      <strong> ${game.name}</strong>
     </div>
     <div class="apply-section" id="applyStart">
       <div class="apply-label">Set start to:</div>
