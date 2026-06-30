@@ -215,13 +215,17 @@ export function initBar() {
       const oldStyle = params.style;
       const oldAccentColor = params.accentColor;
       const oldBgColor = params.bgColor;
+      const oldBarWidth = params.barWidth;
+      const oldBarHeight = params.barHeight;
       Object.assign(params, d);
       params.paused = true;
 
       const needsReinit =
         params.style !== oldStyle ||
         params.accentColor !== oldAccentColor ||
-        params.bgColor !== oldBgColor;
+        params.bgColor !== oldBgColor ||
+        params.barWidth !== oldBarWidth ||
+        params.barHeight !== oldBarHeight;
 
       if (needsReinit) {
         const newStyle = getStyle(params.style);

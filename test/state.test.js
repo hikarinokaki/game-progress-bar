@@ -60,7 +60,7 @@ beforeEach(() => {
   state.msLabelOffsetX = "0";
   state.msLabelOffsetY = "4";
   state.msLabelFontSize = "14";
-  state.paused = false;
+  state.paused = true;
 });
 
 describe("setStart", () => {
@@ -206,8 +206,8 @@ describe("simple setters", () => {
     expect(state.msLabelFontSize).toBe("18");
   });
 
-  it("setPaused defaults to false", () => {
-    expect(state.paused).toBe(false);
+  it("setPaused defaults to true", () => {
+    expect(state.paused).toBe(true);
   });
 
   it("setPaused sets to true", () => {

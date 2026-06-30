@@ -676,8 +676,8 @@ export function initProgressBar() {
         setTodoX(String(x));
         setTodoY(String(y));
       }
-      render();
       _pendingDragUpdate = false;
+      render();
     } else if (event.data?.type === "resize") {
       const { target, fontSize, width, height } = event.data;
       if (target === "title" && fontSize) {
@@ -690,8 +690,8 @@ export function initProgressBar() {
       } else if (target === "todo" && fontSize) {
         setTodoFontSize(String(fontSize));
       }
-      render();
       _pendingDragUpdate = false;
+      render();
     }
   });
 
