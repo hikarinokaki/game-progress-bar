@@ -196,7 +196,7 @@ body {
   font-family: var(--font-body);
   background: var(--bg-body);
   color: var(--text-body);
-  padding: var(--space-10);
+  padding: clamp(1.5rem, 5vw, 6.25rem);
 }
 
 .sr-only {

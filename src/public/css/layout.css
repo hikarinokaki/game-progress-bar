@@ -43,10 +43,8 @@ header {
   font-size: var(--font-size-base);
 }
 
-main,
 header,
-hr,
-h2 {
+hr {
   max-width: 56rem;
   margin-left: auto;
   margin-right: auto;
@@ -71,12 +69,25 @@ main {
   grid-row-start: 1;
 }
 
-.container {
+.config-layout {
   margin: var(--space-11) auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr auto;
   gap: var(--space-11);
   align-items: start;
+}
+
+.config-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-11);
+  align-items: start;
+  min-width: 0;
+}
+
+.config-columns > * {
+  flex: 1;
+  min-width: 15rem;
 }
 
 .col {
@@ -99,9 +110,14 @@ main {
   grid-column: 1 / -1;
 }
 
-@media (max-width: 45rem) {
-  .container {
+@media (max-width: 95rem) {
+  .config-layout {
     grid-template-columns: 1fr;
+  }
+  .preview-section {
+    width: 100%;
+    max-width: 56rem;
+    margin: 0 auto;
   }
 }
 

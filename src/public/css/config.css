@@ -129,6 +129,15 @@
   letter-spacing: 0.05em;
 }
 
+fieldset.time-group {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
 .sub-heading {
   grid-column: 1 / -1;
   margin: var(--space-4) 0 var(--space-2);

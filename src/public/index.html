@@ -92,286 +92,311 @@
     </header>
     <hr />
     <h1 id="configHeading">Progress Bar Configuration</h1>
-    <main class="container">
-      <section class="col" aria-labelledby="general-heading">
-        <h3 id="general-heading" class="section-heading">General</h3>
-        <label id="startInputLabel" style="display: none">
-          Start (seconds):
-          <input type="number" id="startInput" />
-        </label>
+    <div class="config-layout">
+      <div class="config-columns">
+        <section class="col" aria-labelledby="general-heading">
+          <h3 id="general-heading" class="section-heading">General</h3>
+          <label id="startInputLabel" style="display: none">
+            Start (seconds):
+            <input type="number" id="startInput" />
+          </label>
 
-        <label id="maxInputLabel" style="display: none">
-          Max (seconds):
-          <input type="number" id="maxInput" />
-        </label>
+          <label id="maxInputLabel" style="display: none">
+            Max (seconds):
+            <input type="number" id="maxInput" />
+          </label>
 
-        <fieldset class="time-group">
-          <legend class="sr-only">Time Configuration</legend>
+          <fieldset class="time-group">
+            <legend class="sr-only">Time Configuration</legend>
 
-          <div class="time-row">
-            <label for="startTimeInput">Start from:</label>
-            <input
-              type="text"
-              id="startTimeInput"
-              placeholder="e.g. 1h 30m"
-              title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
-            />
-            <label for="maxTimeInput">Max time:</label>
-            <input
-              type="text"
-              id="maxTimeInput"
-              placeholder="e.g. 2 hours"
-              title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
-            />
-          </div>
-
-          <div class="percent-row">
-            <div class="input-group">
-              <input type="number" id="percentInput" min="0" max="100" />
-              <span class="input-addon">%</span>
+            <div class="time-row">
+              <label for="startTimeInput">Start from:</label>
+              <input
+                type="text"
+                id="startTimeInput"
+                placeholder="e.g. 1h 30m"
+                title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
+              />
+              <label for="maxTimeInput">Max time:</label>
+              <input
+                type="text"
+                id="maxTimeInput"
+                placeholder="e.g. 2 hours"
+                title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
+              />
             </div>
 
-            <input type="range" id="startSlider" />
+            <div class="percent-row">
+              <div class="input-group">
+                <input type="number" id="percentInput" min="0" max="100" />
+                <span class="input-addon">%</span>
+              </div>
+
+              <input type="range" id="startSlider" />
+            </div>
+          </fieldset>
+
+          <div class="theme-row">
+            <label for="themeSelect">Theme:</label>
+            <select id="themeSelect">
+              <option value="default">Default</option>
+              <option value="medieval">Medieval</option>
+            </select>
           </div>
-        </fieldset>
 
-        <div class="theme-row">
-          <label for="themeSelect">Theme:</label>
-          <select id="themeSelect">
-            <option value="default">Default</option>
-            <option value="medieval">Medieval</option>
-          </select>
-        </div>
-
-        <div class="direction-row">
-          <label
-            for="directionSelect"
-            title="Which direction the bar fills from"
-          >
-            Bar Fill:
-          </label>
-          <select
-            id="directionSelect"
-            title="Which direction the bar fills from"
-          >
-            <option value="increment">Forward</option>
-            <option value="countdown">Reverse</option>
-          </select>
-        </div>
-
-        <div class="invert-row">
-          <input type="checkbox" id="invertDisplayCheckbox" />
-          <label
-            for="invertDisplayCheckbox"
-            title="Show remaining time/percentage instead of elapsed"
-          >
-            Show Remaining
-          </label>
-        </div>
-
-        <div class="direction-row">
-          <label for="orientationSelect">Orientation:</label>
-          <select id="orientationSelect">
-            <option value="horizontal">Horizontal</option>
-            <option value="vertical">Vertical</option>
-          </select>
-        </div>
-
-        <label>
-          Title:
-          <input type="text" id="titleInput" placeholder="e.g. Game Progress" />
-        </label>
-
-        <label>
-          Bar Style:
-          <select id="styleSelect">
-            <option
-              value="gradient"
-              title="Smooth gradient fill, supports vertical orientation"
+          <div class="direction-row">
+            <label
+              for="directionSelect"
+              title="Which direction the bar fills from"
             >
-              CSS Gradient Animation
-            </option>
-            <option
-              value="mask"
-              title="Custom image fill with mask overlay, supports orientation"
+              Bar Fill:
+            </label>
+            <select
+              id="directionSelect"
+              title="Which direction the bar fills from"
             >
-              Image Mask
-            </option>
-          </select>
-        </label>
+              <option value="increment">Forward</option>
+              <option value="countdown">Reverse</option>
+            </select>
+          </div>
 
-        <label>
-          Fill Color:
-          <input type="color" id="accentColorInput" value="#4CAF50" />
-        </label>
+          <div class="invert-row">
+            <input type="checkbox" id="invertDisplayCheckbox" />
+            <label
+              for="invertDisplayCheckbox"
+              title="Show remaining time/percentage instead of elapsed"
+            >
+              Show Remaining
+            </label>
+          </div>
 
-        <label>
-          Track Color:
-          <input type="color" id="bgColorInput" value="#ddd" />
-        </label>
+          <div class="direction-row">
+            <label for="orientationSelect">Orientation:</label>
+            <select id="orientationSelect">
+              <option value="horizontal">Horizontal</option>
+              <option value="vertical">Vertical</option>
+            </select>
+          </div>
 
-        <label>
-          Time Display:
-          <select id="displayFormatSelect">
-            <option value="percentage">Percentage (75%)</option>
-            <option value="time">Natural Time (1h 30m)</option>
-            <option value="none">None (hidden)</option>
-          </select>
-        </label>
-      </section>
-
-      <section class="col" aria-labelledby="position-heading">
-        <h3 id="position-heading" class="section-heading">
-          Position &amp; Size
-        </h3>
-
-        <div class="input-group-row">
-          <label class="compact-field">
-            <span class="field-label">Canvas Width (px)</span>
-            <input
-              type="number"
-              id="canvasWidthInput"
-              value="1920"
-              min="320"
-              max="7680"
-              title="Total canvas width for OBS source (default: 1920)"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Canvas Height (px)</span>
-            <input
-              type="number"
-              id="canvasHeightInput"
-              value="1080"
-              min="240"
-              max="4320"
-              title="Total canvas height for OBS source (default: 1080)"
-            />
-          </label>
-        </div>
-
-        <div class="input-group-row group-sep">
-          <label class="compact-field">
-            <span class="field-label">Bar X (px)</span>
-            <input
-              type="number"
-              id="barXInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the bar on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Bar Y (px)</span>
-            <input
-              type="number"
-              id="barYInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the bar on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Width (px)</span>
-            <input
-              type="number"
-              id="barWidthInput"
-              value="500"
-              min="50"
-              max="2000"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Height (px)</span>
-            <input
-              type="number"
-              id="barHeightInput"
-              value="60"
-              min="10"
-              max="500"
-            />
-          </label>
-        </div>
-
-        <div class="input-group-row group-sep">
-          <label class="compact-field">
-            <span class="field-label">Title X (px)</span>
-            <input
-              type="number"
-              id="titleXInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the title on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Title Y (px)</span>
-            <input
-              type="number"
-              id="titleYInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the title on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Title Font (px)</span>
-            <input
-              type="number"
-              id="titleFontSizeInput"
-              value="40"
-              min="8"
-              max="200"
-            />
-          </label>
-        </div>
-
-        <div class="input-group-row group-sep">
-          <label class="compact-field">
-            <span class="field-label">Time X (px)</span>
-            <input
-              type="number"
-              id="timeXInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the time display on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Time Y (px)</span>
-            <input
-              type="number"
-              id="timeYInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the time display on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Time Font (px)</span>
-            <input
-              type="number"
-              id="timeFontSizeInput"
-              value="32"
-              min="8"
-              max="200"
-            />
-          </label>
-        </div>
-
-        <div
-          class="option-row group-sep"
-          id="maskImageRow"
-          style="display: none"
-        >
           <label>
-            Mask Image URL:
+            Title:
             <input
-              type="url"
-              id="maskImageUrlInput"
-              placeholder="https://example.com/image.png"
+              type="text"
+              id="titleInput"
+              placeholder="e.g. Game Progress"
             />
           </label>
-        </div>
-      </section>
 
-      <div class="col">
-        <section aria-labelledby="milestones-heading">
-          <h3 id="milestones-heading" class="section-heading">Milestones</h3>
+          <label>
+            Bar Style:
+            <select id="styleSelect">
+              <option
+                value="gradient"
+                title="Smooth gradient fill, supports vertical orientation"
+              >
+                CSS Gradient Animation
+              </option>
+              <option
+                value="mask"
+                title="Custom image fill with mask overlay, supports orientation"
+              >
+                Image Mask
+              </option>
+            </select>
+          </label>
+
+          <label>
+            Fill Color:
+            <input type="color" id="accentColorInput" value="#4CAF50" />
+          </label>
+
+          <label>
+            Track Color:
+            <input type="color" id="bgColorInput" value="#ddd" />
+          </label>
+
+          <label>
+            Time Display:
+            <select id="displayFormatSelect">
+              <option value="percentage">Percentage (75%)</option>
+              <option value="time">Natural Time (1h 30m)</option>
+              <option value="none">None (hidden)</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="col" aria-labelledby="position-heading">
+          <h3 id="position-heading" class="section-heading">
+            Position &amp; Size
+          </h3>
+
+          <div class="input-group-row">
+            <label class="compact-field">
+              <span class="field-label">Canvas Width (px)</span>
+              <input
+                type="number"
+                id="canvasWidthInput"
+                value="1920"
+                min="320"
+                max="7680"
+                title="Total canvas width for OBS source (default: 1920)"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Canvas Height (px)</span>
+              <input
+                type="number"
+                id="canvasHeightInput"
+                value="1080"
+                min="240"
+                max="4320"
+                title="Total canvas height for OBS source (default: 1080)"
+              />
+            </label>
+          </div>
+
+          <div class="input-group-row group-sep">
+            <label class="compact-field">
+              <span class="field-label">Bar X (px)</span>
+              <input
+                type="number"
+                id="barXInput"
+                placeholder="auto"
+                title="Leave empty for auto, or drag the bar on the preview canvas"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Bar Y (px)</span>
+              <input
+                type="number"
+                id="barYInput"
+                placeholder="auto"
+                title="Leave empty for auto, or drag the bar on the preview canvas"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Width (px)</span>
+              <input
+                type="number"
+                id="barWidthInput"
+                value="500"
+                min="50"
+                max="2000"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Height (px)</span>
+              <input
+                type="number"
+                id="barHeightInput"
+                value="60"
+                min="10"
+                max="500"
+              />
+            </label>
+          </div>
+
+          <div class="input-group-row group-sep">
+            <label class="compact-field">
+              <span class="field-label">Title X (px)</span>
+              <input
+                type="number"
+                id="titleXInput"
+                placeholder="auto"
+                title="Leave empty for auto, or drag the title on the preview canvas"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Title Y (px)</span>
+              <input
+                type="number"
+                id="titleYInput"
+                placeholder="auto"
+                title="Leave empty for auto, or drag the title on the preview canvas"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Title Font (px)</span>
+              <input
+                type="number"
+                id="titleFontSizeInput"
+                value="40"
+                min="8"
+                max="200"
+              />
+            </label>
+          </div>
+
+          <div class="input-group-row group-sep">
+            <label class="compact-field">
+              <span class="field-label">Time X (px)</span>
+              <input
+                type="number"
+                id="timeXInput"
+                placeholder="auto"
+                title="Leave empty for auto, or drag the time display on the preview canvas"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Time Y (px)</span>
+              <input
+                type="number"
+                id="timeYInput"
+                placeholder="auto"
+                title="Leave empty for auto, or drag the time display on the preview canvas"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Time Font (px)</span>
+              <input
+                type="number"
+                id="timeFontSizeInput"
+                value="32"
+                min="8"
+                max="200"
+              />
+            </label>
+          </div>
+
+          <div
+            class="option-row group-sep"
+            id="maskImageRow"
+            style="display: none"
+          >
+            <label>
+              Mask Image URL:
+              <input
+                type="url"
+                id="maskImageUrlInput"
+                placeholder="https://example.com/image.png"
+              />
+            </label>
+          </div>
+        </section>
+
+        <div class="col">
+          <h3 class="section-heading">Twitch Integration</h3>
+          <div class="twitch-row">
+            <label class="compact-field">
+              <span class="field-label">Channel Name</span>
+              <input
+                type="text"
+                id="twitchChannelInput"
+                placeholder="e.g. xqc"
+              />
+            </label>
+            <label class="compact-field">
+              <span class="field-label">Command Sender</span>
+              <input
+                type="text"
+                id="twitchUsernameInput"
+                placeholder="Username (leave empty for any chatter)"
+                title="Only this Twitch user can run !bar commands (leave empty for any chatter)"
+              />
+            </label>
+          </div>
+
+          <h3 class="section-heading">Milestones</h3>
           <div id="milestone-list" aria-live="polite"></div>
           <div class="input-group-row">
             <button id="addMilestoneBtn" class="btn-primary">
@@ -407,10 +432,8 @@
               />
             </label>
           </div>
-        </section>
 
-        <section aria-labelledby="todo-list-heading">
-          <h3 id="todo-list-heading" class="section-heading">Todo List</h3>
+          <h3 class="section-heading">Todo List</h3>
           <div id="todo-list" aria-live="polite"></div>
           <div class="input-group-row">
             <button id="addTodoBtn" class="btn-primary">+ Add Todo Item</button>
@@ -449,42 +472,17 @@
               />
             </label>
           </div>
-        </section>
-
-        <section aria-labelledby="twitch-heading">
-          <h3 id="twitch-heading" class="section-heading">
-            Twitch Integration
-          </h3>
-          <div class="twitch-row">
-            <label class="compact-field">
-              <span class="field-label">Channel Name</span>
-              <input
-                type="text"
-                id="twitchChannelInput"
-                placeholder="e.g. xqc"
-              />
-            </label>
-            <label class="compact-field">
-              <span class="field-label">Command Sender</span>
-              <input
-                type="text"
-                id="twitchUsernameInput"
-                placeholder="Username (leave empty for any chatter)"
-                title="Only this Twitch user can run !bar commands (leave empty for any chatter)"
-              />
-            </label>
-          </div>
-        </section>
-      </div>
-    </main>
-
-    <div class="preview-section">
-      <div class="preview-buttons">
-        <button id="copyBtn">Copy URL</button>
-        <button id="snapBtn">Snap: Off</button>
+        </div>
       </div>
 
-      <iframe id="previewFrame"></iframe>
+      <div class="preview-section">
+        <div class="preview-buttons">
+          <button id="copyBtn">Copy URL</button>
+          <button id="snapBtn">Snap: Off</button>
+        </div>
+
+        <iframe id="previewFrame"></iframe>
+      </div>
     </div>
 
     <script src="dist/bundle.js"></script>
