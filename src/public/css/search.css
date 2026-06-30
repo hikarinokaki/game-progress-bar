@@ -1,0 +1,69 @@
+.search-wrapper {
+  position: relative;
+  max-width: 25rem;
+}
+
+#search {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: var(--bg-dropdown);
+  border: 1px solid var(--border-dropdown);
+  border-top: none;
+  border-radius: 0 0 0.5rem 0.5rem;
+  box-shadow: var(--shadow-dropdown);
+  max-height: 18.75rem;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+#results:empty {
+  display: none;
+  border: none;
+}
+
+.game {
+  padding: 0.625rem 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  transition:
+    background 0.15s ease,
+    transform 0.05s ease;
+}
+
+.game:hover {
+  background: var(--bg-result-hover);
+}
+
+.game:focus {
+  outline: none;
+  background: var(--bg-result-focus);
+}
+
+.game:active {
+  transform: scale(0.98);
+}
+
+.game + .game {
+  border-top: 1px solid var(--border-result-divider);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,141 @@
+#selected-game {
+  flex: 1 1 25rem;
+  min-width: 12.5rem;
+  margin-top: 0.625rem;
+  padding: 0.625rem;
+  background-color: var(--bg-game-card);
+  color: var(--text-panel);
+  border-radius: 0.25rem;
+  border-left: 4px solid var(--border-game-card);
+  font-size: 0.875rem;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+#selected-game:empty {
+  visibility: hidden;
+  min-height: 3rem;
+}
+
+.selected-game-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.625rem;
+}
+
+.apply-section {
+  margin-top: 0.3125rem;
+}
+
+.apply-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-bottom: 0.3125rem;
+}
+
+.clear-selection {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-right: 0.625rem;
+  line-height: 1;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+.clear-selection:hover {
+  color: var(--text-danger);
+}
+
+.apply-time-btn {
+  padding: 0.375rem 0.75rem;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: 0.1875rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.apply-time-btn:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+.apply-time-btn:active {
+  background-color: var(--btn-primary-active);
+}
+
+.apply-max-btn {
+  padding: 0.375rem 0.75rem;
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: 0.1875rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-bottom: 0.375rem;
+}
+
+.apply-max-btn:last-child {
+  margin-bottom: 0;
+}
+
+.apply-max-btn-main {
+  background-color: var(--btn-main-bg);
+}
+
+.apply-max-btn-main:hover {
+  background-color: var(--btn-main-hover);
+}
+
+.apply-max-btn-main:active {
+  background-color: var(--btn-main-active);
+}
+
+.apply-max-btn-plus {
+  background-color: var(--btn-plus-bg);
+}
+
+.apply-max-btn-plus:hover {
+  background-color: var(--btn-plus-hover);
+}
+
+.apply-max-btn-plus:active {
+  background-color: var(--btn-plus-active);
+}
+
+.apply-max-btn-complete {
+  background-color: var(--btn-complete-bg);
+}
+
+.apply-max-btn-complete:hover {
+  background-color: var(--btn-complete-hover);
+}
+
+.apply-max-btn-complete:active {
+  background-color: var(--btn-complete-active);
+}
+
+.max-time-loading,
+.max-time-error {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.steam-icon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--icon-fill);
+}

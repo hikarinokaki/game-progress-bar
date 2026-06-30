@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/config.css" />
+    <link rel="stylesheet" href="css/search.css" />
+    <link rel="stylesheet" href="css/game-card.css" />
+    <link rel="stylesheet" href="css/preview.css" />
   </head>
   <body>
     <div id="auth-section">
@@ -55,10 +60,19 @@
 
         <div class="time-row">
           <label for="startTimeInput">Start from:</label>
-          <input type="text" id="startTimeInput" placeholder="e.g. 1h 30m" />
-
+          <input
+            type="text"
+            id="startTimeInput"
+            placeholder="e.g. 1h 30m"
+            title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
+          />
           <label for="maxTimeInput">Max time:</label>
-          <input type="text" id="maxTimeInput" placeholder="e.g. 2 hours" />
+          <input
+            type="text"
+            id="maxTimeInput"
+            placeholder="e.g. 2 hours"
+            title="Supports expressions like 1h 30m, 2 hours, 30min, or bare seconds (3600)"
+          />
         </div>
 
         <div class="percent-row">
@@ -79,16 +93,29 @@
         </div>
 
         <div class="direction-row">
-          <label for="directionSelect">Direction:</label>
-          <select id="directionSelect">
-            <option value="increment">Count Up</option>
-            <option value="countdown">Count Down</option>
+          <label
+            for="directionSelect"
+            title="Which direction the bar fills from"
+          >
+            Bar Fill:
+          </label>
+          <select
+            id="directionSelect"
+            title="Which direction the bar fills from"
+          >
+            <option value="increment">Forward</option>
+            <option value="countdown">Reverse</option>
           </select>
         </div>
 
         <div class="invert-row">
           <input type="checkbox" id="invertDisplayCheckbox" />
-          <label for="invertDisplayCheckbox">Invert Display</label>
+          <label
+            for="invertDisplayCheckbox"
+            title="Show remaining time/percentage instead of elapsed"
+          >
+            Show Remaining
+          </label>
         </div>
 
         <label>
@@ -99,15 +126,32 @@
         <label>
           Bar Style:
           <select id="styleSelect">
-            <option value="progress">HTML Progress Bar</option>
-            <option value="gradient">CSS Gradient Animation</option>
-            <option value="steps">Step-wise Circle</option>
-            <option value="mask">Image Mask</option>
+            <option
+              value="progress"
+              title="Native browser progress element with rounded corners"
+            >
+              HTML Progress Bar
+            </option>
+            <option
+              value="gradient"
+              title="Smooth gradient fill, supports vertical orientation"
+            >
+              CSS Gradient Animation
+            </option>
+            <option value="steps" title="Fills in circular step increments">
+              Step-wise Circle
+            </option>
+            <option
+              value="mask"
+              title="Custom image fill with mask overlay, supports orientation"
+            >
+              Image Mask
+            </option>
           </select>
         </label>
 
         <label>
-          Accent Color:
+          Fill Color:
           <input type="color" id="accentColorInput" value="#4CAF50" />
         </label>
 
@@ -117,7 +161,7 @@
         </label>
 
         <label>
-          Time Indication Format:
+          Time Display:
           <select id="displayFormatSelect">
             <option value="percentage">Percentage (75%)</option>
             <option value="time">Natural Time (1h 30m)</option>
@@ -135,18 +179,32 @@
           </button>
         </div>
 
+        <h4 class="sub-heading">Milestone Labels</h4>
+
         <div class="input-group-row">
           <label class="compact-field">
-            <span class="field-label">Label Offset X (px)</span>
-            <input type="number" id="msLabelOffsetXInput" />
+            <span class="field-label">Offset X (px)</span>
+            <input
+              type="number"
+              id="msLabelOffsetXInput"
+              title="Horizontal offset from the milestone line"
+            />
           </label>
           <label class="compact-field">
-            <span class="field-label">Label Offset Y (px)</span>
-            <input type="number" id="msLabelOffsetYInput" />
+            <span class="field-label">Offset Y (px)</span>
+            <input
+              type="number"
+              id="msLabelOffsetYInput"
+              title="Vertical offset from the milestone line"
+            />
           </label>
           <label class="compact-field">
-            <span class="field-label">Label Font (px)</span>
-            <input type="number" id="msLabelFontSizeInput" />
+            <span class="field-label">Font Size (px)</span>
+            <input
+              type="number"
+              id="msLabelFontSizeInput"
+              title="Font size for milestone labels"
+            />
           </label>
         </div>
 
@@ -163,11 +221,12 @@
             <input type="text" id="twitchChannelInput" placeholder="e.g. xqc" />
           </label>
           <label class="compact-field">
-            <span class="field-label">Allow Username</span>
+            <span class="field-label">Command Sender</span>
             <input
               type="text"
               id="twitchUsernameInput"
-              placeholder="e.g. nightbot (leave empty for any)"
+              placeholder="Username (leave empty for any chatter)"
+              title="Only this Twitch user can run !bar commands (leave empty for any chatter)"
             />
           </label>
         </div>
@@ -179,11 +238,21 @@
         <div class="input-group-row">
           <label class="compact-field">
             <span class="field-label">Title X (px)</span>
-            <input type="number" id="titleXInput" placeholder="auto" />
+            <input
+              type="number"
+              id="titleXInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the title on the preview canvas"
+            />
           </label>
           <label class="compact-field">
             <span class="field-label">Title Y (px)</span>
-            <input type="number" id="titleYInput" placeholder="auto" />
+            <input
+              type="number"
+              id="titleYInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the title on the preview canvas"
+            />
           </label>
           <label class="compact-field">
             <span class="field-label">Title Font (px)</span>
@@ -200,11 +269,21 @@
         <div class="input-group-row">
           <label class="compact-field">
             <span class="field-label">Time X (px)</span>
-            <input type="number" id="timeXInput" placeholder="auto" />
+            <input
+              type="number"
+              id="timeXInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the time display on the preview canvas"
+            />
           </label>
           <label class="compact-field">
             <span class="field-label">Time Y (px)</span>
-            <input type="number" id="timeYInput" placeholder="auto" />
+            <input
+              type="number"
+              id="timeYInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the time display on the preview canvas"
+            />
           </label>
           <label class="compact-field">
             <span class="field-label">Time Font (px)</span>
@@ -221,11 +300,21 @@
         <div class="input-group-row">
           <label class="compact-field">
             <span class="field-label">Bar X (px)</span>
-            <input type="number" id="barXInput" placeholder="auto" />
+            <input
+              type="number"
+              id="barXInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the bar on the preview canvas"
+            />
           </label>
           <label class="compact-field">
             <span class="field-label">Bar Y (px)</span>
-            <input type="number" id="barYInput" placeholder="auto" />
+            <input
+              type="number"
+              id="barYInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the bar on the preview canvas"
+            />
           </label>
           <label class="compact-field">
             <span class="field-label">Width (px)</span>
@@ -258,6 +347,7 @@
               value="1920"
               min="320"
               max="7680"
+              title="Total canvas width for OBS source (default: 1920)"
             />
           </label>
           <label class="compact-field">
@@ -268,6 +358,7 @@
               value="1080"
               min="240"
               max="4320"
+              title="Total canvas height for OBS source (default: 1080)"
             />
           </label>
           <label class="compact-field">
@@ -282,11 +373,21 @@
         <div class="input-group-row">
           <label class="compact-field">
             <span class="field-label">Todo X (px)</span>
-            <input type="number" id="todoXInput" placeholder="auto" />
+            <input
+              type="number"
+              id="todoXInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the todo list on the preview canvas"
+            />
           </label>
           <label class="compact-field">
             <span class="field-label">Todo Y (px)</span>
-            <input type="number" id="todoYInput" placeholder="auto" />
+            <input
+              type="number"
+              id="todoYInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the todo list on the preview canvas"
+            />
           </label>
           <label class="compact-field">
             <span class="field-label">Todo Font (px)</span>
