@@ -63,7 +63,7 @@ function applyFontSizes(params) {
   }
 }
 
-export function setElementPosition(el, x, y) {
+function setElementPosition(el, x, y) {
   if (!el) return;
   if (x !== "" && y !== "") {
     el.style.left = x + "px";

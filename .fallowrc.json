@@ -2,9 +2,16 @@
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
   "entry": ["src/public/js/main.js", "src/public/js/bar.js"],
   "duplicates": {
-    "minOccurrences": 2
+    "minOccurrences": 3
   },
   "rules": {
-    "unused-dependencies": "warn"
+    "unused-dependencies": "warn",
+    "unused-files": "warn",
+    "unresolved-imports": "warn"
+  },
+  "health": {
+    "maxCyclomatic": 40,
+    "maxCognitive": 50,
+    "maxCrap": 1500
   }
 }
