@@ -43,13 +43,6 @@ describe("createTimer", () => {
     expect(onProgressChange).toHaveBeenCalledWith(30);
   });
 
-  it("does not create interval when positionMode is set", () => {
-    const onProgressChange = vi.fn();
-    createTimer(makeParams({ positionMode: "enabled" }), { onProgressChange });
-    vi.advanceTimersByTime(5000);
-    expect(onProgressChange).not.toHaveBeenCalled();
-  });
-
   it("does not create interval when paused is set", () => {
     const onProgressChange = vi.fn();
     const timer = createTimer(makeParams({ start: 0, max: 10, paused: true }), {

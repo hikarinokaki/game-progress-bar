@@ -13,7 +13,6 @@ import {
   initCanvas,
   makeAbsolute,
   applyPositions,
-  setElementPosition,
   updateDisplay,
   renderMilestones,
   renderTodos,
@@ -155,9 +154,9 @@ export function initBar() {
 
   setupTitle(params);
 
-  const style = getStyle(params.style);
+  let style = getStyle(params.style);
   const progressContainer = document.getElementById("progressContainer");
-  const progressElement = style.init(progressContainer, params);
+  let progressElement = style.init(progressContainer, params);
   progressContainer._barInnerElement = progressElement;
 
   makeAbsolute();
@@ -209,52 +208,37 @@ export function initBar() {
         delete canvas._dragCleanup;
       }
       setupDragEnvironment(params);
-    } else if (event.data?.type === "disable-drag") {
-      const canvas = document.getElementById("bar-canvas");
-      if (canvas && canvas._dragCleanup) {
-        canvas._dragCleanup();
-        delete canvas._dragCleanup;
-      }
     } else if (event.data?.type === "snap") {
       setSnapEnabled(event.data.enabled);
-    } else if (event.data?.type === "bar-state") {
+    } else if (event.data?.type === "config-update") {
       const d = event.data;
-      setElementPosition(document.getElementById("title"), d.titleX, d.titleY);
-      setElementPosition(
-        document.getElementById("percentage"),
-        d.timeX,
-        d.timeY,
-      );
-      setElementPosition(
-        document.getElementById("progressContainer"),
-        d.barX,
-        d.barY,
-      );
-      setElementPosition(
-        document.getElementById("todoContainer"),
-        d.todoX,
-        d.todoY,
-      );
-      if (d.barWidth) {
-        const barEl = document.getElementById("progressContainer");
-        barEl.style.width = d.barWidth + "px";
-        barEl.style.height = d.barHeight + "px";
-        const inner = barEl._barInnerElement;
-        if (inner) {
-          inner.style.width = d.barWidth + "px";
-          inner.style.height = d.barHeight + "px";
+      const oldStyle = params.style;
+      const oldAccentColor = params.accentColor;
+      const oldBgColor = params.bgColor;
+      Object.assign(params, d);
+      params.paused = true;
+
+      const needsReinit =
+        params.style !== oldStyle ||
+        params.accentColor !== oldAccentColor ||
+        params.bgColor !== oldBgColor;
+
+      if (needsReinit) {
+        const newStyle = getStyle(params.style);
+        if (newStyle) {
+          if (style.destroy) style.destroy(progressElement);
+          progressContainer.innerHTML = "";
+          progressElement = newStyle.init(progressContainer, params);
+          progressContainer._barInnerElement = progressElement;
+          style = newStyle;
         }
       }
-      if (d.titleFontSize)
-        document.getElementById("title").style.fontSize =
-          d.titleFontSize + "px";
-      if (d.timeFontSize)
-        document.getElementById("percentage").style.fontSize =
-          d.timeFontSize + "px";
-      if (d.todoFontSize) {
-        const tc = document.getElementById("todoContainer");
-        if (tc) tc.style.setProperty("--todo-font-size", d.todoFontSize + "px");
-      }
+
+      setupTitle(params);
+      applyPositions(params);
+      renderMilestones(params);
+      renderTodos(params);
+      timer.setCurrentValue(params.start);
     }
   });
 }

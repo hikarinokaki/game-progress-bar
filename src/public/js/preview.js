@@ -1,5 +1,5 @@
 import { state } from "./state.js";
-import { previewBtn, copyBtn, previewFrame } from "./domElements.js";
+import { copyBtn } from "./domElements.js";
 import { getTheme } from "./theme.js";
 
 function buildPreviewURL() {
@@ -57,11 +57,6 @@ function buildPreviewURL() {
 }
 
 export function initPreview() {
-  previewBtn.addEventListener("click", () => {
-    const url = buildPreviewURL();
-    previewFrame.src = url;
-  });
-
   copyBtn.addEventListener("click", async () => {
     const fullUrl = new URL(buildPreviewURL(), window.location.href).href;
     try {

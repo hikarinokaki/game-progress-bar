@@ -35,14 +35,13 @@ export function createTimer(params, callbacks) {
   };
 
   const resume = () => {
-    if (paused && params.positionMode) return;
     paused = false;
     startInterval();
   };
 
   const isPaused = () => paused;
 
-  if (!params.positionMode && !params.paused) {
+  if (!params.paused) {
     startInterval();
   }
 

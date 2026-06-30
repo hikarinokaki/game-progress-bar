@@ -4,7 +4,7 @@
 
 - `npm run build:frontend` — bundle frontend JS with esbuild (entry: `src/public/js/main.js` → output: `dist/bundle.js`)
 - `npm start` — run server at `src/server.js`
-- `npm test` — vitest run (~176 tests across 6 test files)
+- `npm test` — vitest run (~194 tests across 6 test files)
 - `npm run test:watch` — vitest watch mode
 - `npm run fallow` — run fallow static analysis
 - `npm run fallow:health` — fallow complexity/health analysis only
@@ -27,14 +27,14 @@
 
 ## Module Architecture (bar page)
 
-| Module      | Lines | Exports                                                                                                                                               | Role                                                           |
-| ----------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `shared.js` | 175   | `initBar`                                                                                                                                             | Orchestrator: `parseParams`, `updateURL`, postMessage listener |
-| `logic.js`  | 175   | `secondsToNaturalTime`, `rectsIntersect`, validators, parsers, `parseTimeExpression`, `parseBarCommand`                                               | Pure functions, no DOM                                         |
-| `timer.js`  | 47    | `createTimer`                                                                                                                                         | Owns `currentValue`, `setInterval` tick, pause/resume          |
-| `twitch.js` | 170   | `initTwitch`                                                                                                                                          | tmi.js chat client, todo/milestone add/delete, pause/resume    |
-| `render.js` | 215   | `canvasState`, `initCanvas`, `makeAbsolute`, `applyPositions`, `setElementPosition`, `updateDisplay`, `renderMilestones`, `renderTodos`, `setupTitle` | DOM rendering, canvas scale state                              |
-| `drag.js`   | 726   | `setupDragEnvironment`, `setSnapEnabled`                                                                                                              | Pointer-based drag/resize/select/snap                          |
+| Module      | Lines | Exports                                                                                                                         | Role                                                              |
+| ----------- | ----- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `shared.js` | 236   | `initBar`                                                                                                                       | Orchestrator: `parseParams`, `updateURL`, `config-update` handler |
+| `logic.js`  | 296   | `secondsToNaturalTime`, `rectsIntersect`, validators, parsers, `parseTimeExpression`, `parseBarCommand`                         | Pure functions, no DOM                                            |
+| `timer.js`  | 55    | `createTimer`                                                                                                                   | Owns `currentValue`, `setInterval` tick, pause/resume             |
+| `twitch.js` | 164   | `initTwitch`                                                                                                                    | tmi.js chat client, todo/milestone add/delete, pause/resume       |
+| `render.js` | 220   | `canvasState`, `initCanvas`, `makeAbsolute`, `applyPositions`, `updateDisplay`, `renderMilestones`, `renderTodos`, `setupTitle` | DOM rendering, canvas scale state                                 |
+| `drag.js`   | 718   | `setupDragEnvironment`, `setSnapEnabled`                                                                                        | Pointer-based drag/resize/select/snap                             |
 
 **Key invariants**:
 
@@ -42,21 +42,22 @@
 - `params` object is mutated in-place (toggleTodo, timer, todo push/splice, milestone push/splice, etc.)
 - `updateURL` reads `params.start` and `params.max` directly (not through `timer.getCurrentValue()` — intentional)
 - Twitch `callbacks.setProgressValue` is `timer.setCurrentValue`, which updates `currentValue` AND `params.start` AND calls `onProgressChange` → `updateProgress`/`updateDisplay`/`updateURL`
-- Twitch command dispatch: `parseBarCommand` tried first (`!bar ...`), falls back to legacy `parseProgressCommand` (`!progress milestone`) and `parseTodoCommand` (`!todo <n> <action>`). All command types postMessage to parent for config UI sync.
-- `createTimer` now returns `{ getCurrentValue, setCurrentValue, pause, resume, isPaused }` — `pause` clears the interval, `resume` restarts it
+- Twitch command dispatch: `parseBarCommand` handles all `!bar` commands. Command types postMessage to parent for config UI sync with types: `progressJump`, `todoToggle`, `todoAdd`, `todoDelete`, `milestoneAdd`, `milestoneRemove`.
+- `createTimer` returns `{ getCurrentValue, setCurrentValue, pause, resume, isPaused }` — `pause` clears the interval, `resume` restarts it
 - Style plugin lifecycle: `getStyle(params.style).init(container, params)` then `style.update(element, value, max, params)`
 - `canvasState` (`render.js:3`) is a mutable object passed by reference — allows `drag.js` and `render.js` to share the current canvas scale
+- **Live preview via config-update**: Config UI sends `{ type: "config-update", ...state }` to the iframe on every `render()` call. The bar handles style changes (re-init if `params.style` changed), re-renders title/positions/milestones/todos, and calls `timer.setCurrentValue(params.start)`. Timer stays paused via `params.paused = true`. Drag operations set `_pendingDragUpdate` flag to suppress config-update during active drag.
 
 ## Testing
 
 - **Framework**: Vitest with jsdom environment
 - **Test location**: `test/` directory, mirrors source structure
-- **6 test files, ~176 tests**:
+- **6 test files, ~194 tests**:
   - `test/utils.test.js` — 19 tests (pure utility functions)
-  - `test/bar/logic.test.js` — 80 tests (secondsToNaturalTime, rectsIntersect, validators, parsers, parseTimeExpression, parseBarCommand)
-  - `test/bar/timer.test.js` — 15 tests (createTimer tick, get/set currentValue, pause/resume)
+  - `test/bar/logic.test.js` — 94 tests (secondsToNaturalTime, rectsIntersect, validators, parsers, parseTimeExpression, parseBarCommand, findTodoIndex)
+  - `test/bar/timer.test.js` — 16 tests (createTimer tick, get/set currentValue, pause/resume, paused init)
   - `test/bar/drag.test.js` — 25 tests (drag helpers: geometry, snap, candidates)
-  - `test/state.test.js` — 26 tests (config UI state setters)
+  - `test/state.test.js` — 30 tests (config UI state setters)
   - `test/api.controller.test.js` — 10 tests (server API controller with mocked `getGameMaxTime`)
 - **Mocking pattern for CJS controllers**: Pass mock as second arg (`require("../controllers/api.controller")(libraryCache, mockFn)`)
 - **DOM tests** (`drag.test.js`): set up minimal DOM elements (progressContainer, title, percentage, todoContainer) with style properties; test geometry/snap functions that depend on `document.getElementById`
@@ -100,4 +101,4 @@
 - CommonJS server, ES module frontend (bundled by esbuild)
 - Prettier with `--list-different` for formatting checks
 - No lint/typecheck in CI or pre-commit
-- **Paused state not persisted**: Timer pause/resume (`!bar pause` / `!bar resume`) is not stored in the URL. Adding a `paused=1` param would reload the bar already paused (future enhancement).
+- **Paused state persisted in URL**: `paused=1` URL param loads the bar paused (timer doesn't tick). The config UI pause button toggles this param and reloads the preview iframe. `!bar pause`/`!bar resume` commands update the iframe URL via `history.replaceState`.

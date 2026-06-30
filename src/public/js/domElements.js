@@ -33,12 +33,10 @@ export const barXInput = document.getElementById("barXInput");
 export const barYInput = document.getElementById("barYInput");
 export const orientationSelect = document.getElementById("orientationSelect");
 export const maskImageUrlInput = document.getElementById("maskImageUrlInput");
-export const positionModeBtn = document.getElementById("positionModeBtn");
 export const snapBtn = document.getElementById("snapBtn");
 export const canvasWidthInput = document.getElementById("canvasWidthInput");
 export const canvasHeightInput = document.getElementById("canvasHeightInput");
 
-export const previewBtn = document.getElementById("previewBtn");
 export const copyBtn = document.getElementById("copyBtn");
 export const previewFrame = document.getElementById("previewFrame");
 
@@ -61,4 +59,3 @@ export const msLabelOffsetYInput = document.getElementById(
 export const msLabelFontSizeInput = document.getElementById(
   "msLabelFontSizeInput",
 );
-export const pauseBtn = document.getElementById("pauseBtn");

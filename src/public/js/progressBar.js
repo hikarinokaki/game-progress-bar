@@ -34,7 +34,6 @@ import {
   setMsLabelOffsetX,
   setMsLabelOffsetY,
   setMsLabelFontSize,
-  setPaused,
 } from "./state.js";
 import {
   startInput,
@@ -58,7 +57,6 @@ import {
   timeYInput,
   orientationSelect,
   maskImageUrlInput,
-  positionModeBtn,
   snapBtn,
   previewFrame,
   canvasWidthInput,
@@ -75,7 +73,6 @@ import {
   msLabelOffsetXInput,
   msLabelOffsetYInput,
   msLabelFontSizeInput,
-  pauseBtn,
 } from "./domElements.js";
 import {
   calculatePercent,
@@ -94,8 +91,8 @@ registerStyle(gradientStyle);
 registerStyle(stepsStyle);
 registerStyle(maskStyle);
 
-let positionModeActive = false;
 let snapActive = true;
+let _pendingDragUpdate = false;
 
 const MAX_UNDO = 50;
 const undoStack = [];
@@ -141,12 +138,6 @@ function applyState(snap) {
   setTodoY(snap.todoY);
   setTodoFontSize(snap.todoFontSize);
   render();
-  if (positionModeActive) {
-    previewFrame.contentWindow?.postMessage(
-      { type: "bar-state", ...snap },
-      "*",
-    );
-  }
 }
 
 function undo() {
@@ -297,27 +288,6 @@ function syncPreviewFrameSize() {
   previewFrame.style.height = Math.min(naturalHeight, maxHeight) + "px";
 }
 
-function togglePositionMode() {
-  positionModeActive = !positionModeActive;
-  positionModeBtn.textContent = positionModeActive
-    ? "Exit Position Mode"
-    : "Position Mode";
-
-  if (positionModeActive) {
-    previewFrame.src = buildPreviewURL(true);
-    syncPreviewFrameSize();
-    positionModeBtn.style.background = "#d32f2f";
-    positionModeBtn.style.color = "#fff";
-  } else {
-    previewFrame.contentWindow?.postMessage({ type: "disable-drag" }, "*");
-    previewFrame.src = buildPreviewURL(false);
-    syncPreviewFrameSize();
-    positionModeBtn.style.background = "";
-    positionModeBtn.style.color = "";
-  }
-  syncPauseUI(positionModeActive);
-}
-
 function syncSnapUI() {
   snapBtn.textContent = snapActive ? "Snap: On" : "Snap: Off";
   snapBtn.style.background = snapActive ? "#4CAF50" : "";
@@ -333,17 +303,17 @@ function toggleSnap() {
   );
 }
 
-function buildPreviewURL(forPositionMode) {
+function buildPreviewURL() {
   const params = new URLSearchParams({
-    start: forPositionMode ? state.max : state.start,
+    start: state.start,
     max: state.max,
     title: state.title,
     style: state.style,
     displayFormat: state.displayFormat,
     accentColor: state.accentColor,
     bgColor: state.bgColor,
-    direction: forPositionMode ? "increment" : state.direction,
-    invertDisplay: "false",
+    direction: state.direction,
+    invertDisplay: state.invertDisplay.toString(),
     barWidth: state.barWidth,
     barHeight: state.barHeight,
     titleX: state.titleX,
@@ -368,11 +338,7 @@ function buildPreviewURL(forPositionMode) {
     msLabelFontSize: state.msLabelFontSize,
   });
 
-  if (forPositionMode) {
-    params.set("positionMode", "1");
-  }
-
-  if (state.paused && !forPositionMode) {
+  if (state.paused) {
     params.set("paused", "1");
   }
 
@@ -389,6 +355,18 @@ function buildPreviewURL(forPositionMode) {
   }
 
   return "bar.html?" + params.toString();
+}
+
+function sendStateToPreview() {
+  if (!previewFrame.contentWindow || _pendingDragUpdate) return;
+  previewFrame.contentWindow.postMessage(
+    {
+      type: "config-update",
+      ...state,
+      theme: document.documentElement.getAttribute("data-theme") || "default",
+    },
+    "*",
+  );
 }
 
 export function render() {
@@ -438,6 +416,8 @@ export function render() {
   msLabelOffsetYInput.value = state.msLabelOffsetY;
   msLabelFontSizeInput.value = state.msLabelFontSize;
   renderTodoList();
+
+  sendStateToPreview();
 }
 
 export function initProgressBar() {
@@ -618,29 +598,8 @@ export function initProgressBar() {
     render();
   });
 
-  positionModeBtn.addEventListener("click", togglePositionMode);
   snapBtn.addEventListener("click", toggleSnap);
   syncSnapUI();
-
-  function syncPauseUI(positionActive) {
-    const isPositionMode =
-      positionActive !== undefined ? positionActive : positionModeActive;
-    if (isPositionMode) {
-      pauseBtn.disabled = true;
-      pauseBtn.textContent = "Paused (pos. mode)";
-    } else {
-      pauseBtn.disabled = false;
-      pauseBtn.textContent = state.paused ? "Resume Timer" : "Pause Timer";
-    }
-  }
-
-  pauseBtn.addEventListener("click", () => {
-    if (positionModeActive) return;
-    setPaused(!state.paused);
-    previewFrame.src = buildPreviewURL(false);
-    syncPauseUI(false);
-    render();
-  });
 
   const addMilestoneBtn = document.getElementById("addMilestoneBtn");
   if (addMilestoneBtn) {
@@ -700,6 +659,7 @@ export function initProgressBar() {
           _undoBatch = false;
         }, 0);
       }
+      _pendingDragUpdate = true;
     }
     if (event.data?.type === "position") {
       const { target, x, y } = event.data;
@@ -717,6 +677,7 @@ export function initProgressBar() {
         setTodoY(String(y));
       }
       render();
+      _pendingDragUpdate = false;
     } else if (event.data?.type === "resize") {
       const { target, fontSize, width, height } = event.data;
       if (target === "title" && fontSize) {
@@ -730,15 +691,14 @@ export function initProgressBar() {
         setTodoFontSize(String(fontSize));
       }
       render();
+      _pendingDragUpdate = false;
     }
   });
 
   // Handle iframe load to enable drag mode, sync size, and restore snap
   previewFrame.addEventListener("load", () => {
     syncPreviewFrameSize();
-    if (positionModeActive) {
-      previewFrame.contentWindow?.postMessage({ type: "enable-drag" }, "*");
-    }
+    previewFrame.contentWindow?.postMessage({ type: "enable-drag" }, "*");
     if (snapActive) {
       previewFrame.contentWindow?.postMessage(
         { type: "snap", enabled: true },
@@ -746,8 +706,6 @@ export function initProgressBar() {
       );
     }
   });
-
-  syncPauseUI(false);
 
   document.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
@@ -763,6 +721,7 @@ export function initProgressBar() {
   });
 
   render();
+  previewFrame.src = buildPreviewURL();
   syncPreviewFrameSize();
   window.addEventListener("resize", syncPreviewFrameSize);
 }
