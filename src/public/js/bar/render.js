@@ -28,7 +28,7 @@ export function makeAbsolute() {
   const canvasRect = canvas.getBoundingClientRect();
 
   document
-    .querySelectorAll("#title, #percentage, #progressContainer, #todoContainer")
+    .querySelectorAll("#percentage, #progressContainer, #todoContainer")
     .forEach((label) => {
       if (label.style.display === "none") return;
       const savedTransform = label.style.transform || "";
@@ -65,9 +65,17 @@ function applyFontSizes(params) {
 
 function setElementPosition(el, x, y) {
   if (!el) return;
-  if (x !== "" && y !== "") {
+  let changed = false;
+  if (x !== "") {
     el.style.left = x + "px";
+    changed = true;
+  }
+  if (y !== "") {
     el.style.top = y + "px";
+    changed = true;
+  }
+  if (changed) {
+    el.style.position = "absolute";
     el.style.margin = "0";
     el.style.transform = "";
   }
@@ -84,10 +92,6 @@ export function applyPositions(params) {
     params.timeX,
     params.timeY,
   );
-  const percEl = document.getElementById("percentage");
-  if (percEl && params.timeX !== "" && params.timeY !== "") {
-    percEl.style.transform = "translate(-50%, -50%)";
-  }
   setElementPosition(
     document.getElementById("progressContainer"),
     params.barX,
