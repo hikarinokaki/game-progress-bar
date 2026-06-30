@@ -84,6 +84,10 @@ export function applyPositions(params) {
     params.timeX,
     params.timeY,
   );
+  const percEl = document.getElementById("percentage");
+  if (percEl && params.timeX !== "" && params.timeY !== "") {
+    percEl.style.transform = "translate(-50%, -50%)";
+  }
   setElementPosition(
     document.getElementById("progressContainer"),
     params.barX,

@@ -33,7 +33,7 @@ function parseParams() {
     start: parseInt(params.get("start")),
     max: parseInt(params.get("max")),
     title: params.get("title") || "",
-    style: params.get("style") || "progress",
+    style: params.get("style") || "gradient",
     displayFormat: params.get("displayFormat") || "percentage",
     accentColor: params.get("accentColor") || "#4CAF50",
     bgColor: params.get("bgColor") || "#ddd",
@@ -43,10 +43,10 @@ function parseParams() {
     barHeight: params.get("barHeight") || "60",
     titleX: params.get("titleX") || "",
     titleY: params.get("titleY") || "",
-    timeX: params.get("timeX") || "",
-    timeY: params.get("timeY") || "",
-    barX: params.get("barX") || "",
-    barY: params.get("barY") || "",
+    timeX: params.get("timeX") || "960",
+    timeY: params.get("timeY") || "590",
+    barX: params.get("barX") || "710",
+    barY: params.get("barY") || "560",
     orientation: params.get("orientation") || "horizontal",
     maskImageUrl: params.get("maskImageUrl") || "",
     canvasWidth: params.get("canvasWidth") || "1920",
@@ -57,8 +57,8 @@ function parseParams() {
     paused: params.get("paused") === "1",
     milestones: [],
     todos: [],
-    todoX: params.get("todoX") || "",
-    todoY: params.get("todoY") || "",
+    todoX: params.get("todoX") || "1720",
+    todoY: params.get("todoY") || "50",
     todoFontSize: params.get("todoFontSize") || "20",
     twitchChannel: params.get("twitchChannel") || "",
     twitchUsername: params.get("twitchUsername") || "",
@@ -79,8 +79,8 @@ function parseParams() {
   p.orientation = validateOrientation(p.orientation);
 
   if (!getStyle(p.style)) {
-    console.warn(`Unknown style "${p.style}", falling back to "progress"`);
-    p.style = "progress";
+    console.warn(`Unknown style "${p.style}", falling back to "gradient"`);
+    p.style = "gradient";
   }
 
   return p;

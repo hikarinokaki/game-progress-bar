@@ -81,14 +81,10 @@ import {
   addScroll,
 } from "./utils.js";
 import { registerStyle, getSupportedOptions } from "./bar/registry.js";
-import { progressStyle } from "./bar/progressStyle.js";
 import { gradientStyle } from "./bar/gradientStyle.js";
-import { stepsStyle } from "./bar/stepsStyle.js";
 import { maskStyle } from "./bar/maskStyle.js";
 
-registerStyle(progressStyle);
 registerStyle(gradientStyle);
-registerStyle(stepsStyle);
 registerStyle(maskStyle);
 
 let snapActive = true;

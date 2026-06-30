@@ -48,6 +48,7 @@
     <h2 id="configHeading">Progress Bar Configuration</h2>
     <main class="container">
       <div class="col">
+        <h3 class="section-heading">General</h3>
         <label id="startInputLabel" style="display: none">
           Start (seconds):
           <input type="number" id="startInput" />
@@ -127,19 +128,10 @@
           Bar Style:
           <select id="styleSelect">
             <option
-              value="progress"
-              title="Native browser progress element with rounded corners"
-            >
-              HTML Progress Bar
-            </option>
-            <option
               value="gradient"
               title="Smooth gradient fill, supports vertical orientation"
             >
               CSS Gradient Animation
-            </option>
-            <option value="steps" title="Fills in circular step increments">
-              Step-wise Circle
             </option>
             <option
               value="mask"
@@ -368,9 +360,12 @@
           <button id="addTodoBtn" class="btn-primary">+ Add Todo Item</button>
         </div>
 
-        <div class="input-group-row group-sep">
+        <div class="input-group-row group-sep"></div>
+
+        <h4 class="sub-heading">Todos</h4>
+        <div class="input-group-row">
           <label class="compact-field">
-            <span class="field-label">Todo X (px)</span>
+            <span class="field-label">X Coordinate (px)</span>
             <input
               type="number"
               id="todoXInput"
@@ -379,7 +374,7 @@
             />
           </label>
           <label class="compact-field">
-            <span class="field-label">Todo Y (px)</span>
+            <span class="field-label">Y Coordinate (px)</span>
             <input
               type="number"
               id="todoYInput"
@@ -388,7 +383,7 @@
             />
           </label>
           <label class="compact-field">
-            <span class="field-label">Todo Font (px)</span>
+            <span class="field-label">Font Size (px)</span>
             <input
               type="number"
               id="todoFontSizeInput"
