@@ -54,6 +54,8 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -e
+            docker system prune -f --filter "until=24h"
             cd /opt/game-progress-bar
             docker compose pull
             docker compose up -d
