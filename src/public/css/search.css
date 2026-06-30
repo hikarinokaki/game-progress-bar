@@ -16,7 +16,7 @@
   background: var(--bg-dropdown);
   border: 1px solid var(--border-dropdown);
   border-top: none;
-  border-radius: 0 0 0.5rem 0.5rem;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   box-shadow: var(--shadow-dropdown);
   max-height: 18.75rem;
   overflow-y: auto;
@@ -30,11 +30,11 @@
 }
 
 .game {
-  padding: 0.625rem 0.875rem;
+  padding: var(--space-5) var(--space-7);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: var(--space-5);
   transition:
     background 0.15s ease,
     transform 0.05s ease;
@@ -60,7 +60,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-0.25rem);
+    transform: translateY(calc(-1 * var(--space-2)));
   }
   to {
     opacity: 1;

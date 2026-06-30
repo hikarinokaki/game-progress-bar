@@ -1,116 +1,172 @@
 @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap");
 
 :root {
+  /* ── Font tokens ── */
   --font-body: Arial, sans-serif;
   --font-size-base: 1rem;
   --font-size-sm: 0.875rem;
   --font-size-xs: 0.75rem;
 
-  --bg-body: #f7f9fc;
-  --text-body: #000000;
+  /* ── Spacing scale ── */
+  --space-1: 0.125rem;
+  --space-2: 0.25rem;
+  --space-3: 0.375rem;
+  --space-4: 0.5rem;
+  --space-5: 0.625rem;
+  --space-6: 0.75rem;
+  --space-7: 0.875rem;
+  --space-8: 1rem;
+  --space-9: 1.25rem;
+  --space-10: 1.5rem;
+  --space-11: 2.5rem;
 
-  --bg-panel: #e8f4f8;
-  --border-panel: #2196f3;
+  /* ── Radius tokens ── */
+  --radius-sm: 0.1875rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+
+  /* ── Default palette ── */
+  --color-blue-500: #2196f3;
+  --color-blue-700: #1976d2;
+  --color-blue-900: #0d47a1;
+  --color-green-500: #4caf50;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-100: #e8f4f8;
+  --color-gray-200: #f0f0f0;
+  --color-gray-300: #ccc;
+  --color-gray-600: #666666;
+  --color-red-700: #d32f2f;
+  --color-purple-500: #9c27b0;
+  --color-purple-700: #7b1fa2;
+  --color-purple-900: #4a148c;
+
+  /* ── Semantic tokens ── */
+  --bg-body: #f7f9fc;
+  --text-body: var(--color-black);
+
+  --bg-panel: var(--color-gray-100);
+  --border-panel: var(--color-blue-500);
   --text-panel: inherit;
 
-  --bg-input: #ffffff;
-  --border-input: #ccc;
-  --bg-input-addon: #f0f0f0;
+  --bg-input: var(--color-white);
+  --border-input: var(--color-gray-300);
+  --bg-input-addon: var(--color-gray-200);
 
-  --bg-dropdown: #ffffff;
+  --bg-dropdown: var(--color-white);
   --border-dropdown: #dcdcdc;
-  --shadow-dropdown: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.08);
+  --shadow-dropdown: 0 var(--space-4) var(--space-9) rgba(0, 0, 0, 0.08);
 
   --bg-result-hover: #f3f6fa;
   --bg-result-focus: #e8f0fe;
   --border-result: #eee;
-  --border-result-divider: #f0f0f0;
-  --accent-focus: #2196f3;
+  --border-result-divider: var(--color-gray-200);
+  --accent-focus: var(--color-blue-500);
 
-  --bg-game-card: #e8f4f8;
-  --border-game-card: #2196f3;
-  --text-muted: #666666;
-  --text-danger: #d32f2f;
+  --bg-game-card: var(--color-gray-100);
+  --border-game-card: var(--color-blue-500);
+  --text-muted: var(--color-gray-600);
+  --text-danger: var(--color-red-700);
 
-  --btn-primary-bg: #2196f3;
-  --btn-primary-text: #ffffff;
-  --btn-primary-hover: #1976d2;
-  --btn-primary-active: #0d47a1;
+  --btn-primary-bg: var(--color-blue-500);
+  --btn-primary-text: var(--color-white);
+  --btn-primary-hover: var(--color-blue-700);
+  --btn-primary-active: var(--color-blue-900);
 
-  --btn-main-bg: #2196f3;
-  --btn-main-hover: #1976d2;
-  --btn-main-active: #0d47a1;
+  --btn-main-bg: var(--color-blue-500);
+  --btn-main-hover: var(--color-blue-700);
+  --btn-main-active: var(--color-blue-900);
 
-  --btn-plus-bg: #9c27b0;
-  --btn-plus-hover: #7b1fa2;
-  --btn-plus-active: #4a148c;
+  --btn-plus-bg: var(--color-purple-500);
+  --btn-plus-hover: var(--color-purple-700);
+  --btn-plus-active: var(--color-purple-900);
 
-  --btn-complete-bg: #4caf50;
+  --btn-complete-bg: var(--color-green-500);
   --btn-complete-hover: #45a049;
   --btn-complete-active: #388e3c;
 
-  --icon-fill: #ffffff;
+  --icon-fill: var(--color-white);
 
-  --border-preview: #ccc;
+  --border-preview: var(--color-gray-300);
 
   --bar-track-bg: #ddd;
-  --bar-fill-bg: #4caf50;
+  --bar-fill-bg: var(--color-green-500);
 
   --bg-texture: none;
 }
 
 [data-theme="medieval"] {
+  /* ── Medieval palette ── */
+  --color-med-bg: #0a0806;
+  --color-med-gold: #d4bf8a;
+  --color-med-surface: #1a1410;
+  --color-med-border: #6b4f2e;
+  --color-med-primary: #8b7355;
+  --color-med-primary-hover: #a08060;
+  --color-med-primary-active: #6b5535;
+  --color-med-dark: #2a1f14;
+  --color-med-accent: #c4a96a;
+  --color-med-muted: #a08a66;
+  --color-med-danger: #a03020;
+  --color-med-plus: #6b3a6b;
+  --color-med-plus-hover: #8b4a8b;
+  --color-med-plus-active: #4a2a4a;
+  --color-med-complete: #4a6b3a;
+  --color-med-complete-hover: #5a8b4a;
+  --color-med-complete-active: #3a4a2a;
+
+  /* ── Font ── */
   --font-body: "Cinzel", serif;
 
-  --bg-body: #0a0806;
-  --text-body: #d4bf8a;
+  /* ── Semantic overrides ── */
+  --bg-body: var(--color-med-bg);
+  --text-body: var(--color-med-gold);
 
-  --bg-panel: #1a1410;
-  --border-panel: #8b7355;
-  --text-panel: #d4bf8a;
+  --bg-panel: var(--color-med-surface);
+  --border-panel: var(--color-med-primary);
+  --text-panel: var(--color-med-gold);
 
-  --bg-input: #1a1410;
-  --border-input: #6b4f2e;
-  --bg-input-addon: #2a1f14;
+  --bg-input: var(--color-med-surface);
+  --border-input: var(--color-med-border);
+  --bg-input-addon: var(--color-med-dark);
 
-  --bg-dropdown: #1a1410;
-  --border-dropdown: #6b4f2e;
-  --shadow-dropdown: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.5);
+  --bg-dropdown: var(--color-med-surface);
+  --border-dropdown: var(--color-med-border);
 
-  --bg-result-hover: #2a1f14;
+  --bg-result-hover: var(--color-med-dark);
   --bg-result-focus: #3a2a1a;
-  --border-result: #2a1f14;
-  --border-result-divider: #2a1f14;
-  --accent-focus: #c4a96a;
+  --border-result: var(--color-med-dark);
+  --border-result-divider: var(--color-med-dark);
+  --accent-focus: var(--color-med-accent);
 
-  --bg-game-card: #1a1410;
-  --border-game-card: #c4a96a;
-  --text-muted: #a08a66;
-  --text-danger: #a03020;
+  --bg-game-card: var(--color-med-surface);
+  --border-game-card: var(--color-med-accent);
+  --text-muted: var(--color-med-muted);
+  --text-danger: var(--color-med-danger);
 
-  --btn-primary-bg: #8b7355;
-  --btn-primary-text: #0a0806;
-  --btn-primary-hover: #a08060;
-  --btn-primary-active: #6b5535;
+  --btn-primary-bg: var(--color-med-primary);
+  --btn-primary-text: var(--color-med-bg);
+  --btn-primary-hover: var(--color-med-primary-hover);
+  --btn-primary-active: var(--color-med-primary-active);
 
-  --btn-main-bg: #8b7355;
-  --btn-main-hover: #a08060;
-  --btn-main-active: #6b5535;
+  --btn-main-bg: var(--color-med-primary);
+  --btn-main-hover: var(--color-med-primary-hover);
+  --btn-main-active: var(--color-med-primary-active);
 
-  --btn-plus-bg: #6b3a6b;
-  --btn-plus-hover: #8b4a8b;
-  --btn-plus-active: #4a2a4a;
+  --btn-plus-bg: var(--color-med-plus);
+  --btn-plus-hover: var(--color-med-plus-hover);
+  --btn-plus-active: var(--color-med-plus-active);
 
-  --btn-complete-bg: #4a6b3a;
-  --btn-complete-hover: #5a8b4a;
-  --btn-complete-active: #3a4a2a;
+  --btn-complete-bg: var(--color-med-complete);
+  --btn-complete-hover: var(--color-med-complete-hover);
+  --btn-complete-active: var(--color-med-complete-active);
 
-  --icon-fill: #0a0806;
+  --icon-fill: var(--color-med-bg);
 
-  --border-preview: #6b4f2e;
+  --border-preview: var(--color-med-border);
 
-  --bar-track-bg: #2a1f14;
-  --bar-fill-bg: #c4a96a;
+  --bar-track-bg: var(--color-med-dark);
+  --bar-fill-bg: var(--color-med-accent);
 
   --bg-texture:
     radial-gradient(
@@ -140,5 +196,5 @@ body {
   font-family: var(--font-body);
   background: var(--bg-body);
   color: var(--text-body);
-  padding: 1.5rem;
+  padding: var(--space-10);
 }

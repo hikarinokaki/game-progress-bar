@@ -1,14 +1,14 @@
 .preview-section {
   max-width: 56rem;
-  margin: 2.5rem auto;
+  margin: var(--space-11) auto;
   text-align: center;
 }
 
 .preview-buttons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  gap: var(--space-8);
+  margin-bottom: var(--space-9);
 }
 
 #previewFrame {

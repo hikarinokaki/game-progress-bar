@@ -2,7 +2,7 @@
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 1fr 3fr;
-  gap: 0.5rem;
+  gap: var(--space-4);
   align-items: center;
 }
 
@@ -15,19 +15,19 @@
 .input-group input {
   border: 1px solid var(--border-input);
   border-right: none;
-  padding: 0.5rem;
+  padding: var(--space-4);
   width: 100%;
-  border-radius: 0.25rem 0 0 0.25rem;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
 }
 
 .input-addon {
   display: flex;
   align-items: center;
-  padding: 0 0.625rem;
+  padding: 0 var(--space-5);
   background: var(--bg-input-addon);
   border: 1px solid var(--border-input);
-  border-radius: 0 0.25rem 0.25rem 0;
-  font-size: 0.875rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: var(--font-size-sm);
 }
 
 .percent-row input[type="range"] {
@@ -39,7 +39,7 @@
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 0.75rem 1rem;
+  gap: var(--space-6) var(--space-8);
   align-items: center;
 }
 
@@ -51,7 +51,7 @@
   grid-column: 1 / -1;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-4);
 }
 
 .theme-row label {
@@ -68,7 +68,7 @@
   grid-column: 1 / -1;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-4);
 }
 
 .direction-row label {
@@ -85,7 +85,7 @@
   grid-column: 1 / -1;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-4);
 }
 
 .invert-row label {
@@ -103,7 +103,7 @@
   grid-column: 1 / -1;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-4);
 }
 
 .option-row label {
@@ -112,7 +112,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-4);
 }
 
 .option-row input {
@@ -121,20 +121,20 @@
 
 .section-heading {
   grid-column: 1 / -1;
-  margin: 0.75rem 0 0.25rem;
-  font-size: 0.85rem;
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: var(--font-size-sm);
   font-weight: 600;
-  color: var(--text-muted, #666);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .sub-heading {
   grid-column: 1 / -1;
-  margin: 0.5rem 0 0.25rem;
-  font-size: 0.75rem;
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: var(--font-size-xs);
   font-weight: 500;
-  color: var(--text-muted, #888);
+  color: var(--text-muted);
   letter-spacing: 0.03em;
 }
 
@@ -142,11 +142,11 @@
   grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-4);
 }
 
 .input-group-row.group-sep {
-  margin-top: 1.25rem;
+  margin-top: var(--space-9);
 }
 
 .input-group-row .compact-field {
@@ -154,12 +154,12 @@
   min-width: 6rem;
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: var(--space-1);
 }
 
 .field-label {
-  font-size: 0.7rem;
-  color: var(--text-muted, #666);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
@@ -167,28 +167,28 @@
 .input-group-row .compact-field select {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.25rem 0.375rem;
-  font-size: 0.8125rem;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
 }
 
 #milestone-list {
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: var(--space-3);
 }
 
 .milestone-row {
   display: flex;
-  gap: 0.375rem;
+  gap: var(--space-3);
   align-items: center;
 }
 
 .milestone-row input {
-  padding: 0.25rem 0.375rem;
-  font-size: 0.8125rem;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
   border: 1px solid var(--border-input);
-  border-radius: 0.1875rem;
+  border-radius: var(--radius-sm);
   background: var(--bg-input);
   color: var(--text-body);
 }
@@ -206,19 +206,19 @@
 .milestone-remove-btn {
   background: none;
   border: none;
-  color: var(--text-danger, #d32f2f);
+  color: var(--text-danger);
   font-size: 1.1rem;
   cursor: pointer;
-  padding: 0.125rem 0.25rem;
+  padding: var(--space-1) var(--space-2);
   line-height: 1;
   flex-shrink: 0;
 }
 
 #addMilestoneBtn {
-  padding: 0.3rem 0.75rem;
-  font-size: 0.8125rem;
+  padding: var(--space-2) var(--space-6);
+  font-size: var(--font-size-sm);
   border: none;
-  border-radius: 0.1875rem;
+  border-radius: var(--radius-sm);
   background: var(--btn-primary-bg);
   color: var(--btn-primary-text);
   cursor: pointer;
@@ -233,20 +233,20 @@
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: var(--space-3);
 }
 
 .todo-row {
   display: flex;
-  gap: 0.375rem;
+  gap: var(--space-3);
   align-items: center;
 }
 
 .todo-row input {
-  padding: 0.25rem 0.375rem;
-  font-size: 0.8125rem;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
   border: 1px solid var(--border-input);
-  border-radius: 0.1875rem;
+  border-radius: var(--radius-sm);
   background: var(--bg-input);
   color: var(--text-body);
 }
@@ -266,19 +266,19 @@
 .todo-remove-btn {
   background: none;
   border: none;
-  color: var(--text-danger, #d32f2f);
+  color: var(--text-danger);
   font-size: 1.1rem;
   cursor: pointer;
-  padding: 0.125rem 0.25rem;
+  padding: var(--space-1) var(--space-2);
   line-height: 1;
   flex-shrink: 0;
 }
 
 #addTodoBtn {
-  padding: 0.3rem 0.75rem;
-  font-size: 0.8125rem;
+  padding: var(--space-2) var(--space-6);
+  font-size: var(--font-size-sm);
   border: none;
-  border-radius: 0.1875rem;
+  border-radius: var(--radius-sm);
   background: var(--btn-primary-bg);
   color: var(--btn-primary-text);
   cursor: pointer;
@@ -293,7 +293,7 @@
   grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-4);
 }
 
 .twitch-row .compact-field {
@@ -301,25 +301,25 @@
   min-width: 6rem;
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: var(--space-1);
 }
 
 .twitch-row .compact-field input {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.25rem 0.375rem;
-  font-size: 0.8125rem;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
   border: 1px solid var(--border-input);
-  border-radius: 0.1875rem;
+  border-radius: var(--radius-sm);
   background: var(--bg-input);
   color: var(--text-body);
 }
 
 .twitch-status {
-  font-size: 0.75rem;
-  color: var(--text-muted, #666);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
   grid-column: 1 / -1;
-  margin-top: -0.25rem;
+  margin-top: calc(-1 * var(--space-2));
 }
 
 .milestone-marker {
@@ -338,41 +338,41 @@
   position: absolute;
   color: var(--bar-text-color);
   text-shadow: var(--bar-shadow);
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   white-space: nowrap;
   pointer-events: none;
 }
 
 input {
-  padding: 0.5rem;
+  padding: var(--space-4);
   width: 100%;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   box-sizing: border-box;
   background: var(--bg-input);
   color: var(--text-body);
 }
 
 select {
-  padding: 0.5rem;
+  padding: var(--space-4);
   width: 100%;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   box-sizing: border-box;
   cursor: pointer;
   background: var(--bg-input);
   color: var(--text-body);
   border: 1px solid var(--border-input);
-  border-radius: 0.25rem;
+  border-radius: var(--radius-md);
 }
 
 input[type="color"] {
-  padding: 0.25rem;
-  height: 2.5rem;
+  padding: var(--space-2);
+  height: var(--space-11);
   cursor: pointer;
   border: 1px solid var(--border-input);
 }
 
 button {
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--font-size-base);
   cursor: pointer;
 }
