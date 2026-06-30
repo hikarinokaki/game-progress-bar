@@ -145,6 +145,10 @@
   gap: 0.5rem;
 }
 
+.input-group-row.group-sep {
+  margin-top: 1.25rem;
+}
+
 .input-group-row .compact-field {
   flex: 1;
   min-width: 6rem;

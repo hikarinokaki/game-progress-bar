@@ -171,6 +171,160 @@
       </div>
 
       <div class="col">
+        <h3 class="section-heading">Position &amp; Size</h3>
+
+        <div class="input-group-row">
+          <label class="compact-field">
+            <span class="field-label">Canvas Width (px)</span>
+            <input
+              type="number"
+              id="canvasWidthInput"
+              value="1920"
+              min="320"
+              max="7680"
+              title="Total canvas width for OBS source (default: 1920)"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Canvas Height (px)</span>
+            <input
+              type="number"
+              id="canvasHeightInput"
+              value="1080"
+              min="240"
+              max="4320"
+              title="Total canvas height for OBS source (default: 1080)"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Orientation</span>
+            <select id="orientationSelect">
+              <option value="horizontal">Horizontal</option>
+              <option value="vertical">Vertical</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="input-group-row group-sep">
+          <label class="compact-field">
+            <span class="field-label">Bar X (px)</span>
+            <input
+              type="number"
+              id="barXInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the bar on the preview canvas"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Bar Y (px)</span>
+            <input
+              type="number"
+              id="barYInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the bar on the preview canvas"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Width (px)</span>
+            <input
+              type="number"
+              id="barWidthInput"
+              value="500"
+              min="50"
+              max="2000"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Height (px)</span>
+            <input
+              type="number"
+              id="barHeightInput"
+              value="60"
+              min="10"
+              max="500"
+            />
+          </label>
+        </div>
+
+        <div class="input-group-row group-sep">
+          <label class="compact-field">
+            <span class="field-label">Title X (px)</span>
+            <input
+              type="number"
+              id="titleXInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the title on the preview canvas"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Title Y (px)</span>
+            <input
+              type="number"
+              id="titleYInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the title on the preview canvas"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Title Font (px)</span>
+            <input
+              type="number"
+              id="titleFontSizeInput"
+              value="40"
+              min="8"
+              max="200"
+            />
+          </label>
+        </div>
+
+        <div class="input-group-row group-sep">
+          <label class="compact-field">
+            <span class="field-label">Time X (px)</span>
+            <input
+              type="number"
+              id="timeXInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the time display on the preview canvas"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Time Y (px)</span>
+            <input
+              type="number"
+              id="timeYInput"
+              placeholder="auto"
+              title="Leave empty for auto, or drag the time display on the preview canvas"
+            />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Time Font (px)</span>
+            <input
+              type="number"
+              id="timeFontSizeInput"
+              value="32"
+              min="8"
+              max="200"
+            />
+          </label>
+        </div>
+
+        <div
+          class="option-row group-sep"
+          id="maskImageRow"
+          style="display: none"
+        >
+          <label>
+            Mask Image URL:
+            <input
+              type="url"
+              id="maskImageUrlInput"
+              placeholder="https://example.com/image.png"
+            />
+          </label>
+        </div>
+      </div>
+
+      <div class="col">
         <h3 class="section-heading">Milestones</h3>
         <div id="milestone-list"></div>
         <div class="input-group-row">
@@ -214,163 +368,7 @@
           <button id="addTodoBtn" class="btn-primary">+ Add Todo Item</button>
         </div>
 
-        <h3 class="section-heading">Twitch Integration</h3>
-        <div class="twitch-row">
-          <label class="compact-field">
-            <span class="field-label">Channel Name</span>
-            <input type="text" id="twitchChannelInput" placeholder="e.g. xqc" />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Command Sender</span>
-            <input
-              type="text"
-              id="twitchUsernameInput"
-              placeholder="Username (leave empty for any chatter)"
-              title="Only this Twitch user can run !bar commands (leave empty for any chatter)"
-            />
-          </label>
-        </div>
-      </div>
-
-      <div class="col">
-        <h3 class="section-heading">Position &amp; Size</h3>
-
-        <div class="input-group-row">
-          <label class="compact-field">
-            <span class="field-label">Title X (px)</span>
-            <input
-              type="number"
-              id="titleXInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the title on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Title Y (px)</span>
-            <input
-              type="number"
-              id="titleYInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the title on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Title Font (px)</span>
-            <input
-              type="number"
-              id="titleFontSizeInput"
-              value="40"
-              min="8"
-              max="200"
-            />
-          </label>
-        </div>
-
-        <div class="input-group-row">
-          <label class="compact-field">
-            <span class="field-label">Time X (px)</span>
-            <input
-              type="number"
-              id="timeXInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the time display on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Time Y (px)</span>
-            <input
-              type="number"
-              id="timeYInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the time display on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Time Font (px)</span>
-            <input
-              type="number"
-              id="timeFontSizeInput"
-              value="32"
-              min="8"
-              max="200"
-            />
-          </label>
-        </div>
-
-        <div class="input-group-row">
-          <label class="compact-field">
-            <span class="field-label">Bar X (px)</span>
-            <input
-              type="number"
-              id="barXInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the bar on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Bar Y (px)</span>
-            <input
-              type="number"
-              id="barYInput"
-              placeholder="auto"
-              title="Leave empty for auto, or drag the bar on the preview canvas"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Width (px)</span>
-            <input
-              type="number"
-              id="barWidthInput"
-              value="500"
-              min="50"
-              max="2000"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Height (px)</span>
-            <input
-              type="number"
-              id="barHeightInput"
-              value="60"
-              min="10"
-              max="500"
-            />
-          </label>
-        </div>
-
-        <div class="input-group-row">
-          <label class="compact-field">
-            <span class="field-label">Canvas Width (px)</span>
-            <input
-              type="number"
-              id="canvasWidthInput"
-              value="1920"
-              min="320"
-              max="7680"
-              title="Total canvas width for OBS source (default: 1920)"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Canvas Height (px)</span>
-            <input
-              type="number"
-              id="canvasHeightInput"
-              value="1080"
-              min="240"
-              max="4320"
-              title="Total canvas height for OBS source (default: 1080)"
-            />
-          </label>
-          <label class="compact-field">
-            <span class="field-label">Orientation</span>
-            <select id="orientationSelect">
-              <option value="horizontal">Horizontal</option>
-              <option value="vertical">Vertical</option>
-            </select>
-          </label>
-        </div>
-
-        <div class="input-group-row">
+        <div class="input-group-row group-sep">
           <label class="compact-field">
             <span class="field-label">Todo X (px)</span>
             <input
@@ -401,13 +399,19 @@
           </label>
         </div>
 
-        <div class="option-row" id="maskImageRow" style="display: none">
-          <label>
-            Mask Image URL:
+        <h3 class="section-heading">Twitch Integration</h3>
+        <div class="twitch-row">
+          <label class="compact-field">
+            <span class="field-label">Channel Name</span>
+            <input type="text" id="twitchChannelInput" placeholder="e.g. xqc" />
+          </label>
+          <label class="compact-field">
+            <span class="field-label">Command Sender</span>
             <input
-              type="url"
-              id="maskImageUrlInput"
-              placeholder="https://example.com/image.png"
+              type="text"
+              id="twitchUsernameInput"
+              placeholder="Username (leave empty for any chatter)"
+              title="Only this Twitch user can run !bar commands (leave empty for any chatter)"
             />
           </label>
         </div>

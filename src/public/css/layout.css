@@ -73,15 +73,13 @@ main {
 
 .container {
   margin: 2.5rem auto;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2.5rem;
-  align-items: flex-start;
+  align-items: start;
 }
 
 .col {
-  flex: 1 1 25rem;
-  min-width: 12.5rem;
   display: grid;
   grid-template-columns: 5.625rem 1fr;
   gap: 0.75rem 1rem;
@@ -99,6 +97,12 @@ main {
 
 .col input[type="range"] {
   grid-column: 1 / -1;
+}
+
+@media (max-width: 45rem) {
+  .container {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 37.5rem) {
