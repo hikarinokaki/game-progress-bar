@@ -93,6 +93,15 @@
     <hr />
     <h1 id="configHeading">Progress Bar Configuration</h1>
     <div class="config-layout">
+      <div class="preview-section">
+        <div class="preview-buttons">
+          <button id="copyBtn">Copy URL</button>
+          <button id="snapBtn">Snap: Off</button>
+        </div>
+
+        <iframe id="previewFrame"></iframe>
+      </div>
+
       <div class="config-columns">
         <section class="col" aria-labelledby="general-heading">
           <h3 id="general-heading" class="section-heading">General</h3>
@@ -136,21 +145,21 @@
             </div>
           </fieldset>
 
-          <div class="theme-row">
-            <label for="themeSelect">Theme:</label>
+          <label>
+            Show Remaining
+            <input type="checkbox" id="invertDisplayCheckbox" />
+          </label>
+
+          <label>
+            Theme:
             <select id="themeSelect">
               <option value="default">Default</option>
               <option value="medieval">Medieval</option>
             </select>
-          </div>
+          </label>
 
-          <div class="direction-row">
-            <label
-              for="directionSelect"
-              title="Which direction the bar fills from"
-            >
-              Bar Fill:
-            </label>
+          <label>
+            Bar Fill:
             <select
               id="directionSelect"
               title="Which direction the bar fills from"
@@ -158,25 +167,15 @@
               <option value="increment">Forward</option>
               <option value="countdown">Reverse</option>
             </select>
-          </div>
+          </label>
 
-          <div class="invert-row">
-            <input type="checkbox" id="invertDisplayCheckbox" />
-            <label
-              for="invertDisplayCheckbox"
-              title="Show remaining time/percentage instead of elapsed"
-            >
-              Show Remaining
-            </label>
-          </div>
-
-          <div class="direction-row">
-            <label for="orientationSelect">Orientation:</label>
+          <label>
+            Orientation:
             <select id="orientationSelect">
               <option value="horizontal">Horizontal</option>
               <option value="vertical">Vertical</option>
             </select>
-          </div>
+          </label>
 
           <label>
             Title:
@@ -230,9 +229,10 @@
             Position &amp; Size
           </h3>
 
+          <h4 class="sub-heading">Canvas</h4>
           <div class="input-group-row">
             <label class="compact-field">
-              <span class="field-label">Canvas Width (px)</span>
+              <span class="field-label">Width</span>
               <input
                 type="number"
                 id="canvasWidthInput"
@@ -243,7 +243,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Canvas Height (px)</span>
+              <span class="field-label">Height</span>
               <input
                 type="number"
                 id="canvasHeightInput"
@@ -255,9 +255,10 @@
             </label>
           </div>
 
-          <div class="input-group-row group-sep">
+          <h4 class="sub-heading">Bar</h4>
+          <div class="input-group-row">
             <label class="compact-field">
-              <span class="field-label">Bar X (px)</span>
+              <span class="field-label">X</span>
               <input
                 type="number"
                 id="barXInput"
@@ -266,7 +267,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Bar Y (px)</span>
+              <span class="field-label">Y</span>
               <input
                 type="number"
                 id="barYInput"
@@ -274,8 +275,10 @@
                 title="Leave empty for auto, or drag the bar on the preview canvas"
               />
             </label>
+          </div>
+          <div class="input-group-row">
             <label class="compact-field">
-              <span class="field-label">Width (px)</span>
+              <span class="field-label">Width</span>
               <input
                 type="number"
                 id="barWidthInput"
@@ -285,7 +288,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Height (px)</span>
+              <span class="field-label">Height</span>
               <input
                 type="number"
                 id="barHeightInput"
@@ -296,9 +299,10 @@
             </label>
           </div>
 
-          <div class="input-group-row group-sep">
+          <h4 class="sub-heading">Title</h4>
+          <div class="input-group-row">
             <label class="compact-field">
-              <span class="field-label">Title X (px)</span>
+              <span class="field-label">X</span>
               <input
                 type="number"
                 id="titleXInput"
@@ -307,7 +311,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Title Y (px)</span>
+              <span class="field-label">Y</span>
               <input
                 type="number"
                 id="titleYInput"
@@ -316,7 +320,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Title Font (px)</span>
+              <span class="field-label">Font</span>
               <input
                 type="number"
                 id="titleFontSizeInput"
@@ -327,9 +331,10 @@
             </label>
           </div>
 
-          <div class="input-group-row group-sep">
+          <h4 class="sub-heading">Time</h4>
+          <div class="input-group-row">
             <label class="compact-field">
-              <span class="field-label">Time X (px)</span>
+              <span class="field-label">X</span>
               <input
                 type="number"
                 id="timeXInput"
@@ -338,7 +343,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Time Y (px)</span>
+              <span class="field-label">Y</span>
               <input
                 type="number"
                 id="timeYInput"
@@ -347,7 +352,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Time Font (px)</span>
+              <span class="field-label">Font</span>
               <input
                 type="number"
                 id="timeFontSizeInput"
@@ -358,13 +363,10 @@
             </label>
           </div>
 
-          <div
-            class="option-row group-sep"
-            id="maskImageRow"
-            style="display: none"
-          >
-            <label>
-              Mask Image URL:
+          <h4 class="sub-heading" id="maskImageHeading">Mask Image</h4>
+          <div class="input-group-row" id="maskImageRow" style="display: none">
+            <label class="compact-field">
+              <span class="field-label">URL</span>
               <input
                 type="url"
                 id="maskImageUrlInput"
@@ -375,14 +377,23 @@
         </section>
 
         <div class="col">
-          <h3 class="section-heading">Twitch Integration</h3>
+          <h3 class="section-heading">
+            Twitch Integration
+            <a
+              class="help-link"
+              href="https://github.com/hikarinokaki/game-progress-bar#readme"
+              target="_blank"
+              title="View !bar chat commands in the README"
+              >?</a
+            >
+          </h3>
           <div class="twitch-row">
             <label class="compact-field">
               <span class="field-label">Channel Name</span>
               <input
                 type="text"
                 id="twitchChannelInput"
-                placeholder="e.g. xqc"
+                placeholder="e.g. acanthus_dawn"
               />
             </label>
             <label class="compact-field">
@@ -424,7 +435,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Font Size (px)</span>
+              <span class="field-label">Font</span>
               <input
                 type="number"
                 id="msLabelFontSizeInput"
@@ -444,7 +455,7 @@
           <h4 class="sub-heading">Todos</h4>
           <div class="input-group-row">
             <label class="compact-field">
-              <span class="field-label">X Coordinate (px)</span>
+              <span class="field-label">X</span>
               <input
                 type="number"
                 id="todoXInput"
@@ -453,7 +464,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Y Coordinate (px)</span>
+              <span class="field-label">Y</span>
               <input
                 type="number"
                 id="todoYInput"
@@ -462,7 +473,7 @@
               />
             </label>
             <label class="compact-field">
-              <span class="field-label">Font Size (px)</span>
+              <span class="field-label">Font</span>
               <input
                 type="number"
                 id="todoFontSizeInput"
@@ -474,16 +485,20 @@
           </div>
         </div>
       </div>
-
-      <div class="preview-section">
-        <div class="preview-buttons">
-          <button id="copyBtn">Copy URL</button>
-          <button id="snapBtn">Snap: Off</button>
-        </div>
-
-        <iframe id="previewFrame"></iframe>
-      </div>
     </div>
+
+    <footer>
+      <a
+        href="https://github.com/hikarinokaki/game-progress-bar"
+        target="_blank"
+        >GitHub</a
+      >
+      <a
+        href="https://github.com/hikarinokaki/game-progress-bar/issues"
+        target="_blank"
+        >Report Issue</a
+      >
+    </footer>
 
     <script src="dist/bundle.js"></script>
   </body>

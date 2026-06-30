@@ -154,6 +154,8 @@ function redo() {
 
 function syncSupportedOptions() {
   const options = getSupportedOptions(state.style);
+  document.getElementById("maskImageHeading").style.display =
+    options.maskImageUrl ? "" : "none";
   document.getElementById("maskImageRow").style.display = options.maskImageUrl
     ? ""
     : "none";

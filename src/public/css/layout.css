@@ -48,10 +48,7 @@ hr {
   max-width: 56rem;
   margin-left: auto;
   margin-right: auto;
-}
-
-main {
-  margin-top: var(--space-11);
+  flex-shrink: 0;
 }
 
 #configHeading {
@@ -72,9 +69,10 @@ main {
 .config-layout {
   margin: var(--space-11) auto;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr;
   gap: var(--space-11);
   align-items: start;
+  flex: 1;
 }
 
 .config-columns {
@@ -125,4 +123,22 @@ main {
   .percent-row {
     grid-template-columns: 1fr;
   }
+}
+
+footer {
+  text-align: center;
+  padding: var(--space-11);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+  flex-shrink: 0;
+}
+
+footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }
