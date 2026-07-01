@@ -1,26 +1,5 @@
 header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-11);
-  align-items: flex-start;
-}
-
-#auth-section {
-  flex: 1 1 100%;
   text-align: center;
-}
-
-.auth-hint {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  margin: var(--space-4) auto 0;
-  max-width: 22rem;
-  line-height: 1.4;
-}
-
-#app-section {
-  flex: 1 1 25rem;
-  min-width: 12.5rem;
 }
 
 .header-top {
@@ -41,14 +20,6 @@ header {
   width: auto;
   padding: var(--space-4);
   font-size: var(--font-size-base);
-}
-
-header,
-hr {
-  max-width: 56rem;
-  margin-left: auto;
-  margin-right: auto;
-  flex-shrink: 0;
 }
 
 #configHeading {

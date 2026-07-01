@@ -60,41 +60,13 @@
     <link rel="stylesheet" href="css/preview.css" />
   </head>
   <body>
-    <div id="auth-section">
-      <a href="auth/steam">
-        <img
-          src="https://community.fastly.steamstatic.com/public/images/signinthroughsteam/sits_01.png"
-          width="180"
-          height="35"
-          border="0"
-          alt="Sign in through Steam"
-        />
-      </a>
-      <p class="auth-hint">
-        Login with Steam OpenID to fetch your playtime. Your profile and game
-        details have to be set to public.
-      </p>
-    </div>
     <header>
-      <div id="app-section" style="display: none">
-        <div class="header-top">
-          <h2 id="welcome"></h2>
-          <button onclick="window.location.href = 'auth/logout'">Logout</button>
-        </div>
-        <br /><br />
-        <div class="search-wrapper" role="search">
-          <input type="text" id="search" placeholder="Search your games..." />
-          <div id="results" aria-live="polite"></div>
-        </div>
-      </div>
-
-      <div id="selected-game" aria-live="polite"></div>
+      <h1 id="configHeading">Progress Bar Configuration</h1>
     </header>
-    <hr />
-    <h1 id="configHeading">Progress Bar Configuration</h1>
     <div class="config-layout">
       <div class="preview-section">
         <div class="preview-buttons">
+          <button id="gridBtn">Grid: Off</button>
           <button id="copyBtn">Copy URL</button>
           <button id="snapBtn">Snap: Off</button>
         </div>
@@ -103,8 +75,43 @@
       </div>
 
       <div class="config-columns">
-        <section class="col" aria-labelledby="general-heading">
-          <h3 id="general-heading" class="section-heading">General</h3>
+        <section class="col">
+          <h3 id="general-heading" class="section-heading">Game</h3>
+
+          <div id="auth-section">
+            <a href="auth/steam">
+              <img
+                src="https://community.fastly.steamstatic.com/public/images/signinthroughsteam/sits_01.png"
+                width="180"
+                height="35"
+                border="0"
+                alt="Sign in through Steam"
+              />
+            </a>
+            <p class="auth-hint">
+              Login with Steam OpenID to fetch your playtime. Your profile and
+              game details have to be set to public.
+            </p>
+          </div>
+
+          <div id="app-section" style="display: none">
+            <div class="header-top">
+              <span id="welcome"></span>
+              <a href="auth/logout">Logout</a>
+            </div>
+            <div class="search-wrapper" role="search">
+              <input
+                type="text"
+                id="search"
+                placeholder="Search your games..."
+              />
+              <div id="results" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div id="selected-game" aria-live="polite"></div>
+
+          <h3 class="section-heading">General</h3>
           <label id="startInputLabel" style="display: none">
             Start (seconds):
             <input type="number" id="startInput" />

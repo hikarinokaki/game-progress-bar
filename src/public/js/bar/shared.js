@@ -65,6 +65,7 @@ function parseParams() {
     msLabelOffsetX: params.get("msLabelOffsetX") || "0",
     msLabelOffsetY: params.get("msLabelOffsetY") || "4",
     msLabelFontSize: params.get("msLabelFontSize") || "14",
+    grid: params.get("grid") || "",
   };
 
   if (isNaN(p.start) || p.start < 0) p.start = 0;
@@ -161,6 +162,8 @@ export function initBar() {
 
   makeAbsolute();
 
+  document.getElementById("bar-canvas").dataset.grid = params.grid;
+
   applyPositions(params);
 
   renderMilestones(params);
@@ -238,6 +241,7 @@ export function initBar() {
         }
       }
 
+      document.getElementById("bar-canvas").dataset.grid = params.grid;
       setupTitle(params);
       applyPositions(params);
       renderMilestones(params);

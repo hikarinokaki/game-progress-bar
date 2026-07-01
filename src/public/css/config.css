@@ -1,3 +1,25 @@
+#auth-section {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-6) 0;
+}
+
+#app-section {
+  grid-column: 1 / -1;
+}
+
+#selected-game {
+  grid-column: 1 / -1;
+}
+
+.auth-hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin: var(--space-4) auto 0;
+  max-width: 22rem;
+  line-height: 1.4;
+}
+
 .percent-row {
   grid-column: 1 / -1;
   display: grid;

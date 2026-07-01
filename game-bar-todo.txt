@@ -1,0 +1,44 @@
+# Triage 2026-07-01 — organized by effort/impact
+
+## NOW (trivial, quick wins)
+- **5** — Measure project size (du -sh + dep count), add self-hosting note to README.
+- **13** — Register at Buy Me a Coffee, add link to README/GitHub repo.
+- **8** — Add lightweight analytics (Umami or Plausible script tag, privacy notice if needed).
+- **1** — Graph paper background on preview canvas only. Pure CSS/`config-update` toggle. Helps with positioning.
+
+## SOON (small-medium effort, good UX wins)
+- **3** — Move steam login + game search into the config panel layout. Remove the `<hr>`. Feels integrated.
+- **4** — Config save/reset via localStorage. "Reset to defaults" button. Biggest UX improvement on the list.
+- **11** — Better touchscreen drag. Unify pointer events. Good for tablet users.
+- **12** — Wiki/docs site separate from README. Valuable for self-hosters.
+
+## LATER (medium effort, polish)
+- **2** — SVG icons for settings section headings. Nice-to-have visual polish, requires sourcing icons + ARIA.
+- **10** — Redesign default shadow-DOM bar styles. Subjective effort, depends on design direction.
+- **14** — Milestone label overlap detection. Complex geometry. Recommended approach: parity-based toggle (labels alternate above/below). Avoid full collision detection.
+
+## FUTURE (complex, revisit after above)
+- **6** — Light/dark mode support. Requires rethinking design system tokens. Worth doing eventually, but scope is larger than current default/medieval switch.
+
+## SKIP (advise against)
+- **7** — Tailwind CSS. Rewrites all CSS, adds build step, zero functional benefit.
+- **9** — GitHub Pages. The app has a real backend (Express, Steam auth, HLTB Puppeteer, Twitch). Would need split deployment + CORS. Not worth it.
+
+---
+
+## Original items (preserved for reference)
+
+1. See if adding graphing paper bg to canvas looks good. See if its possible to have it in the preview iframe canvas, but not the actual page to be used in OBS.
+2. For the settings headings consider adding svg icons for better readability.
+3. Try turning the steam login and game search into one of the panels. Get rid of the horizontal rule
+4. Add config saving / resetting to defaults behavior.
+5. Measure how big project is, and inform people about it if they want to self-host. 
+6. Let's remove the default / medieval theme distinction. Let's stick with default for now, but support light and dark modes instead.
+7. Consider switching to tailwindcss.
+8. Consider adding some analytics scripts to the page. Something lightweight and respectful, not crazy like google. Add privacy / usage terms if needed.
+9. Consider switching to github pages, and only self hosting the necessary API stuff. Permissions, CORS? Can github pages have iframes? Another CDN?
+10. Replace default, shadow-dom styles with something nicer.
+11. See if dragging behavior on preview canvas can be made to work better on touchscreens.
+12. Consider making wiki/docs for project, instead of just readme. 
+13. Register at bymeacoffee and link it in github.
+14. For milestone labels, automatically change their position if you detect that they will overlap. For example, on a horizontal bar the first label would go underneath at first, and then the second label could go above the bar. Alternative idea, if this behavior is too complex, we could have the labels always switch between up and down positions based on their parity. Control this behavior with an extra toggle in the config ui.

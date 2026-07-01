@@ -44,6 +44,25 @@ The `<id>` in todo commands can be any of:
 
 If multiple todos contain the same search text, the first match is used. Numbered IDs always take priority over fuzzy matching when the number is in range.
 
+## Self-hosting
+
+The project is designed to run in Docker behind a reverse proxy. Node.js 20 with Chromium is required (for Puppeteer → HLTB scraping).
+
+**Snapshot:**
+
+- ~2.2 MB source (38 files across JS/CSS/HTML)
+- 15 direct npm dependencies (key ones: Express 5, Puppeteer, Passport, tmi.js, esbuild)
+- Production Docker image ~500 MB (includes Chromium for HLTB auth token)
+
+**Quick start:**
+
+1. Clone the repo
+2. `cp .env.example .env` — fill in `STEAM_API_KEY`, `BASE_URL`, `SESSION_SECRET`
+3. `npm ci && npm run build:frontend`
+4. `npm start` — runs on `http://localhost:3000`
+
+See `Dockerfile` for the containerized build. The CI (`deploy.yml`) builds and pushes to GHCR, then deploys via `docker compose` on the target host.
+
 ## Necessary environment variables
 
 - STEAM_API_KEY

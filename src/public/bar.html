@@ -62,6 +62,38 @@
         align-items: center;
       }
 
+      #bar-canvas[data-grid="thirds"] {
+        background-image:
+          linear-gradient(
+            to right,
+            rgba(200, 200, 200, 0) calc(33.333% - 1px),
+            rgba(200, 200, 200, 0.25) calc(33.333% - 1px),
+            rgba(200, 200, 200, 0.25) calc(33.333% + 1px),
+            rgba(200, 200, 200, 0) calc(33.333% + 1px)
+          ),
+          linear-gradient(
+            to right,
+            rgba(200, 200, 200, 0) calc(66.667% - 1px),
+            rgba(200, 200, 200, 0.25) calc(66.667% - 1px),
+            rgba(200, 200, 200, 0.25) calc(66.667% + 1px),
+            rgba(200, 200, 200, 0) calc(66.667% + 1px)
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(200, 200, 200, 0) calc(33.333% - 1px),
+            rgba(200, 200, 200, 0.25) calc(33.333% - 1px),
+            rgba(200, 200, 200, 0.25) calc(33.333% + 1px),
+            rgba(200, 200, 200, 0) calc(33.333% + 1px)
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(200, 200, 200, 0) calc(66.667% - 1px),
+            rgba(200, 200, 200, 0.25) calc(66.667% - 1px),
+            rgba(200, 200, 200, 0.25) calc(66.667% + 1px),
+            rgba(200, 200, 200, 0) calc(66.667% + 1px)
+          );
+      }
+
       #bar-canvas h1 {
         position: absolute;
         left: 960px;

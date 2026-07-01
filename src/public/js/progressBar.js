@@ -34,6 +34,7 @@ import {
   setMsLabelOffsetX,
   setMsLabelOffsetY,
   setMsLabelFontSize,
+  setGrid,
 } from "./state.js";
 import {
   startInput,
@@ -58,6 +59,7 @@ import {
   orientationSelect,
   maskImageUrlInput,
   snapBtn,
+  gridBtn,
   previewFrame,
   canvasWidthInput,
   canvasHeightInput,
@@ -336,6 +338,10 @@ function buildPreviewURL() {
     msLabelFontSize: state.msLabelFontSize,
   });
 
+  if (state.grid) {
+    params.set("grid", state.grid);
+  }
+
   if (state.paused) {
     params.set("paused", "1");
   }
@@ -598,6 +604,17 @@ export function initProgressBar() {
 
   snapBtn.addEventListener("click", toggleSnap);
   syncSnapUI();
+
+  function toggleGrid() {
+    const next = state.grid === "thirds" ? "" : "thirds";
+    setGrid(next);
+    gridBtn.textContent =
+      state.grid === "thirds" ? "Grid: Thirds" : "Grid: Off";
+    gridBtn.style.background = state.grid === "thirds" ? "#4CAF50" : "";
+    gridBtn.style.color = state.grid === "thirds" ? "#fff" : "";
+    sendStateToPreview();
+  }
+  gridBtn.addEventListener("click", toggleGrid);
 
   const addMilestoneBtn = document.getElementById("addMilestoneBtn");
   if (addMilestoneBtn) {

@@ -12,8 +12,8 @@ export const state = {
   invertDisplay: false,
   barWidth: "500",
   barHeight: "60",
-  titleX: "960",
-  titleY: "20",
+  titleX: "18",
+  titleY: "8",
   timeX: "944",
   timeY: "572",
   barX: "710",
@@ -35,6 +35,7 @@ export const state = {
   msLabelOffsetY: "4",
   msLabelFontSize: "14",
   paused: true,
+  grid: "",
 };
 
 export function setStart(value) {
@@ -177,4 +178,8 @@ export function setMsLabelFontSize(value) {
 
 export function setPaused(value) {
   state.paused = !!value;
+}
+
+export function setGrid(value) {
+  state.grid = String(value);
 }
