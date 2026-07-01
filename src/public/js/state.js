@@ -64,6 +64,7 @@ export const state = {
   msLabelOffsetX: "0",
   msLabelOffsetY: "4",
   msLabelFontSize: "20",
+  msLabelAlternate: "0",
   paused: true,
   grid: "",
 };
@@ -204,6 +205,10 @@ export function setMsLabelOffsetY(value) {
 
 export function setMsLabelFontSize(value) {
   state.msLabelFontSize = value;
+}
+
+export function setMsLabelAlternate(value) {
+  state.msLabelAlternate = value ? "1" : "0";
 }
 
 export function setPaused(value) {

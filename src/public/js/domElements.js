@@ -61,3 +61,6 @@ export const msLabelOffsetYInput = document.getElementById(
 export const msLabelFontSizeInput = document.getElementById(
   "msLabelFontSizeInput",
 );
+export const msLabelAlternateInput = document.getElementById(
+  "msLabelAlternateInput",
+);

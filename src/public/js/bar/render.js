@@ -136,7 +136,9 @@ export function renderMilestones(params) {
   const h = parseInt(params.barHeight) || 60;
   const isHorizontal = params.orientation !== "vertical";
 
-  params.milestones.forEach((ms) => {
+  const alternate = params.msLabelAlternate === "1";
+
+  params.milestones.forEach((ms, msIndex) => {
     const ratio = ms.seconds / params.max;
     const group = document.createElement("div");
     group.className = "milestone-marker";
@@ -151,6 +153,7 @@ export function renderMilestones(params) {
     const offX = parseInt(params.msLabelOffsetX) || 0;
     const offY = parseInt(params.msLabelOffsetY) || 0;
     const fontSize = parseInt(params.msLabelFontSize) || 14;
+    const labelApproxH = fontSize * 1.4;
 
     if (isHorizontal) {
       const lineX = ratio * w;
@@ -160,8 +163,13 @@ export function renderMilestones(params) {
       line.style.height = h + "px";
 
       label.style.left = lineX + offX + "px";
-      label.style.top = h + offY + "px";
       label.style.transform = "translateX(-50%)";
+
+      if (alternate && msIndex % 2 === 1) {
+        label.style.top = 0 - labelApproxH - offY + "px";
+      } else {
+        label.style.top = h + offY + "px";
+      }
     } else {
       const lineY = (1 - ratio) * h;
       line.style.left = "0";
@@ -169,9 +177,16 @@ export function renderMilestones(params) {
       line.style.width = w + "px";
       line.style.height = "2px";
 
-      label.style.left = w + offX + "px";
       label.style.top = lineY + offY + "px";
-      label.style.transform = "translateY(-50%)";
+
+      if (alternate && msIndex % 2 === 1) {
+        label.style.left = "0px";
+        label.style.transform =
+          "translateX(calc(-100% - " + offX + "px)) translateY(-50%)";
+      } else {
+        label.style.left = w + offX + "px";
+        label.style.transform = "translateY(-50%)";
+      }
     }
 
     group.appendChild(line);

@@ -65,6 +65,7 @@ function parseParams() {
     msLabelOffsetX: params.get("msLabelOffsetX") || "0",
     msLabelOffsetY: params.get("msLabelOffsetY") || "4",
     msLabelFontSize: params.get("msLabelFontSize") || "14",
+    msLabelAlternate: params.get("msLabelAlternate") || "0",
     grid: params.get("grid") || "",
   };
 
@@ -131,6 +132,7 @@ function updateURL(currentValue, maxValue, params) {
   searchParams.set("msLabelOffsetX", params.msLabelOffsetX);
   searchParams.set("msLabelOffsetY", params.msLabelOffsetY);
   searchParams.set("msLabelFontSize", params.msLabelFontSize);
+  searchParams.set("msLabelAlternate", params.msLabelAlternate);
 
   if (params.paused) {
     searchParams.set("paused", "1");

@@ -35,6 +35,7 @@ function buildPreviewURL() {
     msLabelOffsetX: state.msLabelOffsetX,
     msLabelOffsetY: state.msLabelOffsetY,
     msLabelFontSize: state.msLabelFontSize,
+    msLabelAlternate: state.msLabelAlternate,
   });
 
   if (state.maskImageUrl) {

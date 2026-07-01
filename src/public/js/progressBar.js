@@ -34,6 +34,7 @@ import {
   setMsLabelOffsetX,
   setMsLabelOffsetY,
   setMsLabelFontSize,
+  setMsLabelAlternate,
   setGrid,
   saveState,
   loadState,
@@ -75,6 +76,7 @@ import {
   msLabelOffsetXInput,
   msLabelOffsetYInput,
   msLabelFontSizeInput,
+  msLabelAlternateInput,
 } from "./domElements.js";
 import {
   calculatePercent,
@@ -419,6 +421,7 @@ export function render() {
   msLabelOffsetXInput.value = state.msLabelOffsetX;
   msLabelOffsetYInput.value = state.msLabelOffsetY;
   msLabelFontSizeInput.value = state.msLabelFontSize;
+  msLabelAlternateInput.checked = state.msLabelAlternate === "1";
   renderTodoList();
 
   sendStateToPreview();
@@ -646,6 +649,11 @@ export function initProgressBar() {
 
   msLabelFontSizeInput.addEventListener("change", (e) => {
     setMsLabelFontSize(e.target.value);
+    render();
+  });
+
+  msLabelAlternateInput.addEventListener("change", (e) => {
+    setMsLabelAlternate(e.target.checked);
     render();
   });
 
