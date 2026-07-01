@@ -143,7 +143,9 @@
   align-items: center;
 }
 
-.milestone-row input {
+.milestone-row input,
+.todo-row input,
+.twitch-row .compact-field input {
   padding: var(--space-2) var(--space-3);
   font-size: var(--font-size-sm);
   border: 1px solid var(--border-input);
@@ -199,15 +201,6 @@
   display: flex;
   gap: var(--space-3);
   align-items: center;
-}
-
-.todo-row input {
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--font-size-sm);
-  border: 1px solid var(--border-input);
-  border-radius: var(--radius-sm);
-  background: var(--bg-input);
-  color: var(--text-body);
 }
 
 .todo-done-checkbox {
@@ -266,12 +259,6 @@
 .twitch-row .compact-field input {
   width: 100%;
   box-sizing: border-box;
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--font-size-sm);
-  border: 1px solid var(--border-input);
-  border-radius: var(--radius-sm);
-  background: var(--bg-input);
-  color: var(--text-body);
 }
 
 .twitch-status {

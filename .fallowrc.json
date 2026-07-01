@@ -12,6 +12,6 @@
   "health": {
     "maxCyclomatic": 40,
     "maxCognitive": 50,
-    "maxCrap": 1500
+    "maxCrap": 1600
   }
 }

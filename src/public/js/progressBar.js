@@ -77,6 +77,10 @@ import {
   msLabelOffsetYInput,
   msLabelFontSizeInput,
   msLabelAlternateInput,
+  barXInput,
+  barYInput,
+  titleFontSizeInput,
+  timeFontSizeInput,
 } from "./domElements.js";
 import {
   calculatePercent,
