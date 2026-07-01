@@ -39,6 +39,7 @@ export const canvasHeightInput = document.getElementById("canvasHeightInput");
 
 export const copyBtn = document.getElementById("copyBtn");
 export const gridBtn = document.getElementById("gridBtn");
+export const resetBtn = document.getElementById("resetBtn");
 export const previewFrame = document.getElementById("previewFrame");
 
 const themeSelect = document.getElementById("themeSelect");

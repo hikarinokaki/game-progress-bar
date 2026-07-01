@@ -1,31 +1,36 @@
 #auth-section {
   grid-column: 1 / -1;
   text-align: center;
-  padding: var(--space-6) 0;
 }
 
 #app-section {
   grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 #selected-game {
   grid-column: 1 / -1;
 }
 
+#selected-game:empty {
+  display: none;
+}
+
 .auth-hint {
   font-size: var(--font-size-xs);
   color: var(--text-muted);
-  margin: var(--space-4) auto 0;
   max-width: 22rem;
   line-height: 1.4;
+  margin: var(--space-2) auto 0;
 }
 
-.percent-row {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  gap: var(--space-4);
-  align-items: center;
+.account-bar {
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
 }
 
 .input-group {
@@ -52,43 +57,6 @@
   font-size: var(--font-size-sm);
 }
 
-.percent-row input[type="range"] {
-  grid-column: 2 / -1;
-  width: 100%;
-}
-
-.time-row {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: var(--space-6) var(--space-8);
-  align-items: center;
-}
-
-.time-row label {
-  margin: 0;
-}
-
-.option-row {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.option-row label {
-  margin: 0;
-  white-space: nowrap;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.option-row input {
-  flex: 1;
-}
-
 .section-heading {
   grid-column: 1 / -1;
   margin: var(--space-6) 0 var(--space-2);
@@ -97,15 +65,6 @@
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-fieldset.time-group {
-  grid-column: 1 / -1;
-  width: 100%;
-  min-width: 0;
-  border: none;
-  padding: 0;
-  margin: 0;
 }
 
 .sub-heading {
@@ -148,6 +107,27 @@ fieldset.time-group {
   box-sizing: border-box;
   padding: var(--space-2) var(--space-3);
   font-size: var(--font-size-sm);
+}
+
+.input-group-row .compact-field input[type="checkbox"] {
+  width: auto;
+  height: auto;
+}
+
+.compact-percent-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.compact-percent-row .input-group {
+  flex: 0 0 auto;
+}
+
+.compact-percent-row input[type="range"] {
+  flex: 1;
+  min-width: 0;
 }
 
 #milestone-list {

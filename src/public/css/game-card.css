@@ -1,54 +1,25 @@
-#selected-game {
-  flex: 1 1 25rem;
-  min-width: 12.5rem;
-  margin-top: var(--space-5);
-  padding: var(--space-5);
-  background-color: var(--bg-game-card);
-  color: var(--text-panel);
-  border-radius: var(--radius-md);
-  border-left: 4px solid var(--border-game-card);
-  font-size: var(--font-size-sm);
-
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: var(--space-4);
-}
-
-#selected-game:empty {
-  visibility: hidden;
-  min-height: 3rem;
-}
-
-.selected-game-content {
+.selected-game-info {
   display: flex;
   align-items: center;
-  margin-bottom: var(--space-5);
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
 }
 
-.apply-section {
-  margin-top: var(--space-2);
-}
-
-.apply-label {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  margin-bottom: var(--space-2);
+.game-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
 }
 
 .clear-selection {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--text-muted);
-  cursor: pointer;
-  margin-right: var(--space-5);
-  line-height: 1;
-  transition: color 0.2s;
-  user-select: none;
-}
-
-.clear-selection:hover {
+  background: none;
+  border: none;
   color: var(--text-danger);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 .apply-time-btn {
@@ -60,9 +31,6 @@
   cursor: pointer;
   font-size: var(--font-size-sm);
   transition: background-color 0.2s;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
 }
 
 .apply-time-btn:hover {
@@ -81,14 +49,6 @@
   cursor: pointer;
   font-size: var(--font-size-sm);
   transition: background-color 0.2s;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-3);
-}
-
-.apply-max-btn:last-child {
-  margin-bottom: 0;
 }
 
 .apply-max-btn-main {
@@ -125,6 +85,12 @@
 
 .apply-max-btn-complete:active {
   background-color: var(--btn-complete-active);
+}
+
+.max-time-buttons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
 }
 
 .max-time-loading,

@@ -35,6 +35,9 @@ import {
   setMsLabelOffsetY,
   setMsLabelFontSize,
   setGrid,
+  saveState,
+  loadState,
+  resetState,
 } from "./state.js";
 import {
   startInput,
@@ -60,13 +63,10 @@ import {
   maskImageUrlInput,
   snapBtn,
   gridBtn,
+  resetBtn,
   previewFrame,
   canvasWidthInput,
   canvasHeightInput,
-  barXInput,
-  barYInput,
-  titleFontSizeInput,
-  timeFontSizeInput,
   todoXInput,
   todoYInput,
   todoFontSizeInput,
@@ -422,9 +422,12 @@ export function render() {
   renderTodoList();
 
   sendStateToPreview();
+  saveState();
 }
 
 export function initProgressBar() {
+  loadState();
+
   titleInput.addEventListener("input", (e) => {
     setTitle(e.target.value);
     render();
@@ -615,6 +618,12 @@ export function initProgressBar() {
     sendStateToPreview();
   }
   gridBtn.addEventListener("click", toggleGrid);
+
+  resetBtn.addEventListener("click", () => {
+    if (confirm("Reset all settings to defaults?")) {
+      resetState();
+    }
+  });
 
   const addMilestoneBtn = document.getElementById("addMilestoneBtn");
   if (addMilestoneBtn) {

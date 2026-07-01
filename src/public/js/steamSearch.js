@@ -46,12 +46,7 @@ async function fetchMaxTime(appid, gameName) {
 
         const button = document.createElement("button");
         button.className = `apply-max-btn apply-max-btn-${type.color}`;
-        button.innerHTML = `
-          <svg class="steam-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10c0-5.52-4.48-10-10-10zm0 18c-4.41 0-8-3.59-8-8 0-1.85.63-3.55 1.69-4.9l5.39 2.23c-.15.45-.23.93-.23 1.42 0 2.49 2.01 4.5 4.5 4.5.34 0 .68-.04 1-.11l2.24 3.21C17.55 19.37 14.85 20 12 20zm6.31-11.9c-1.33-1.33-3.53-1.33-4.86 0-.2.2-.37.42-.5.67l2.23.92c.48-.31 1.03-.49 1.63-.49 1.66 0 3 1.34 3 3s-1.34 3-3 3c-.35 0-.68-.06-1-.16l-2.25 3.22c.73.27 1.5.42 2.31.42 4.41 0 8-3.59 8-8 0-1.85-.63-3.55-1.69-4.9z"/>
-          </svg>
-          ${type.label}: ${hours} hrs
-        `;
+        button.textContent = `${type.label}: ${hours} hrs`;
 
         button.addEventListener("click", () => {
           setMax(timeInSeconds);
@@ -81,22 +76,15 @@ function selectGame(game) {
   resultsDiv.innerHTML = "";
 
   selectedGameDiv.innerHTML = `
-    <div class="selected-game-content">
-      <span class="clear-selection" title="Clear selection" aria-label="Clear selection">&times;</span>
+    <div class="selected-game-info">
       <img src="https://media.steampowered.com/steamcommunity/public/images/apps/${game.appid}/${game.icon}.jpg" />
-      <strong> ${game.name}</strong>
+      <strong>${game.name}</strong>
+      <span class="clear-selection" title="Clear selection" aria-label="Clear selection">&times;</span>
     </div>
-    <div class="apply-section" id="applyStart">
-      <div class="apply-label">Set start to:</div>
+    <div class="game-buttons">
       <button class="apply-time-btn">
-        <svg class="steam-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10c0-5.52-4.48-10-10-10zm0 18c-4.41 0-8-3.59-8-8 0-1.85.63-3.55 1.69-4.9l5.39 2.23c-.15.45-.23.93-.23 1.42 0 2.49 2.01 4.5 4.5 4.5.34 0 .68-.04 1-.11l2.24 3.21C17.55 19.37 14.85 20 12 20zm6.31-11.9c-1.33-1.33-3.53-1.33-4.86 0-.2.2-.37.42-.5.67l2.23.92c.48-.31 1.03-.49 1.63-.49 1.66 0 3 1.34 3 3s-1.34 3-3 3c-.35 0-.68-.06-1-.16l-2.25 3.22c.73.27 1.5.42 2.31.42 4.41 0 8-3.59 8-8 0-1.85-.63-3.55-1.69-4.9z"/>
-        </svg>
         ${secondsToText(playtimeInSeconds)} played
       </button>
-    </div>
-    <div class="apply-section" id="applyMax">
-      <div class="apply-label">Set max to:</div>
       <div class="max-time-buttons" data-appid="${game.appid}">
         <div class="max-time-loading">Loading completion times...</div>
       </div>
@@ -212,7 +200,7 @@ export function initSteamSearch() {
       authSection.style.display = "none";
       appSection.style.display = "block";
       selectedGameDiv.style.display = "";
-      welcome.innerText = `Welcome, ${data.name}`;
+      welcome.innerText = data.name;
     } else {
       authSection.style.display = "block";
       appSection.style.display = "none";

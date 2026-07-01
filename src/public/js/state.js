@@ -1,5 +1,35 @@
 import { clamp, calculatePercent } from "./utils.js";
 
+const STORAGE_KEY = "gpb-config";
+
+export function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.warn("Failed to save state:", e);
+  }
+}
+
+export function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    const parsed = JSON.parse(saved);
+    for (const key of Object.keys(state)) {
+      if (key in parsed) {
+        state[key] = parsed[key];
+      }
+    }
+  } catch (e) {
+    console.warn("Failed to load state:", e);
+  }
+}
+
+export function resetState() {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
 export const state = {
   start: 0,
   max: 3600,
@@ -33,7 +63,7 @@ export const state = {
   twitchUsername: "",
   msLabelOffsetX: "0",
   msLabelOffsetY: "4",
-  msLabelFontSize: "14",
+  msLabelFontSize: "20",
   paused: true,
   grid: "",
 };
